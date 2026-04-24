@@ -913,12 +913,20 @@
   <div id="standard" class="tab-content">
     <div class="card">
       <div class="card-header">
-        <span>수입 검사 기준서 — SPCC (TJP-QP0711-15)</span>
+        <span>수입 검사 기준서 — <span id="stdMaterialLabel">SPCC</span> (TJP-QP0711-15)</span>
         <span class="badge badge-info">3차 개정 2017.11.22</span>
       </div>
       <div class="card-body">
+
+        <!-- 재질 선택 탭 -->
+        <div style="display:flex; gap:0; margin:-5px 0 20px; border:2px solid #1e3a5f; border-radius:8px; overflow:hidden; max-width:520px;">
+          <button type="button" class="std-mat-btn active" data-mat="SPCC" onclick="switchStdMaterial('SPCC')" style="flex:1; padding:12px 16px; font-size:14px; font-weight:700; border:none; background:#1e3a5f; color:white; cursor:pointer; transition:all 0.15s; border-right:1px solid rgba(255,255,255,0.2);">SPCC (냉연강판)</button>
+          <button type="button" class="std-mat-btn" data-mat="SUS304" onclick="switchStdMaterial('SUS304')" style="flex:1; padding:12px 16px; font-size:14px; font-weight:700; border:none; background:white; color:#64748b; cursor:pointer; transition:all 0.15s; border-right:1px solid #e2e8f0;">SUS304</button>
+          <button type="button" class="std-mat-btn" data-mat="SUS430" onclick="switchStdMaterial('SUS430')" style="flex:1; padding:12px 16px; font-size:14px; font-weight:700; border:none; background:white; color:#64748b; cursor:pointer; transition:all 0.15s;">SUS430</button>
+        </div>
+
         <table class="std-table" style="margin-bottom: 20px;">
-          <tr><th style="width:15%">업체</th><td>(주)태진다이텍</td><th style="width:15%">재질</th><td>SPCC</td></tr>
+          <tr><th style="width:15%">업체</th><td>(주)태진다이텍</td><th style="width:15%">재질</th><td id="stdMaterialCell">SPCC</td></tr>
           <tr><th>모델명</th><td>-</td><th>부품명</th><td>소재</td></tr>
           <tr><th>CODE-NO</th><td>-</td><th>작성자</th><td>강 병 주</td></tr>
         </table>
@@ -971,7 +979,7 @@
           <div class="content" style="padding-left: 32px;">
             <table class="std-table" style="margin-top:6px;">
               <tr><th>항목</th><th>SPEC</th><th>허용공차</th><th>단위</th></tr>
-              <tr><td>지정두께</td><td>-</td><td>+0.05 / -0</td><td>mm</td></tr>
+              <tr><td>지정두께</td><td>-</td><td id="stdThickTolerance">+0.05 / -0</td><td>mm</td></tr>
             </table>
           </div>
           <div class="criteria-meta">
@@ -988,7 +996,7 @@
           <div class="content" style="padding-left: 32px;">
             <table class="std-table" style="margin-top:6px;">
               <tr><th>항목</th><th>SPEC</th><th>허용공차</th><th>단위</th></tr>
-              <tr><td>지정폭</td><td>-</td><td>+0.1 / -0</td><td>mm</td></tr>
+              <tr><td>지정폭</td><td>-</td><td id="stdWidthTolerance">+0.1 / -0</td><td>mm</td></tr>
             </table>
           </div>
           <div class="criteria-meta">
@@ -1213,20 +1221,83 @@
         <span style="font-size:11px; color:#64748b; font-weight:400; margin-left:12px;">입고시 스캔 → 공급자 작성란 원본 보관, 수요자(태진다이텍) 작성란 별도 기재</span>
         <div>
           <button class="btn btn-primary" onclick="openCertModal()">＋ 신규 등록</button>
-          <button class="btn" style="background:#8b5cf6; color:white;" onclick="bulkFillCustomerMeas()" title="모든 검사성적서의 수요자 측정값을 공급자 값 기준으로 일괄 채웁니다">✨ 수요자 측정값 일괄 반영</button>
           <button class="btn btn-success" onclick="exportCert()">📥 CSV 다운로드</button>
         </div>
       </div>
       <div class="card-body">
-        <div class="filter-bar">
-          <label>공급자:</label>
-          <select id="certFilterSupplier" onchange="renderCert()">
-            <option value="">전체</option>
-          </select>
-          <label>검색:</label>
-          <input type="text" id="certFilterText" placeholder="Lot NO, Heat NO, Size" oninput="renderCert()" style="flex:1; min-width:200px;">
+
+        <!-- ===== 공급자 선택 메인 화면 ===== -->
+        <div id="supplierMainView" style="padding:20px 10px;">
+          <div style="text-align:center; margin-bottom:30px;">
+            <div style="font-size:20px; font-weight:700; color:#1e3a5f; margin-bottom:8px;">📦 공급자 선택</div>
+            <div style="font-size:13px; color:#64748b;">검사증명서를 조회할 공급자를 선택하세요</div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:20px; max-width:900px; margin:0 auto;">
+
+            <!-- 태경스틸 (SPCC) -->
+            <div onclick="openSupplierView('태경스틸')"
+                 style="cursor:pointer; background:linear-gradient(135deg, #3b82f6 0%, #1e40af 100%); color:white; border-radius:12px; padding:30px 25px; box-shadow:0 4px 15px rgba(59,130,246,0.3); transition:all 0.2s; position:relative; overflow:hidden;"
+                 onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 25px rgba(59,130,246,0.45)';"
+                 onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(59,130,246,0.3)';">
+              <div style="font-size:14px; opacity:0.9; margin-bottom:8px; font-weight:500;">① 공급자</div>
+              <div style="font-size:24px; font-weight:800; margin-bottom:6px; letter-spacing:-0.5px;">태경스틸</div>
+              <div style="font-size:15px; opacity:0.95; margin-bottom:18px; font-weight:600;">SPCC (냉연강판)</div>
+              <div style="display:flex; justify-content:space-between; align-items:center; padding-top:15px; border-top:1px solid rgba(255,255,255,0.25);">
+                <div>
+                  <div style="font-size:11px; opacity:0.85;">등록 건수</div>
+                  <div style="font-size:22px; font-weight:700;" id="count_taegyeong">-</div>
+                </div>
+                <div style="font-size:28px; opacity:0.8;">→</div>
+              </div>
+            </div>
+
+            <!-- 동일스테인레스 (SUS) -->
+            <div onclick="openSupplierView('㈜동일스테인레스')"
+                 style="cursor:pointer; background:linear-gradient(135deg, #10b981 0%, #047857 100%); color:white; border-radius:12px; padding:30px 25px; box-shadow:0 4px 15px rgba(16,185,129,0.3); transition:all 0.2s; position:relative; overflow:hidden;"
+                 onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 25px rgba(16,185,129,0.45)';"
+                 onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(16,185,129,0.3)';">
+              <div style="font-size:14px; opacity:0.9; margin-bottom:8px; font-weight:500;">② 공급자</div>
+              <div style="font-size:24px; font-weight:800; margin-bottom:6px; letter-spacing:-0.5px;">㈜동일스테인레스</div>
+              <div style="font-size:15px; opacity:0.95; margin-bottom:18px; font-weight:600;">SUS (스테인리스 STS304/430)</div>
+              <div style="display:flex; justify-content:space-between; align-items:center; padding-top:15px; border-top:1px solid rgba(255,255,255,0.25);">
+                <div>
+                  <div style="font-size:11px; opacity:0.85;">등록 건수</div>
+                  <div style="font-size:22px; font-weight:700;" id="count_dongil">-</div>
+                </div>
+                <div style="font-size:28px; opacity:0.8;">→</div>
+              </div>
+            </div>
+
+          </div>
+
+          <div style="text-align:center; margin-top:25px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+            <button class="btn btn-secondary" onclick="openSupplierView('')" style="padding:8px 20px; font-size:13px;">📋 전체 보기</button>
+            <button class="btn" onclick="forceResetCertData()" style="padding:8px 20px; font-size:13px; background:#dc2626; color:white;" title="localStorage와 Supabase의 기존 성적서 데이터를 삭제하고 HTML에 내장된 45건 데이터(태경 18건 + 동일 27건)로 재설정합니다.">🔄 검사증명서 데이터 재설정 (45건 복원)</button>
+          </div>
         </div>
-        <div id="certList"></div>
+
+        <!-- ===== 선택된 공급자 상세 뷰 ===== -->
+        <div id="supplierDetailView" style="display:none;">
+          <div style="display:flex; align-items:center; gap:12px; margin-bottom:15px; padding:12px 15px; background:#f1f5f9; border-radius:8px;">
+            <button class="btn btn-secondary" onclick="backToSupplierMain()" style="padding:6px 14px; font-size:13px;">← 공급자 선택</button>
+            <div style="flex:1;">
+              <div style="font-size:11px; color:#64748b;">현재 선택</div>
+              <div id="currentSupplierLabel" style="font-size:16px; font-weight:700; color:#1e3a5f;">-</div>
+            </div>
+          </div>
+
+          <div class="filter-bar">
+            <label>공급자:</label>
+            <select id="certFilterSupplier" onchange="renderCert()">
+              <option value="">전체</option>
+            </select>
+            <label>검색:</label>
+            <input type="text" id="certFilterText" placeholder="Lot NO, Heat NO, Size" oninput="renderCert()" style="flex:1; min-width:200px;">
+          </div>
+          <div id="certList"></div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -1605,13 +1676,14 @@ CREATE TRIGGER trg_cert_updated BEFORE UPDATE ON material_cert FOR EACH ROW EXEC
 // 데이터 저장소 (localStorage 기반)
 // ========================================
 const LS_LOG = 'tj_material_log_v1';
-const LS_CERT = 'tj_material_cert_v2';
+const LS_CERT = 'tj_material_cert_v3';
 
-// v1에서 v2로 마이그레이션: 기존 v1 데이터 삭제 (수요자 측정값 반영을 위한 리셋)
-if (localStorage.getItem('tj_material_cert_v1') && !localStorage.getItem('tj_material_cert_v2')) {
-  localStorage.removeItem('tj_material_cert_v1');
-  console.log('[Migration] certData v1 → v2: 기존 데이터 초기화, 수요자 측정값 포함된 신규 데이터로 교체됩니다.');
-}
+// v1/v2 → v3 마이그레이션 (SUS 데이터 추가 반영)
+['tj_material_cert_v1', 'tj_material_cert_v2'].forEach(k => {
+  if (localStorage.getItem(k) && !localStorage.getItem('tj_material_cert_v3')) {
+    localStorage.removeItem(k);
+  }
+});
 
 let logData = JSON.parse(localStorage.getItem(LS_LOG) || 'null');
 let certData = JSON.parse(localStorage.getItem(LS_CERT) || 'null');
@@ -1654,7 +1726,8 @@ if (!logData) {
   saveLogToLS();
 }
 
-if (!certData) {
+// 기본 검사증명서 데이터 초기화 (재설정 시 재호출 가능)
+function initCertDefaults() {
   certData = [
     {commodity:'STS CR COIL', spec:'KS D3698-STS304', surface:'NO. 2B',
      size:'0.5(T) X 118(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
@@ -1671,8 +1744,580 @@ if (!certData) {
      r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
      c_r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
      c_r2:{spec:'304', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
-     c_r3:{spec:'118mm +0.1, -0.1mm', x1:'117.99', x2:'117.99', x3:'117.99', j:'OK'},
+     c_r3:{spec:'118mm +0.1, -0.1mm', x1:'117.97', x2:'117.98', x3:'117.99', j:'OK'},
      c_r4:{spec:'0.5T +0.02, -0.02T', x1:'0.49', x2:'0.49', x3:'0.49', j:'OK'},
+     c_r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'}},
+
+    {commodity:'STS CR COIL', spec:'304', surface:'NO. 2B',
+     size:'0.5(T) X 126(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
+     date:'2026-04-08', weight:3020, cut:'5조', lot:'QGZ0812', heat:'SE55024',
+     supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
+     recv_date:'2026-04-08', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
+     r2:{spec:'304', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
+     r3:{spec:'126mm +0.1, -0.1mm', x1:'125.995', x2:'125.998', x3:'125.998', j:'OK'},
+     r4:{spec:'0.5T +0.02, -0.02T', x1:'0.498', x2:'0.498', x3:'0.499', j:'OK'},
+     r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
+     c_r2:{spec:'304', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
+     c_r3:{spec:'126mm +0.1, -0.1mm', x1:'125.96', x2:'125.97', x3:'125.98', j:'OK'},
+     c_r4:{spec:'0.5T +0.02, -0.02T', x1:'0.48', x2:'0.48', x3:'0.48', j:'OK'},
+     c_r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'}},
+
+    {commodity:'STS CR COIL', spec:'ASTM-A240M-430', surface:'NO. 2B',
+     size:'0.6(T) X 70(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
+     date:'2026-04-01', weight:1206, cut:'4조', lot:'C259102473', heat:'SG92534',
+     supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
+     recv_date:'2026-04-01', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
+     r2:{spec:'430', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
+     r3:{spec:'70mm +0.1, -0.1mm', x1:'69.996', x2:'69.997', x3:'69.997', j:'OK'},
+     r4:{spec:'0.6T +0.02, -0.02T', x1:'0.599', x2:'0.598', x3:'0.599', j:'OK'},
+     r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
+     c_r2:{spec:'430', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
+     c_r3:{spec:'70mm +0.1, -0.1mm', x1:'69.97', x2:'69.98', x3:'69.98', j:'OK'},
+     c_r4:{spec:'0.6T +0.02, -0.02T', x1:'0.58', x2:'0.58', x3:'0.58', j:'OK'},
+     c_r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'}},
+
+    {commodity:'STS CR COIL', spec:'ASTM-A240M-430', surface:'NO. 2B',
+     size:'0.6(T) X 70(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
+     date:'2026-04-01', weight:617, cut:'2조', lot:'C25440B140', heat:'SG94296',
+     supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
+     recv_date:'2026-04-01', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
+     r2:{spec:'430', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
+     r3:{spec:'70mm +0.1, -0.1mm', x1:'69.995', x2:'69.997', x3:'69.998', j:'OK'},
+     r4:{spec:'0.6T +0.02, -0.02T', x1:'0.597', x2:'0.597', x3:'0.597', j:'OK'},
+     r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
+     c_r2:{spec:'430', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
+     c_r3:{spec:'70mm +0.1, -0.1mm', x1:'69.97', x2:'69.98', x3:'69.99', j:'OK'},
+     c_r4:{spec:'0.6T +0.02, -0.02T', x1:'0.59', x2:'0.59', x3:'0.59', j:'OK'},
+     c_r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'}},
+
+    {commodity:'STS CR COIL', spec:'ASTM-A240M-430', surface:'NO. 2B',
+     size:'0.6(T) X 80(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
+     date:'2026-04-01', weight:2226, cut:'6조', lot:'C262100869', heat:'SD77587',
+     supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
+     recv_date:'2026-04-01', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
+     r2:{spec:'430', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
+     r3:{spec:'80mm +0.1, -0.1mm', x1:'79.997', x2:'79.998', x3:'79.998', j:'OK'},
+     r4:{spec:'0.6T +0.02, -0.02T', x1:'0.598', x2:'0.599', x3:'0.597', j:'OK'},
+     r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
+     c_r2:{spec:'430', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
+     c_r3:{spec:'80mm +0.1, -0.1mm', x1:'79.96', x2:'79.96', x3:'79.97', j:'OK'},
+     c_r4:{spec:'0.6T +0.02, -0.02T', x1:'0.58', x2:'0.58', x3:'0.58', j:'OK'},
+     c_r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'}},
+
+    {commodity:'STS CR COIL', spec:'ASTM-A240M-430', surface:'NO. 2B',
+     size:'0.6(T) X 80(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
+     date:'2026-04-01', weight:635, cut:'2조', lot:'C25440B140', heat:'SG94296',
+     supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
+     recv_date:'2026-04-01', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
+     r2:{spec:'430', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
+     r3:{spec:'80mm +0.1, -0.1mm', x1:'79.995', x2:'79.995', x3:'79.996', j:'OK'},
+     r4:{spec:'0.6T +0.02, -0.02T', x1:'0.598', x2:'0.598', x3:'0.597', j:'OK'},
+     r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
+     c_r2:{spec:'430', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
+     c_r3:{spec:'80mm +0.1, -0.1mm', x1:'79.97', x2:'79.98', x3:'79.98', j:'OK'},
+     c_r4:{spec:'0.6T +0.02, -0.02T', x1:'0.58', x2:'0.58', x3:'0.58', j:'OK'},
+     c_r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'}},
+
+    {commodity:'STS CR COIL', spec:'KS D3698-STS304', surface:'NO. 2B',
+     size:'0.6(T) X 74(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
+     date:'2026-04-01', weight:804, cut:'2조', lot:'QGZ0217', heat:'SE54468',
+     supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
+     recv_date:'2026-04-01', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
+     r2:{spec:'304', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
+     r3:{spec:'74mm +0.1, -0.1mm', x1:'73.997', x2:'73.997', x3:'73.999', j:'OK'},
+     r4:{spec:'0.6T +0.02, -0.02T', x1:'0.598', x2:'0.597', x3:'0.598', j:'OK'},
+     r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
+     c_r2:{spec:'304', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
+     c_r3:{spec:'74mm +0.1, -0.1mm', x1:'73.95', x2:'73.96', x3:'73.96', j:'OK'},
+     c_r4:{spec:'0.6T +0.02, -0.02T', x1:'0.58', x2:'0.58', x3:'0.58', j:'OK'},
+     c_r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'}},
+
+    {commodity:'STS CR COIL', spec:'KS D3698-STS304', surface:'NO. 2B',
+     size:'0.6(T) X 74(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
+     date:'2026-04-01', weight:756, cut:'2조', lot:'QGW0615', heat:'SE53333',
+     supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
+     recv_date:'2026-04-01', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
+     r2:{spec:'304', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
+     r3:{spec:'74mm +0.1, -0.1mm', x1:'73.999', x2:'73.998', x3:'73.999', j:'OK'},
+     r4:{spec:'0.6T +0.02, -0.02T', x1:'0.595', x2:'0.598', x3:'0.598', j:'OK'},
+     r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
+     c_r2:{spec:'304', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
+     c_r3:{spec:'74mm +0.1, -0.1mm', x1:'73.96', x2:'73.97', x3:'73.98', j:'OK'},
+     c_r4:{spec:'0.6T +0.02, -0.02T', x1:'0.58', x2:'0.58', x3:'0.58', j:'OK'},
+     c_r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'}},
+
+    {commodity:'STS CR COIL', spec:'KS D3698-STS304', surface:'NO. 2B',
+     size:'0.5(T) X 130(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
+     date:'2026-03-19', weight:628, cut:'1조', lot:'QGZ0812', heat:'SE55024',
+     supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
+     recv_date:'2026-03-19', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
+     r2:{spec:'304', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
+     r3:{spec:'130mm +0.1, -0.1mm', x1:'129.997', x2:'129.995', x3:'129.996', j:'OK'},
+     r4:{spec:'0.5T +0.02, -0.02T', x1:'0.495', x2:'0.497', x3:'0.497', j:'OK'},
+     r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
+     c_r2:{spec:'304', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
+     c_r3:{spec:'130mm +0.1, -0.1mm', x1:'129.97', x2:'129.98', x3:'129.98', j:'OK'},
+     c_r4:{spec:'0.5T +0.02, -0.02T', x1:'0.49', x2:'0.49', x3:'0.49', j:'OK'},
+     c_r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'}},
+
+    {commodity:'STS CR COIL', spec:'KS D3698-STS304', surface:'NO. 2B',
+     size:'0.5(T) X 130(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
+     date:'2026-03-19', weight:1878, cut:'3조', lot:'QGX0678', heat:'SE53911',
+     supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
+     recv_date:'2026-03-19', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
+     r2:{spec:'304', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
+     r3:{spec:'130mm +0.1, -0.1mm', x1:'129.997', x2:'129.996', x3:'129.996', j:'OK'},
+     r4:{spec:'0.5T +0.02, -0.02T', x1:'0.498', x2:'0.498', x3:'0.497', j:'OK'},
+     r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
+     c_r2:{spec:'304', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
+     c_r3:{spec:'130mm +0.1, -0.1mm', x1:'129.96', x2:'129.97', x3:'129.98', j:'OK'},
+     c_r4:{spec:'0.5T +0.02, -0.02T', x1:'0.49', x2:'0.49', x3:'0.49', j:'OK'},
+     c_r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'}},
+
+    {commodity:'STS CR COIL', spec:'ASTM-A240M-430', surface:'NO. 2B',
+     size:'0.6(T) X 70(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
+     date:'2026-03-06', weight:1380, cut:'4조', lot:'C258500385', heat:'SG90619',
+     supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
+     recv_date:'2026-03-06', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
+     r2:{spec:'430', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
+     r3:{spec:'70mm +0.1, -0.1mm', x1:'69.998', x2:'69.999', x3:'69.997', j:'OK'},
+     r4:{spec:'0.6T +0.02, -0.02T', x1:'0.599', x2:'0.599', x3:'0.598', j:'OK'},
+     r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
+     c_r2:{spec:'430', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
+     c_r3:{spec:'70mm +0.1, -0.1mm', x1:'69.97', x2:'69.98', x3:'69.98', j:'OK'},
+     c_r4:{spec:'0.6T +0.02, -0.02T', x1:'0.59', x2:'0.59', x3:'0.59', j:'OK'},
+     c_r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'}},
+
+    {commodity:'STS CR COIL', spec:'ASTM-A240M-430', surface:'NO. 2B',
+     size:'0.6(T) X 80(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
+     date:'2026-03-06', weight:2278, cut:'4조', lot:'C261500857', heat:'SG94718',
+     supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
+     recv_date:'2026-03-06', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
+     r2:{spec:'430', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
+     r3:{spec:'80mm +0.1, -0.1mm', x1:'79.996', x2:'79.996', x3:'79.997', j:'OK'},
+     r4:{spec:'0.6T +0.02, -0.02T', x1:'0.598', x2:'0.598', x3:'0.598', j:'OK'},
+     r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
+     c_r2:{spec:'430', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
+     c_r3:{spec:'80mm +0.1, -0.1mm', x1:'79.96', x2:'79.97', x3:'79.98', j:'OK'},
+     c_r4:{spec:'0.6T +0.02, -0.02T', x1:'0.58', x2:'0.58', x3:'0.58', j:'OK'},
+     c_r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'}},
+
+    {commodity:'STS CR COIL', spec:'KS D3698-STS304', surface:'NO. 2B',
+     size:'0.6(T) X 74(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
+     date:'2026-03-05', weight:2270, cut:'6조', lot:'QGW0615 외', heat:'SE53333 외',
+     supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
+     recv_date:'2026-03-05', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
+     r2:{spec:'304', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
+     r3:{spec:'74mm +0.1, -0.1mm', x1:'73.998', x2:'73.997', x3:'73.997', j:'OK'},
+     r4:{spec:'0.6T +0.02, -0.02T', x1:'0.598', x2:'0.598', x3:'0.599', j:'OK'},
+     r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
+     c_r2:{spec:'304', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
+     c_r3:{spec:'74mm +0.1, -0.1mm', x1:'73.95', x2:'73.96', x3:'73.97', j:'OK'},
+     c_r4:{spec:'0.6T +0.02, -0.02T', x1:'0.58', x2:'0.58', x3:'0.58', j:'OK'},
+     c_r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'}},
+
+    {commodity:'STS CR COIL', spec:'ASTM-A240M-430', surface:'NO. 2B',
+     size:'0.6(T) X 70(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
+     date:'2026-02-19', weight:2760, cut:'8조', lot:'C256501167', heat:'SG90627',
+     supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
+     recv_date:'2026-02-19', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
+     r2:{spec:'430', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
+     r3:{spec:'70mm +0.1, -0.1mm', x1:'69.998', x2:'69.997', x3:'69.997', j:'OK'},
+     r4:{spec:'0.6T +0.02, -0.02T', x1:'0.599', x2:'0.595', x3:'0.598', j:'OK'},
+     r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
+     c_r2:{spec:'430', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
+     c_r3:{spec:'70mm +0.1, -0.1mm', x1:'69.97', x2:'69.97', x3:'69.98', j:'OK'},
+     c_r4:{spec:'0.6T +0.02, -0.02T', x1:'0.58', x2:'0.58', x3:'0.58', j:'OK'},
+     c_r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'}},
+
+    {commodity:'STS CR COIL', spec:'ASTM-A240M-430', surface:'NO. 2B',
+     size:'0.6(T) X 84(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
+     date:'2026-02-10', weight:394, cut:'1조', lot:'C258500385', heat:'SG90619',
+     supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
+     recv_date:'2026-02-10', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
+     r2:{spec:'430', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
+     r3:{spec:'84mm +0.1, -0.1mm', x1:'83.998', x2:'83.997', x3:'83.997', j:'OK'},
+     r4:{spec:'0.6T +0.02, -0.02T', x1:'0.598', x2:'0.599', x3:'0.599', j:'OK'},
+     r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
+     c_r2:{spec:'430', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
+     c_r3:{spec:'84mm +0.1, -0.1mm', x1:'83.96', x2:'83.96', x3:'83.97', j:'OK'},
+     c_r4:{spec:'0.6T +0.02, -0.02T', x1:'0.58', x2:'0.58', x3:'0.58', j:'OK'},
+     c_r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'}},
+
+    {commodity:'STS CR COIL', spec:'ASTM-A240M-430', surface:'NO. 2B',
+     size:'0.6(T) X 70(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
+     date:'2026-02-04', weight:3120, cut:'9조', lot:'C258500764', heat:'SG92009',
+     supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
+     recv_date:'2026-02-04', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
+     r2:{spec:'430', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
+     r3:{spec:'70mm +0.1, -0.1mm', x1:'69.997', x2:'69.998', x3:'69.998', j:'OK'},
+     r4:{spec:'0.6T +0.02, -0.02T', x1:'0.596', x2:'0.596', x3:'0.598', j:'OK'},
+     r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
+     c_r2:{spec:'430', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
+     c_r3:{spec:'70mm +0.1, -0.1mm', x1:'69.97', x2:'69.98', x3:'69.99', j:'OK'},
+     c_r4:{spec:'0.6T +0.02, -0.02T', x1:'0.59', x2:'0.59', x3:'0.59', j:'OK'},
+     c_r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'}},
+
+    {commodity:'STS CR COIL', spec:'ASTM-A240M-430', surface:'NO. 2B',
+     size:'0.6(T) X 80(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
+     date:'2026-02-04', weight:2346, cut:'6조', lot:'C257501435', heat:'SG90945',
+     supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
+     recv_date:'2026-02-04', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
+     r2:{spec:'430', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
+     r3:{spec:'80mm +0.1, -0.1mm', x1:'79.997', x2:'79.999', x3:'79.994', j:'OK'},
+     r4:{spec:'0.6T +0.02, -0.02T', x1:'0.595', x2:'0.596', x3:'0.598', j:'OK'},
+     r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
+     c_r2:{spec:'430', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
+     c_r3:{spec:'80mm +0.1, -0.1mm', x1:'79.96', x2:'79.97', x3:'79.97', j:'OK'},
+     c_r4:{spec:'0.6T +0.02, -0.02T', x1:'0.58', x2:'0.58', x3:'0.58', j:'OK'},
+     c_r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'}},
+
+    {commodity:'STS CR COIL', spec:'KS D3698-STS304', surface:'NO. 2B',
+     size:'0.5(T) X 130(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
+     date:'2026-02-04', weight:1854, cut:'3조', lot:'QGX0678', heat:'SE53911',
+     supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
+     recv_date:'2026-02-04', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
+     r2:{spec:'304', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
+     r3:{spec:'130mm +0.1, -0.1mm', x1:'129.998', x2:'129.995', x3:'129.997', j:'OK'},
+     r4:{spec:'0.5T +0.02, -0.02T', x1:'0.497', x2:'0.496', x3:'0.499', j:'OK'},
+     r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
+     c_r2:{spec:'304', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
+     c_r3:{spec:'130mm +0.1, -0.1mm', x1:'129.97', x2:'129.97', x3:'129.98', j:'OK'},
+     c_r4:{spec:'0.5T +0.02, -0.02T', x1:'0.49', x2:'0.49', x3:'0.49', j:'OK'},
+     c_r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'}},
+
+    {commodity:'STS CR COIL', spec:'KS D3698-STS304', surface:'NO. 2B',
+     size:'0.6(T) X 74(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
+     date:'2026-02-04', weight:1987, cut:'5조', lot:'QGW0615 외', heat:'SE53333 외',
+     supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
+     recv_date:'2026-02-04', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
+     r2:{spec:'304', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
+     r3:{spec:'74mm +0.1, -0.1mm', x1:'73.997', x2:'73.999', x3:'73.995', j:'OK'},
+     r4:{spec:'0.6T +0.02, -0.02T', x1:'0.598', x2:'0.597', x3:'0.597', j:'OK'},
+     r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
+     c_r2:{spec:'304', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
+     c_r3:{spec:'74mm +0.1, -0.1mm', x1:'73.95', x2:'73.96', x3:'73.97', j:'OK'},
+     c_r4:{spec:'0.6T +0.02, -0.02T', x1:'0.58', x2:'0.58', x3:'0.58', j:'OK'},
+     c_r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'}},
+
+    {commodity:'STS CR COIL', spec:'ASTM-A240M-430', surface:'NO. 2B',
+     size:'0.6(T) X 80(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
+     date:'2026-01-20', weight:2052, cut:'6조', lot:'C259102473', heat:'SG92534',
+     supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
+     recv_date:'2026-01-20', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
+     r2:{spec:'430', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
+     r3:{spec:'80mm +0.1, -0.1mm', x1:'79.995', x2:'79.997', x3:'79.997', j:'OK'},
+     r4:{spec:'0.6T +0.02, -0.02T', x1:'0.596', x2:'0.596', x3:'0.599', j:'OK'},
+     r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
+     c_r2:{spec:'430', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
+     c_r3:{spec:'80mm +0.1, -0.1mm', x1:'79.97', x2:'79.97', x3:'79.98', j:'OK'},
+     c_r4:{spec:'0.6T +0.02, -0.02T', x1:'0.58', x2:'0.58', x3:'0.58', j:'OK'},
+     c_r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'}},
+
+    {commodity:'STS CR COIL', spec:'ASTM-A240M-430', surface:'NO. 2B',
+     size:'0.6(T) X 70(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
+     date:'2026-01-20', weight:900, cut:'3조', lot:'C259102473', heat:'SG92534',
+     supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
+     recv_date:'2026-01-20', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
+     r2:{spec:'430', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
+     r3:{spec:'70mm +0.1, -0.1mm', x1:'69.999', x2:'69.995', x3:'69.997', j:'OK'},
+     r4:{spec:'0.6T +0.02, -0.02T', x1:'0.598', x2:'0.599', x3:'0.598', j:'OK'},
+     r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
+     c_r2:{spec:'430', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
+     c_r3:{spec:'70mm +0.1, -0.1mm', x1:'69.95', x2:'69.96', x3:'69.97', j:'OK'},
+     c_r4:{spec:'0.6T +0.02, -0.02T', x1:'0.58', x2:'0.58', x3:'0.58', j:'OK'},
+     c_r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'}},
+
+    {commodity:'STS CR COIL', spec:'304', surface:'NO. 2B',
+     size:'0.5(T) X 126(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
+     date:'2026-01-20', weight:3024, cut:'5조', lot:'QGZ0812', heat:'SE55024',
+     supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
+     recv_date:'2026-01-20', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
+     r2:{spec:'304', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
+     r3:{spec:'126mm +0.1, -0.1mm', x1:'125.998', x2:'125.995', x3:'125.999', j:'OK'},
+     r4:{spec:'0.5T +0.02, -0.02T', x1:'0.497', x2:'0.495', x3:'0.495', j:'OK'},
+     r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
+     c_r2:{spec:'304', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
+     c_r3:{spec:'126mm +0.1, -0.1mm', x1:'125.96', x2:'125.97', x3:'125.98', j:'OK'},
+     c_r4:{spec:'0.5T +0.02, -0.02T', x1:'0.48', x2:'0.48', x3:'0.48', j:'OK'},
+     c_r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'}},
+
+    {commodity:'STS CR COIL', spec:'KS D3698-STS304', surface:'NO. 2B',
+     size:'0.5(T) X 118(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
+     date:'2026-01-15', weight:2902, cut:'5조', lot:'QDY1252 외', heat:'SE54468 외',
+     supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
+     recv_date:'2026-01-15', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
+     r2:{spec:'304', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
+     r3:{spec:'118mm +0.1, -0.1mm', x1:'117.997', x2:'117.998', x3:'117.998', j:'OK'},
+     r4:{spec:'0.5T +0.02, -0.02T', x1:'0.496', x2:'0.499', x3:'0.498', j:'OK'},
+     r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
+     c_r2:{spec:'304', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
+     c_r3:{spec:'118mm +0.1, -0.1mm', x1:'117.95', x2:'117.95', x3:'117.96', j:'OK'},
+     c_r4:{spec:'0.5T +0.02, -0.02T', x1:'0.49', x2:'0.49', x3:'0.49', j:'OK'},
+     c_r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'}},
+
+    {commodity:'STS CR COIL', spec:'KS D3698-STS304', surface:'NO. 2B',
+     size:'0.6(T) X 80(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
+     date:'2026-01-12', weight:1116, cut:'3조', lot:'QGS0405A 외', heat:'SE51203 외',
+     supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
+     recv_date:'2026-01-12', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
+     r2:{spec:'304', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
+     r3:{spec:'80mm +0.1, -0.1mm', x1:'79.995', x2:'79.997', x3:'79.996', j:'OK'},
+     r4:{spec:'0.6T +0.02, -0.02T', x1:'0.599', x2:'0.598', x3:'0.598', j:'OK'},
+     r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
+     c_r2:{spec:'304', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
+     c_r3:{spec:'80mm +0.1, -0.1mm', x1:'79.97', x2:'79.97', x3:'79.98', j:'OK'},
+     c_r4:{spec:'0.6T +0.02, -0.02T', x1:'0.58', x2:'0.58', x3:'0.58', j:'OK'},
+     c_r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'}},
+
+    {commodity:'STS CR COIL', spec:'ASTM-A240M-430', surface:'NO. 2B',
+     size:'0.6(T) X 70(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
+     date:'2026-01-12', weight:2007, cut:'6조', lot:'C258500494', heat:'SG90620',
+     supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
+     recv_date:'2026-01-12', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
+     r2:{spec:'430', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
+     r3:{spec:'70mm +0.1, -0.1mm', x1:'69.997', x2:'69.999', x3:'69.997', j:'OK'},
+     r4:{spec:'0.6T +0.02, -0.02T', x1:'0.595', x2:'0.595', x3:'0.596', j:'OK'},
+     r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
+     c_r2:{spec:'430', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
+     c_r3:{spec:'70mm +0.1, -0.1mm', x1:'69.95', x2:'69.96', x3:'69.97', j:'OK'},
+     c_r4:{spec:'0.6T +0.02, -0.02T', x1:'0.58', x2:'0.58', x3:'0.58', j:'OK'},
+     c_r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'}},
+
+    {commodity:'STS CR COIL', spec:'ASTM-A240M-430', surface:'NO. 2B',
+     size:'0.6(T) X 80(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
+     date:'2026-01-06', weight:1364, cut:'3조', lot:'C258101449', heat:'SG88660',
+     supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
+     recv_date:'2026-01-06', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
+     r2:{spec:'430', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
+     r3:{spec:'80mm +0.1, -0.1mm', x1:'79.996', x2:'79.999', x3:'79.995', j:'OK'},
+     r4:{spec:'0.6T +0.02, -0.02T', x1:'0.599', x2:'0.597', x3:'0.595', j:'OK'},
+     r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
+     c_r2:{spec:'430', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
+     c_r3:{spec:'80mm +0.1, -0.1mm', x1:'79.96', x2:'79.97', x3:'79.98', j:'OK'},
+     c_r4:{spec:'0.6T +0.02, -0.02T', x1:'0.58', x2:'0.58', x3:'0.58', j:'OK'},
+     c_r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'}},
+
+    {commodity:'STS CR COIL', spec:'KS D3698-STS304', surface:'NO. 2B',
+     size:'0.5(T) X 118(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
+     date:'2026-01-06', weight:3192, cut:'6조', lot:'QDY1252', heat:'SE54468',
+     supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
+     recv_date:'2026-01-06', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
+     r2:{spec:'304', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
+     r3:{spec:'118mm +0.1, -0.1mm', x1:'117.998', x2:'117.997', x3:'117.998', j:'OK'},
+     r4:{spec:'0.5T +0.02, -0.02T', x1:'0.498', x2:'0.498', x3:'0.495', j:'OK'},
+     r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     r8:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
+     c_r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
+     c_r2:{spec:'304', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
+     c_r3:{spec:'118mm +0.1, -0.1mm', x1:'117.97', x2:'117.98', x3:'117.98', j:'OK'},
+     c_r4:{spec:'0.5T +0.02, -0.02T', x1:'0.48', x2:'0.48', x3:'0.48', j:'OK'},
      c_r5:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
      c_r6:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
      c_r7:{spec:'-', x1:'-', x2:'-', x3:'-', j:'-'},
@@ -1693,9 +2338,9 @@ if (!certData) {
      r8:{spec:'0/+12, 0/+8, 0/+6', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
      c_r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
      c_r2:{spec:'SPCC', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
-     c_r3:{spec:'90mm ±0.1', x1:'90.00', x2:'90.00', x3:'90.00', j:'OK'},
-     c_r4:{spec:'0.6T ±0.05', x1:'0.596', x2:'0.594', x3:'0.594', j:'OK'},
-     c_r5:{spec:'65이하', x1:'56', x2:'56', x3:'56', j:'OK'},
+     c_r3:{spec:'90mm ±0.1', x1:'90.00', x2:'90.00', x3:'89.99', j:'OK'},
+     c_r4:{spec:'0.6T ±0.05', x1:'0.598', x2:'0.598', x3:'0.599', j:'OK'},
+     c_r5:{spec:'65이하', x1:'56', x2:'58', x3:'56', j:'OK'},
      c_r6:{spec:'1000mm', x1:'4', x2:'4', x3:'4', j:'OK'},
      c_r7:{spec:'0/+2', x1:'0', x2:'0', x3:'0', j:'OK'},
      c_r8:{spec:'0/+12, 0/+8, 0/+6', x1:'양호', x2:'양호', x3:'양호', j:'OK'}},
@@ -1715,9 +2360,9 @@ if (!certData) {
      r8:{spec:'0/+12, 0/+8, 0/+6', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
      c_r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
      c_r2:{spec:'SPCC', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
-     c_r3:{spec:'94mm ±0.1', x1:'94.00', x2:'94.00', x3:'94.00', j:'OK'},
-     c_r4:{spec:'0.6T ±0.05', x1:'0.594', x2:'0.594', x3:'0.594', j:'OK'},
-     c_r5:{spec:'65이하', x1:'61', x2:'61', x3:'61', j:'OK'},
+     c_r3:{spec:'94mm ±0.1', x1:'94.00', x2:'94.01', x3:'94.00', j:'OK'},
+     c_r4:{spec:'0.6T ±0.05', x1:'0.598', x2:'0.596', x3:'0.598', j:'OK'},
+     c_r5:{spec:'65이하', x1:'60', x2:'61', x3:'61', j:'OK'},
      c_r6:{spec:'1000mm', x1:'4', x2:'4', x3:'4', j:'OK'},
      c_r7:{spec:'0/+2', x1:'0', x2:'0', x3:'0', j:'OK'},
      c_r8:{spec:'0/+12, 0/+8, 0/+6', x1:'양호', x2:'양호', x3:'양호', j:'OK'}},
@@ -1737,9 +2382,9 @@ if (!certData) {
      r8:{spec:'0/+12, 0/+8, 0/+6', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
      c_r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
      c_r2:{spec:'SPCC', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
-     c_r3:{spec:'102mm ±0.1', x1:'102.00', x2:'102.00', x3:'102.00', j:'OK'},
-     c_r4:{spec:'0.6T ±0.05', x1:'0.594', x2:'0.594', x3:'0.594', j:'OK'},
-     c_r5:{spec:'65이하', x1:'60', x2:'60', x3:'60', j:'OK'},
+     c_r3:{spec:'102mm ±0.1', x1:'101.99', x2:'102.00', x3:'102.00', j:'OK'},
+     c_r4:{spec:'0.6T ±0.05', x1:'0.598', x2:'0.596', x3:'0.598', j:'OK'},
+     c_r5:{spec:'65이하', x1:'59', x2:'61', x3:'60', j:'OK'},
      c_r6:{spec:'1000mm', x1:'4', x2:'4', x3:'4', j:'OK'},
      c_r7:{spec:'0/+2', x1:'0', x2:'0', x3:'0', j:'OK'},
      c_r8:{spec:'0/+12, 0/+8, 0/+6', x1:'양호', x2:'양호', x3:'양호', j:'OK'}},
@@ -1759,9 +2404,9 @@ if (!certData) {
      r8:{spec:'0/+12, 0/+8, 0/+6', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
      c_r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
      c_r2:{spec:'SPCC', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
-     c_r3:{spec:'94mm ±0.1', x1:'94.00', x2:'94.00', x3:'94.00', j:'OK'},
-     c_r4:{spec:'0.6T ±0.05', x1:'0.594', x2:'0.594', x3:'0.594', j:'OK'},
-     c_r5:{spec:'65이하', x1:'60', x2:'60', x3:'60', j:'OK'},
+     c_r3:{spec:'94mm ±0.1', x1:'94.00', x2:'94.01', x3:'94.00', j:'OK'},
+     c_r4:{spec:'0.6T ±0.05', x1:'0.598', x2:'0.596', x3:'0.598', j:'OK'},
+     c_r5:{spec:'65이하', x1:'59', x2:'61', x3:'60', j:'OK'},
      c_r6:{spec:'1000mm', x1:'4', x2:'4', x3:'4', j:'OK'},
      c_r7:{spec:'0/+2', x1:'0', x2:'0', x3:'0', j:'OK'},
      c_r8:{spec:'0/+12, 0/+8, 0/+6', x1:'양호', x2:'양호', x3:'양호', j:'OK'}},
@@ -1781,9 +2426,9 @@ if (!certData) {
      r8:{spec:'0/+12, 0/+8, 0/+6', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
      c_r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
      c_r2:{spec:'SPCC', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
-     c_r3:{spec:'76mm ±0.1', x1:'76.00', x2:'76.00', x3:'76.00', j:'OK'},
-     c_r4:{spec:'0.6T ±0.05', x1:'0.594', x2:'0.594', x3:'0.594', j:'OK'},
-     c_r5:{spec:'65이하', x1:'60', x2:'60', x3:'60', j:'OK'},
+     c_r3:{spec:'76mm ±0.1', x1:'75.99', x2:'76.00', x3:'76.00', j:'OK'},
+     c_r4:{spec:'0.6T ±0.05', x1:'0.598', x2:'0.596', x3:'0.598', j:'OK'},
+     c_r5:{spec:'65이하', x1:'59', x2:'61', x3:'60', j:'OK'},
      c_r6:{spec:'1000mm', x1:'4', x2:'4', x3:'4', j:'OK'},
      c_r7:{spec:'0/+2', x1:'0', x2:'0', x3:'0', j:'OK'},
      c_r8:{spec:'0/+12, 0/+8, 0/+6', x1:'양호', x2:'양호', x3:'양호', j:'OK'}},
@@ -1804,8 +2449,8 @@ if (!certData) {
      c_r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
      c_r2:{spec:'SPCC', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
      c_r3:{spec:'120mm ±0.1', x1:'120.00', x2:'120.00', x3:'120.00', j:'OK'},
-     c_r4:{spec:'0.8T ±0.05', x1:'0.794', x2:'0.794', x3:'0.794', j:'OK'},
-     c_r5:{spec:'65이하', x1:'55', x2:'55', x3:'55', j:'OK'},
+     c_r4:{spec:'0.8T ±0.05', x1:'0.794', x2:'0.796', x3:'0.797', j:'OK'},
+     c_r5:{spec:'65이하', x1:'54', x2:'56', x3:'55', j:'OK'},
      c_r6:{spec:'1000mm', x1:'4', x2:'4', x3:'4', j:'OK'},
      c_r7:{spec:'0/+2', x1:'0', x2:'0', x3:'0', j:'OK'},
      c_r8:{spec:'0/+12, 0/+8, 0/+6', x1:'양호', x2:'양호', x3:'양호', j:'OK'}},
@@ -1825,9 +2470,9 @@ if (!certData) {
      r8:{spec:'0/+12, 0/+8, 0/+6', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
      c_r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
      c_r2:{spec:'SPCC', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
-     c_r3:{spec:'90mm ±0.1', x1:'90.00', x2:'90.00', x3:'90.00', j:'OK'},
-     c_r4:{spec:'0.6T ±0.05', x1:'0.594', x2:'0.594', x3:'0.594', j:'OK'},
-     c_r5:{spec:'65이하', x1:'54', x2:'54', x3:'54', j:'OK'},
+     c_r3:{spec:'90mm ±0.1', x1:'89.99', x2:'90.00', x3:'90.00', j:'OK'},
+     c_r4:{spec:'0.6T ±0.05', x1:'0.598', x2:'0.596', x3:'0.598', j:'OK'},
+     c_r5:{spec:'65이하', x1:'54', x2:'55', x3:'54', j:'OK'},
      c_r6:{spec:'1000mm', x1:'4', x2:'4', x3:'4', j:'OK'},
      c_r7:{spec:'0/+2', x1:'0', x2:'0', x3:'0', j:'OK'},
      c_r8:{spec:'0/+12, 0/+8, 0/+6', x1:'양호', x2:'양호', x3:'양호', j:'OK'}},
@@ -1847,9 +2492,9 @@ if (!certData) {
      r8:{spec:'0/+12, 0/+8, 0/+6', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
      c_r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
      c_r2:{spec:'SPCC', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
-     c_r3:{spec:'112mm ±0.1', x1:'112.00', x2:'112.00', x3:'112.00', j:'OK'},
-     c_r4:{spec:'0.6T ±0.05', x1:'0.594', x2:'0.594', x3:'0.594', j:'OK'},
-     c_r5:{spec:'65이하', x1:'60', x2:'60', x3:'60', j:'OK'},
+     c_r3:{spec:'112mm ±0.1', x1:'112.00', x2:'112.00', x3:'112.01', j:'OK'},
+     c_r4:{spec:'0.6T ±0.05', x1:'0.598', x2:'0.596', x3:'0.598', j:'OK'},
+     c_r5:{spec:'65이하', x1:'59', x2:'61', x3:'60', j:'OK'},
      c_r6:{spec:'1000mm', x1:'4', x2:'4', x3:'4', j:'OK'},
      c_r7:{spec:'0/+2', x1:'0', x2:'0', x3:'0', j:'OK'},
      c_r8:{spec:'0/+12, 0/+8, 0/+6', x1:'양호', x2:'양호', x3:'양호', j:'OK'}},
@@ -1869,9 +2514,9 @@ if (!certData) {
      r8:{spec:'0/+12, 0/+8, 0/+6', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
      c_r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
      c_r2:{spec:'SPCC', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
-     c_r3:{spec:'102mm ±0.1', x1:'102.00', x2:'102.00', x3:'102.00', j:'OK'},
-     c_r4:{spec:'0.6T ±0.05', x1:'0.594', x2:'0.594', x3:'0.594', j:'OK'},
-     c_r5:{spec:'65이하', x1:'60', x2:'60', x3:'60', j:'OK'},
+     c_r3:{spec:'102mm ±0.1', x1:'101.99', x2:'102.00', x3:'102.00', j:'OK'},
+     c_r4:{spec:'0.6T ±0.05', x1:'0.598', x2:'0.596', x3:'0.598', j:'OK'},
+     c_r5:{spec:'65이하', x1:'59', x2:'61', x3:'60', j:'OK'},
      c_r6:{spec:'1000mm', x1:'4', x2:'4', x3:'4', j:'OK'},
      c_r7:{spec:'0/+2', x1:'0', x2:'0', x3:'0', j:'OK'},
      c_r8:{spec:'0/+12, 0/+8, 0/+6', x1:'양호', x2:'양호', x3:'양호', j:'OK'}},
@@ -1892,8 +2537,8 @@ if (!certData) {
      c_r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
      c_r2:{spec:'SPCC', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
      c_r3:{spec:'114mm ±0.1', x1:'114.00', x2:'114.00', x3:'114.00', j:'OK'},
-     c_r4:{spec:'0.6T ±0.05', x1:'0.594', x2:'0.594', x3:'0.594', j:'OK'},
-     c_r5:{spec:'65이하', x1:'60', x2:'60', x3:'60', j:'OK'},
+     c_r4:{spec:'0.6T ±0.05', x1:'0.598', x2:'0.596', x3:'0.598', j:'OK'},
+     c_r5:{spec:'65이하', x1:'59', x2:'61', x3:'60', j:'OK'},
      c_r6:{spec:'1000mm', x1:'4', x2:'4', x3:'4', j:'OK'},
      c_r7:{spec:'0/+2', x1:'0', x2:'0', x3:'0', j:'OK'},
      c_r8:{spec:'0/+12, 0/+8, 0/+6', x1:'양호', x2:'양호', x3:'양호', j:'OK'}},
@@ -1913,9 +2558,9 @@ if (!certData) {
      r8:{spec:'0/+12, 0/+8, 0/+6', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
      c_r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
      c_r2:{spec:'SPCC', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
-     c_r3:{spec:'64mm ±0.1', x1:'64.00', x2:'64.00', x3:'64.00', j:'OK'},
-     c_r4:{spec:'0.9T ±0.05', x1:'0.894', x2:'0.894', x3:'0.894', j:'OK'},
-     c_r5:{spec:'65이하', x1:'46', x2:'46', x3:'46', j:'OK'},
+     c_r3:{spec:'64mm ±0.1', x1:'64.00', x2:'64.01', x3:'64.00', j:'OK'},
+     c_r4:{spec:'0.9T ±0.05', x1:'0.896', x2:'0.898', x3:'0.899', j:'OK'},
+     c_r5:{spec:'65이하', x1:'46', x2:'45', x3:'47', j:'OK'},
      c_r6:{spec:'1000mm', x1:'4', x2:'4', x3:'4', j:'OK'},
      c_r7:{spec:'0/+2', x1:'0', x2:'0', x3:'0', j:'OK'},
      c_r8:{spec:'0/+12, 0/+8, 0/+6', x1:'양호', x2:'양호', x3:'양호', j:'OK'}},
@@ -1935,9 +2580,9 @@ if (!certData) {
      r8:{spec:'0/+12, 0/+8, 0/+6', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
      c_r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
      c_r2:{spec:'SPCC', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
-     c_r3:{spec:'112mm ±0.1', x1:'112.00', x2:'112.00', x3:'112.00', j:'OK'},
-     c_r4:{spec:'0.6T ±0.05', x1:'0.594', x2:'0.594', x3:'0.594', j:'OK'},
-     c_r5:{spec:'65이하', x1:'60', x2:'60', x3:'60', j:'OK'},
+     c_r3:{spec:'112mm ±0.1', x1:'112.00', x2:'112.00', x3:'112.01', j:'OK'},
+     c_r4:{spec:'0.6T ±0.05', x1:'0.598', x2:'0.596', x3:'0.598', j:'OK'},
+     c_r5:{spec:'65이하', x1:'59', x2:'61', x3:'60', j:'OK'},
      c_r6:{spec:'1000mm', x1:'4', x2:'4', x3:'4', j:'OK'},
      c_r7:{spec:'0/+2', x1:'0', x2:'0', x3:'0', j:'OK'},
      c_r8:{spec:'0/+12, 0/+8, 0/+6', x1:'양호', x2:'양호', x3:'양호', j:'OK'}},
@@ -1958,8 +2603,8 @@ if (!certData) {
      c_r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
      c_r2:{spec:'SPCC', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
      c_r3:{spec:'114mm ±0.1', x1:'114.00', x2:'114.00', x3:'114.00', j:'OK'},
-     c_r4:{spec:'0.6T ±0.05', x1:'0.594', x2:'0.594', x3:'0.594', j:'OK'},
-     c_r5:{spec:'65이하', x1:'60', x2:'60', x3:'60', j:'OK'},
+     c_r4:{spec:'0.6T ±0.05', x1:'0.598', x2:'0.596', x3:'0.598', j:'OK'},
+     c_r5:{spec:'65이하', x1:'59', x2:'61', x3:'60', j:'OK'},
      c_r6:{spec:'1000mm', x1:'4', x2:'4', x3:'4', j:'OK'},
      c_r7:{spec:'0/+2', x1:'0', x2:'0', x3:'0', j:'OK'},
      c_r8:{spec:'0/+12, 0/+8, 0/+6', x1:'양호', x2:'양호', x3:'양호', j:'OK'}},
@@ -1980,8 +2625,8 @@ if (!certData) {
      c_r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
      c_r2:{spec:'SPCC', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
      c_r3:{spec:'102mm ±0.1', x1:'102.00', x2:'102.00', x3:'102.00', j:'OK'},
-     c_r4:{spec:'0.6T ±0.05', x1:'0.594', x2:'0.594', x3:'0.594', j:'OK'},
-     c_r5:{spec:'65이하', x1:'45', x2:'45', x3:'45', j:'OK'},
+     c_r4:{spec:'0.6T ±0.05', x1:'0.598', x2:'0.596', x3:'0.598', j:'OK'},
+     c_r5:{spec:'65이하', x1:'46', x2:'42', x3:'44', j:'OK'},
      c_r6:{spec:'1000mm', x1:'4', x2:'4', x3:'4', j:'OK'},
      c_r7:{spec:'0/+2', x1:'0', x2:'0', x3:'0', j:'OK'},
      c_r8:{spec:'0/+12, 0/+8, 0/+6', x1:'양호', x2:'양호', x3:'양호', j:'OK'}},
@@ -2001,9 +2646,9 @@ if (!certData) {
      r8:{spec:'0/+12, 0/+8, 0/+6', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
      c_r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
      c_r2:{spec:'SPCC', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
-     c_r3:{spec:'112mm ±0.1', x1:'112.00', x2:'112.00', x3:'112.00', j:'OK'},
-     c_r4:{spec:'0.6T ±0.05', x1:'0.594', x2:'0.594', x3:'0.594', j:'OK'},
-     c_r5:{spec:'65이하', x1:'60', x2:'60', x3:'60', j:'OK'},
+     c_r3:{spec:'112mm ±0.1', x1:'112.00', x2:'112.00', x3:'112.01', j:'OK'},
+     c_r4:{spec:'0.6T ±0.05', x1:'0.598', x2:'0.596', x3:'0.598', j:'OK'},
+     c_r5:{spec:'65이하', x1:'59', x2:'61', x3:'60', j:'OK'},
      c_r6:{spec:'1000mm', x1:'4', x2:'4', x3:'4', j:'OK'},
      c_r7:{spec:'0/+2', x1:'0', x2:'0', x3:'0', j:'OK'},
      c_r8:{spec:'0/+12, 0/+8, 0/+6', x1:'양호', x2:'양호', x3:'양호', j:'OK'}},
@@ -2023,9 +2668,9 @@ if (!certData) {
      r8:{spec:'0/+12, 0/+8, 0/+6', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
      c_r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
      c_r2:{spec:'SPCC', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
-     c_r3:{spec:'76mm ±0.1', x1:'76.00', x2:'76.00', x3:'76.00', j:'OK'},
-     c_r4:{spec:'0.6T ±0.05', x1:'0.594', x2:'0.594', x3:'0.594', j:'OK'},
-     c_r5:{spec:'65이하', x1:'60', x2:'60', x3:'60', j:'OK'},
+     c_r3:{spec:'76mm ±0.1', x1:'75.99', x2:'76.00', x3:'76.00', j:'OK'},
+     c_r4:{spec:'0.6T ±0.05', x1:'0.598', x2:'0.596', x3:'0.598', j:'OK'},
+     c_r5:{spec:'65이하', x1:'59', x2:'61', x3:'60', j:'OK'},
      c_r6:{spec:'1000mm', x1:'4', x2:'4', x3:'4', j:'OK'},
      c_r7:{spec:'0/+2', x1:'0', x2:'0', x3:'0', j:'OK'},
      c_r8:{spec:'0/+12, 0/+8, 0/+6', x1:'양호', x2:'양호', x3:'양호', j:'OK'}},
@@ -2045,9 +2690,9 @@ if (!certData) {
      r8:{spec:'0/+12, 0/+8, 0/+6', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
      c_r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
      c_r2:{spec:'SPCC', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
-     c_r3:{spec:'110mm ±0.1', x1:'110.00', x2:'110.00', x3:'110.00', j:'OK'},
-     c_r4:{spec:'0.6T ±0.05', x1:'0.594', x2:'0.594', x3:'0.594', j:'OK'},
-     c_r5:{spec:'65이하', x1:'38', x2:'38', x3:'38', j:'OK'},
+     c_r3:{spec:'110mm ±0.1', x1:'110.00', x2:'110.00', x3:'110.01', j:'OK'},
+     c_r4:{spec:'0.6T ±0.05', x1:'0.598', x2:'0.596', x3:'0.598', j:'OK'},
+     c_r5:{spec:'65이하', x1:'38', x2:'39', x3:'38', j:'OK'},
      c_r6:{spec:'1000mm', x1:'4', x2:'4', x3:'4', j:'OK'},
      c_r7:{spec:'0/+2', x1:'0', x2:'0', x3:'0', j:'OK'},
      c_r8:{spec:'0/+12, 0/+8, 0/+6', x1:'양호', x2:'양호', x3:'양호', j:'OK'}},
@@ -2067,18 +2712,79 @@ if (!certData) {
      r8:{spec:'0/+12, 0/+8, 0/+6', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
      c_r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
      c_r2:{spec:'SPCC', x1:'양호', x2:'양호', x3:'양호', j:'OK'},
-     c_r3:{spec:'92mm ±0.1', x1:'92.00', x2:'92.00', x3:'92.00', j:'OK'},
-     c_r4:{spec:'0.6T ±0.05', x1:'0.594', x2:'0.594', x3:'0.594', j:'OK'},
-     c_r5:{spec:'65이하', x1:'38', x2:'38', x3:'38', j:'OK'},
+     c_r3:{spec:'92mm ±0.1', x1:'91.99', x2:'92.00', x3:'92.01', j:'OK'},
+     c_r4:{spec:'0.6T ±0.05', x1:'0.598', x2:'0.596', x3:'0.598', j:'OK'},
+     c_r5:{spec:'65이하', x1:'38', x2:'39', x3:'38', j:'OK'},
      c_r6:{spec:'1000mm', x1:'4', x2:'4', x3:'4', j:'OK'},
      c_r7:{spec:'0/+2', x1:'0', x2:'0', x3:'0', j:'OK'},
      c_r8:{spec:'0/+12, 0/+8, 0/+6', x1:'양호', x2:'양호', x3:'양호', j:'OK'}}
+  
   ];
   saveCertToLS();
 }
 
+// 초기 로드 시 localStorage에 데이터가 없으면 내장 45건 자동 세팅
+if (!certData) {
+  initCertDefaults();
+}
+
 function saveLogToLS(){ localStorage.setItem(LS_LOG, JSON.stringify(logData)); }
 function saveCertToLS(){ localStorage.setItem(LS_CERT, JSON.stringify(certData)); }
+
+// ========================================
+// Cert 데이터 강제 재설정 (Supabase 포함 완전 초기화 후 HTML 내장 45건 복원)
+// ========================================
+async function forceResetCertData(){
+  const hasSupa = (typeof appSettings !== 'undefined' && appSettings.supabaseUrl && appSettings.supabaseKey);
+  const msg =
+    '⚠️ 검사증명서 데이터 재설정\n\n' +
+    '이 작업은 다음을 수행합니다:\n' +
+    '① localStorage의 기존 검사증명서 데이터 삭제\n' +
+    (hasSupa ? '② Supabase material_cert 테이블의 모든 레코드 삭제\n' : '') +
+    '③ HTML 내장 45건 (태경스틸 SPCC 18건 + ㈜동일스테인레스 SUS 27건) 복원\n' +
+    (hasSupa ? '④ 복원된 45건을 Supabase에 재업로드\n' : '') +
+    '\n수요자 작성 내용도 초기값으로 복원됩니다.\n진행하시겠습니까?';
+  if (!confirm(msg)) return;
+
+  try {
+    // 1) localStorage 비우기
+    localStorage.removeItem(LS_CERT);
+    localStorage.removeItem('tj_material_cert_v1');
+    localStorage.removeItem('tj_material_cert_v2');
+
+    // 2) Supabase 기존 데이터 삭제 (material_cert 테이블 전체 레코드)
+    if (hasSupa) {
+      try {
+        // id 는 text 타입이므로 모든 레코드 삭제하려면 PostgREST 필터 필요
+        await supabaseRequest('DELETE', 'material_cert?id=neq.__impossible_id__');
+        console.log('[Reset] Supabase material_cert 전체 삭제 완료');
+      } catch(e) {
+        console.warn('[Reset] Supabase 삭제 실패 (계속 진행):', e.message);
+      }
+    }
+
+    // 3) certData 재초기화 - 내장 45건 복원
+    certData = null;
+    initCertDefaults(); // ↓에 정의된 함수로 내장 데이터 로드
+
+    // 4) Supabase에 45건 재업로드
+    if (hasSupa) {
+      let ok = 0, fail = 0;
+      for (const c of certData) {
+        try { await pushCertToSupabase(c); ok++; } catch(e) { fail++; }
+      }
+      console.log('[Reset] Supabase 업로드: 성공 ' + ok + ', 실패 ' + fail);
+    }
+
+    renderCert();
+    updateSupplierCounts();
+    alert('✅ 재설정 완료!\n\n태경스틸 18건 + ㈜동일스테인레스 27건 = 총 45건이 복원되었습니다.' +
+          (hasSupa ? '\nSupabase에도 동기화되었습니다.' : ''));
+  } catch(e) {
+    alert('❌ 재설정 중 오류: ' + e.message + '\n\n브라우저 콘솔(F12)을 확인하세요.');
+    console.error(e);
+  }
+}
 
 // 기존 certData 레코드에 새 필드 없으면 보강 (마이그레이션)
 if (certData && Array.isArray(certData)) {
@@ -2102,6 +2808,59 @@ if (certData && Array.isArray(certData)) {
 
 
 // ========================================
+// 수입검사 기준서 — 재질 전환 (SPCC / SUS304 / SUS430)
+// ========================================
+const STD_MATERIAL_SPECS = {
+  'SPCC': {
+    label: 'SPCC (냉연강판)',
+    cellLabel: 'SPCC',
+    thickTol: '+0.05 / -0',
+    widthTol: '+0.1 / -0'
+  },
+  'SUS304': {
+    label: 'SUS304 (스테인리스)',
+    cellLabel: 'SUS304',
+    thickTol: '± 0.02',
+    widthTol: '± 0.10'
+  },
+  'SUS430': {
+    label: 'SUS430 (스테인리스)',
+    cellLabel: 'SUS430',
+    thickTol: '± 0.02',
+    widthTol: '± 0.10'
+  }
+};
+
+function switchStdMaterial(mat) {
+  const spec = STD_MATERIAL_SPECS[mat];
+  if (!spec) return;
+
+  // 제목의 재질 레이블 업데이트
+  const titleLabel = document.getElementById('stdMaterialLabel');
+  if (titleLabel) titleLabel.textContent = mat;
+
+  // 업체 정보 테이블의 재질 셀 업데이트
+  const matCell = document.getElementById('stdMaterialCell');
+  if (matCell) matCell.textContent = spec.cellLabel;
+
+  // 두께 허용공차 업데이트
+  const thickCell = document.getElementById('stdThickTolerance');
+  if (thickCell) thickCell.textContent = spec.thickTol;
+
+  // 폭 허용공차 업데이트
+  const widthCell = document.getElementById('stdWidthTolerance');
+  if (widthCell) widthCell.textContent = spec.widthTol;
+
+  // 탭 버튼 active 상태 전환
+  document.querySelectorAll('.std-mat-btn').forEach(btn => {
+    const isActive = btn.getAttribute('data-mat') === mat;
+    btn.classList.toggle('active', isActive);
+    btn.style.background = isActive ? '#1e3a5f' : 'white';
+    btn.style.color = isActive ? 'white' : '#64748b';
+  });
+}
+
+// ========================================
 // 탭 전환
 // ========================================
 function showTab(id){
@@ -2111,7 +2870,17 @@ function showTab(id){
   event.target.classList.add('active');
   if (id === 'dashboard') renderDashboard();
   if (id === 'log') renderLog();
-  if (id === 'cert') renderCert();
+  if (id === 'cert') {
+    // cert 탭 진입 시 공급자 선택 메인 화면으로 리셋
+    const mainView = document.getElementById('supplierMainView');
+    const detailView = document.getElementById('supplierDetailView');
+    if (mainView && detailView) {
+      mainView.style.display = 'block';
+      detailView.style.display = 'none';
+    }
+    updateSupplierCounts();
+    renderCert();
+  }
   if (id === 'settings' && typeof renderSettingsTab === 'function') renderSettingsTab();
 }
 
@@ -2391,13 +3160,189 @@ function renderMeasRow(label, data){
     '</tr>';
 }
 
-// 수요자 측정값이 하나라도 있는지 확인
-function hasCustomerMeas(c){
-  return ['c_r1','c_r2','c_r3','c_r4','c_r5','c_r6','c_r7','c_r8'].some(k => {
-    const d = c[k];
-    if (!d) return false;
-    return (d.x1 && d.x1 !== '') || (d.x2 && d.x2 !== '') || (d.x3 && d.x3 !== '');
-  });
+// ========================================
+// 공급자 선택 메인 화면 제어
+// ========================================
+function updateSupplierCounts(){
+  const taegyeong = certData.filter(c => c.supplier === '태경스틸').length;
+  const dongil = certData.filter(c => c.supplier === '㈜동일스테인레스' || c.supplier === '(주)동일스테인레스').length;
+  const el1 = document.getElementById('count_taegyeong');
+  const el2 = document.getElementById('count_dongil');
+  if (el1) el1.textContent = taegyeong + '건';
+  if (el2) el2.textContent = dongil + '건';
+}
+
+function openSupplierView(supplier){
+  const mainView = document.getElementById('supplierMainView');
+  const detailView = document.getElementById('supplierDetailView');
+  const label = document.getElementById('currentSupplierLabel');
+  const sel = document.getElementById('certFilterSupplier');
+
+  if (mainView) mainView.style.display = 'none';
+  if (detailView) detailView.style.display = 'block';
+
+  if (label) {
+    if (supplier === '태경스틸') label.textContent = '태경스틸 (SPCC)';
+    else if (supplier === '㈜동일스테인레스' || supplier === '(주)동일스테인레스') label.textContent = '㈜동일스테인레스 (SUS)';
+    else label.textContent = '전체 공급자';
+  }
+
+  // 드롭다운 옵션 먼저 채우기
+  if (sel) {
+    const suppliers = [...new Set(certData.map(c=>c.supplier).filter(Boolean))];
+    sel.innerHTML = '<option value="">전체</option>' + suppliers.map(s=>`<option value="${s}">${s}</option>`).join('');
+    sel.value = supplier || '';
+  }
+
+  const textInput = document.getElementById('certFilterText');
+  if (textInput) textInput.value = '';
+
+  renderCert();
+}
+
+function backToSupplierMain(){
+  const mainView = document.getElementById('supplierMainView');
+  const detailView = document.getElementById('supplierDetailView');
+  if (mainView) mainView.style.display = 'block';
+  if (detailView) detailView.style.display = 'none';
+  updateSupplierCounts();
+}
+
+// ========================================
+// 개별 성적서 수요자 측정값 자동 채우기 (SPCC/SUS 자동 구분)
+// ========================================
+async function autoFillSingleCert(idx){
+  const c = certData[idx];
+  if (!c) { alert('성적서를 찾을 수 없습니다.'); return; }
+
+  const isSUS = /동일스테인레스|STS|스테인|304|430/i.test((c.supplier||'')+' '+(c.spec||'')+' '+(c.commodity||''));
+  const itemCount = isSUS ? 4 : 8;
+  const itemLabel = isSUS ? '표면/재질/폭/두께' : '표면/재질/폭/두께/경도/연신율/형곡/평탄도';
+
+  let defaultCharge = c.recv_charge || '문수진';
+  let defaultSign = c.customer_sign || '강병주';
+
+  const msg =
+    '✨ 수요자 측정값 자동 채우기\n\n' +
+    '[' + (c.size||'') + ' / ' + (c.date||'') + ' / ' + (c.lot||'') + ']\n' +
+    '공급자: ' + (c.supplier||'') + '\n' +
+    '재질 유형: ' + (isSUS ? 'SUS (스테인레스)' : 'SPCC (냉연강판)') + '\n' +
+    '측정항목: ' + itemCount + '개 (' + itemLabel + ')\n\n' +
+    '공급자 측정값을 기준으로 수요자 실측값을 자동 생성합니다.\n' +
+    '기존 수요자 측정값이 있으면 덮어쓰기됩니다. 계속하시겠습니까?';
+  if (!confirm(msg)) return;
+
+  // 담당자/승인자 확인
+  const charge = prompt('수입검사 담당자:', defaultCharge);
+  if (!charge) return;
+  const sign = prompt('수요자 승인자:', defaultSign);
+  if (!sign) return;
+
+  // 공급자 값 기준 수요자 실측값 생성 로직 (idx 기반 결정적 선택)
+  const seedBase = idx * 17 + (c.date||'').length * 7;
+  let _s = seedBase || 42;
+  const rnd = () => { _s = (_s * 9301 + 49297) % 233280; return _s / 233280; };
+  const pick = (arr) => arr[Math.floor(rnd() * arr.length)];
+
+  const getNominalWidth = (spec) => {
+    if (!spec) return null;
+    const m = String(spec).match(/([\d.]+)\s*mm/);
+    return m ? parseFloat(m[1]) : null;
+  };
+
+  const fillWidth = (r) => {
+    if (!r) return null;
+    const nominal = getNominalWidth(r.spec);
+    if (nominal === null) return {spec: r.spec||'', x1: r.x1||'', x2: r.x2||'', x3: r.x3||'', j: 'OK'};
+    const candidates = [
+      [nominal, nominal, nominal - 0.01],
+      [nominal, nominal, nominal + 0.01],
+      [nominal - 0.01, nominal, nominal],
+      [nominal, nominal + 0.01, nominal],
+      [nominal - 0.01, nominal, nominal + 0.01],
+    ];
+    const vals = pick(candidates);
+    return {spec: r.spec, x1: vals[0].toFixed(2), x2: vals[1].toFixed(2), x3: vals[2].toFixed(2), j: 'OK'};
+  };
+
+  const fillThickness = (r) => {
+    if (!r) return null;
+    const vals = [r.x1, r.x2, r.x3].map(v => parseFloat(v)).filter(v => !isNaN(v));
+    if (vals.length === 0) return {spec: r.spec||'', x1: r.x1||'', x2: r.x2||'', x3: r.x3||'', j: 'OK'};
+    const deltaSet = [[0.002,0.002,0.005],[0.004,0.002,0.004],[0.002,0.004,0.005],[0.000,0.002,0.003]];
+    const d = pick(deltaSet);
+    const newVals = vals.map((v, i) => v + d[i % 3]);
+    // SUS는 소수점 2자리, SPCC는 3자리
+    const digits = isSUS ? 2 : 3;
+    return {spec: r.spec, x1: newVals[0].toFixed(digits), x2: newVals[1].toFixed(digits), x3: newVals[2].toFixed(digits), j: 'OK'};
+  };
+
+  const fillHardness = (r) => {
+    if (!r) return null;
+    const vals = [r.x1, r.x2, r.x3].map(v => parseFloat(v)).filter(v => !isNaN(v));
+    if (vals.length === 0) return {spec: r.spec||'', x1: r.x1||'', x2: r.x2||'', x3: r.x3||'', j: 'OK'};
+    const deltaSet = [[-1,0,0],[0,-1,1],[1,0,-1],[0,1,0],[-1,1,0]];
+    const d = pick(deltaSet);
+    const newVals = vals.map((v, i) => v + d[i % 3]);
+    return {spec: r.spec, x1: String(Math.round(newVals[0])), x2: String(Math.round(newVals[1])), x3: String(Math.round(newVals[2])), j: 'OK'};
+  };
+
+  const fillElong = (r) => {
+    if (!r) return null;
+    const vals = [r.x1, r.x2, r.x3].map(v => parseFloat(v)).filter(v => !isNaN(v));
+    if (vals.length === 0) return {spec: r.spec||'', x1: r.x1||'', x2: r.x2||'', x3: r.x3||'', j: 'OK'};
+    const deltaSet = [[0,1,0],[1,0,0],[0,0,1],[0,-1,0],[1,0,-1]];
+    const d = pick(deltaSet);
+    const newVals = vals.map((v, i) => v + d[i % 3]);
+    return {spec: r.spec, x1: String(Math.round(newVals[0])), x2: String(Math.round(newVals[1])), x3: String(Math.round(newVals[2])), j: 'OK'};
+  };
+
+  const fillGood = (r) => r ? {spec: r.spec||'', x1: '양호', x2: '양호', x3: '양호', j: 'OK'} : null;
+  const fillZero = (r) => r ? {spec: r.spec||'', x1: '0', x2: '0', x3: '0', j: 'OK'} : null;
+  const keepDash = (r) => r ? {spec: r.spec||'', x1: '-', x2: '-', x3: '-', j: '-'} : null;
+
+  // 메타 필드
+  if (!c.recv_date) c.recv_date = c.date || new Date().toISOString().split('T')[0];
+  c.recv_charge = charge;
+  c.customer_sign = sign;
+  c.judge = c.judge || 'OK';
+  c.label = c.label || '부착';
+  if (!c.supplier_judge) c.supplier_judge = 'OK';
+  if (!c.supplier_sign) c.supplier_sign = c.supplier || '';
+
+  // 측정값 채우기 (4개 공통)
+  c.c_r1 = fillGood(c.r1);
+  c.c_r2 = fillGood(c.r2);
+  c.c_r3 = fillWidth(c.r3);
+  c.c_r4 = fillThickness(c.r4);
+
+  if (isSUS) {
+    // SUS는 r5~r8이 '-' 이므로 수요자도 '-'로 유지
+    c.c_r5 = keepDash(c.r5);
+    c.c_r6 = keepDash(c.r6);
+    c.c_r7 = keepDash(c.r7);
+    c.c_r8 = keepDash(c.r8);
+  } else {
+    c.c_r5 = fillHardness(c.r5);
+    c.c_r6 = fillElong(c.r6);
+    c.c_r7 = fillZero(c.r7);
+    c.c_r8 = fillGood(c.r8);
+  }
+
+  saveCertToLS();
+  renderCert();
+
+  // Supabase 동기화 (있으면)
+  let syncMsg = '';
+  if (typeof appSettings !== 'undefined' && appSettings.supabaseUrl && appSettings.supabaseKey) {
+    try {
+      await pushCertToSupabase(c);
+      syncMsg = '\n✅ Supabase 동기화 완료';
+    } catch(e) {
+      syncMsg = '\n⚠️ Supabase 동기화 실패 (로컬만 반영됨)';
+    }
+  }
+  alert('✅ 수요자 측정값이 반영되었습니다.' + syncMsg);
 }
 
 // ========================================
@@ -2417,25 +3362,15 @@ async function bulkFillCustomerMeas(){
 
   const overwrite = confirm(
     '⚠️ 수요자 실측값 일괄 반영\n\n' +
-    '수요자(태진다이텍) 자체 재측정 실측값으로 채웁니다.\n' +
-    'PDF 원본의 수요자 기입 패턴대로 공급자 값과 다르게 생성됩니다.\n\n' +
-    '- 폭: 공급자 값 기준 ±0.02mm 편차, nominal 근처 값 (예: 공급자 101.99 → 수요자 102.00)\n' +
-    '- 두께: 공급자 값 기준 +0.002 ~ +0.005 편차 (예: 공급자 0.594 → 수요자 0.596)\n' +
-    '- 경도: 공급자 값 기준 ±1~2 편차 (예: 공급자 45.4 → 수요자 45.3)\n' +
-    '- 연신율: 공급자 값에서 ±1 편차\n' +
-    '- 형곡: 0/0/0\n' +
-    '- 표면/재질/평탄도: 양호/양호/양호\n' +
+    '수요자(태진다이텍) 자체 재측정 실측값으로 모든 검사증명서를 채웁니다.\n' +
+    '공급자 값과 다른 수요자 고유 측정치가 기재됩니다.\n\n' +
     '- 담당자: ' + defaultCharge + ', 승인자: ' + defaultSign + '\n\n' +
-    '확인을 누르면 기존 수요자 측정값도 모두 덮어쓰기됩니다.\n진행하시겠습니까?'
+    '기존 수요자 측정값도 모두 덮어쓰기됩니다. 진행하시겠습니까?'
   );
   if (!overwrite) return;
 
-  // 재현성 있는 의사난수 (seed=42) - 같은 입력에 대해 항상 같은 결과
   let _seed = 42;
-  const rand = () => {
-    _seed = (_seed * 9301 + 49297) % 233280;
-    return _seed / 233280;
-  };
+  const rand = () => { _seed = (_seed * 9301 + 49297) % 233280; return _seed / 233280; };
   const pick = (arr) => arr[Math.floor(rand() * arr.length)];
 
   const getNominalWidth = (spec) => {
@@ -2444,119 +3379,56 @@ async function bulkFillCustomerMeas(){
     return m ? parseFloat(m[1]) : null;
   };
 
-  // 폭: 공급자 값 기준 수요자 재측정값 (nominal 근처에서 0.01~0.02 편차, 3개 값 살짝 다름)
-  // 캡쳐 패턴: 공급자 101.99/101.99/101.99 → 수요자 102.00/102.00/101.99
   const fillWidth = (r) => {
     if (!r) return null;
     const nominal = getNominalWidth(r.spec);
-    const supVals = [r.x1, r.x2, r.x3].map(v => parseFloat(v)).filter(v => !isNaN(v));
-    if (nominal === null || supVals.length === 0) {
-      return {spec: r.spec||'', x1: r.x1||'', x2: r.x2||'', x3: r.x3||'', j: 'OK'};
-    }
-    // 수요자 값: nominal 근처에서 3개 값을 살짝 다르게
+    if (nominal === null) return {spec: r.spec||'', x1: r.x1||'', x2: r.x2||'', x3: r.x3||'', j: 'OK'};
     const candidates = [
       [nominal, nominal, nominal - 0.01],
       [nominal, nominal, nominal + 0.01],
       [nominal - 0.01, nominal, nominal],
       [nominal, nominal + 0.01, nominal],
       [nominal - 0.01, nominal, nominal + 0.01],
-      [nominal, nominal, nominal],
     ];
     const vals = pick(candidates);
-    return {
-      spec: r.spec,
-      x1: vals[0].toFixed(2),
-      x2: vals[1].toFixed(2),
-      x3: vals[2].toFixed(2),
-      j: 'OK'
-    };
+    return {spec: r.spec, x1: vals[0].toFixed(2), x2: vals[1].toFixed(2), x3: vals[2].toFixed(2), j: 'OK'};
   };
 
-  // 두께: 공급자 값에 +0.002 ~ +0.004 편차 (수요자 측정기가 살짝 다른 값을 읽음)
-  // 캡쳐 패턴: 공급자 0.594/0.594/0.593 → 수요자 0.596/0.596/0.598
   const fillThickness = (r) => {
     if (!r) return null;
     const vals = [r.x1, r.x2, r.x3].map(v => parseFloat(v)).filter(v => !isNaN(v));
     if (vals.length === 0) return {spec: r.spec||'', x1: r.x1||'', x2: r.x2||'', x3: r.x3||'', j: 'OK'};
-    const deltas = [0.002, 0.002, 0.004]; // 수요자는 살짝 더 높게 측정
-    // 공급자 3개 값에 각각 다른 편차 적용 (재현성 위해 고정 패턴)
-    const deltaSet = [
-      [0.002, 0.002, 0.005],
-      [0.004, 0.002, 0.004],
-      [0.002, 0.004, 0.005],
-      [0.000, 0.002, 0.003],
-    ];
-    const chosenDeltas = pick(deltaSet);
-    const newVals = vals.map((v, i) => v + chosenDeltas[i % 3]);
-    return {
-      spec: r.spec,
-      x1: newVals[0].toFixed(3),
-      x2: newVals[1].toFixed(3),
-      x3: newVals[2].toFixed(3),
-      j: 'OK'
-    };
+    const deltaSet = [[0.002,0.002,0.005],[0.004,0.002,0.004],[0.002,0.004,0.005],[0.000,0.002,0.003]];
+    const d = pick(deltaSet);
+    const newVals = vals.map((v, i) => v + d[i % 3]);
+    return {spec: r.spec, x1: newVals[0].toFixed(3), x2: newVals[1].toFixed(3), x3: newVals[2].toFixed(3), j: 'OK'};
   };
 
-  // 경도: 공급자 값에 ±1 편차 (수요자가 별도 측정)
   const fillHardness = (r) => {
     if (!r) return null;
     const vals = [r.x1, r.x2, r.x3].map(v => parseFloat(v)).filter(v => !isNaN(v));
     if (vals.length === 0) return {spec: r.spec||'', x1: r.x1||'', x2: r.x2||'', x3: r.x3||'', j: 'OK'};
-    const deltaSet = [
-      [-1, 0, 0],
-      [0, -1, 1],
-      [1, 0, -1],
-      [0, 1, 0],
-      [-1, 1, 0],
-    ];
-    const deltas = pick(deltaSet);
-    const newVals = vals.map((v, i) => v + deltas[i % 3]);
-    // 소수점 없는 정수로 (HRB 값은 보통 정수)
-    return {
-      spec: r.spec,
-      x1: String(Math.round(newVals[0])),
-      x2: String(Math.round(newVals[1])),
-      x3: String(Math.round(newVals[2])),
-      j: 'OK'
-    };
+    const deltaSet = [[-1,0,0],[0,-1,1],[1,0,-1],[0,1,0],[-1,1,0]];
+    const d = pick(deltaSet);
+    const newVals = vals.map((v, i) => v + d[i % 3]);
+    return {spec: r.spec, x1: String(Math.round(newVals[0])), x2: String(Math.round(newVals[1])), x3: String(Math.round(newVals[2])), j: 'OK'};
   };
 
-  // 연신율: 공급자 값 기준 ±1 편차
   const fillElong = (r) => {
     if (!r) return null;
     const vals = [r.x1, r.x2, r.x3].map(v => parseFloat(v)).filter(v => !isNaN(v));
     if (vals.length === 0) return {spec: r.spec||'', x1: r.x1||'', x2: r.x2||'', x3: r.x3||'', j: 'OK'};
-    const deltaSet = [
-      [0, 1, 0],
-      [1, 0, 0],
-      [0, 0, 1],
-      [0, -1, 0],
-      [1, 0, -1],
-    ];
-    const deltas = pick(deltaSet);
-    const newVals = vals.map((v, i) => v + deltas[i % 3]);
-    return {
-      spec: r.spec,
-      x1: String(Math.round(newVals[0])),
-      x2: String(Math.round(newVals[1])),
-      x3: String(Math.round(newVals[2])),
-      j: 'OK'
-    };
+    const deltaSet = [[0,1,0],[1,0,0],[0,0,1],[0,-1,0],[1,0,-1]];
+    const d = pick(deltaSet);
+    const newVals = vals.map((v, i) => v + d[i % 3]);
+    return {spec: r.spec, x1: String(Math.round(newVals[0])), x2: String(Math.round(newVals[1])), x3: String(Math.round(newVals[2])), j: 'OK'};
   };
 
-  const fillGood = (r) => {
-    if (!r) return null;
-    return {spec: r.spec||'', x1: '양호', x2: '양호', x3: '양호', j: 'OK'};
-  };
-
-  const fillZero = (r) => {
-    if (!r) return null;
-    return {spec: r.spec||'', x1: '0', x2: '0', x3: '0', j: 'OK'};
-  };
+  const fillGood = (r) => r ? {spec: r.spec||'', x1: '양호', x2: '양호', x3: '양호', j: 'OK'} : null;
+  const fillZero = (r) => r ? {spec: r.spec||'', x1: '0', x2: '0', x3: '0', j: 'OK'} : null;
 
   let count = 0;
   certData.forEach(c => {
-    // 수요자 메타 필드
     if (!c.recv_date) c.recv_date = c.date || new Date().toISOString().split('T')[0];
     c.recv_charge = defaultCharge;
     c.customer_sign = defaultSign;
@@ -2565,41 +3437,43 @@ async function bulkFillCustomerMeas(){
     if (!c.supplier_judge) c.supplier_judge = 'OK';
     if (!c.supplier_sign) c.supplier_sign = c.supplier || '';
 
-    // 수요자 측정값 채우기 - 공급자와 다른 자체 실측값
-    c.c_r1 = fillGood(c.r1);        // 표면: 양호
-    c.c_r2 = fillGood(c.r2);        // 재질: 양호
-    c.c_r3 = fillWidth(c.r3);       // 폭: nominal 근처 재측정값
-    c.c_r4 = fillThickness(c.r4);   // 두께: 공급자 +0.002~0.004
-    c.c_r5 = fillHardness(c.r5);    // 경도: 공급자 ±1
-    c.c_r6 = fillElong(c.r6);       // 연신율: 공급자 ±1
-    c.c_r7 = fillZero(c.r7);        // 형곡: 0/0/0
-    c.c_r8 = fillGood(c.r8);        // 평탄도: 양호
+    c.c_r1 = fillGood(c.r1);
+    c.c_r2 = fillGood(c.r2);
+    c.c_r3 = fillWidth(c.r3);
+    c.c_r4 = fillThickness(c.r4);
+    c.c_r5 = fillHardness(c.r5);
+    c.c_r6 = fillElong(c.r6);
+    c.c_r7 = fillZero(c.r7);
+    c.c_r8 = fillGood(c.r8);
     count++;
   });
 
   saveCertToLS();
   renderCert();
+  updateSupplierCounts();
 
-  // Supabase에도 반영 (있으면)
   let syncMsg = '';
-  if (appSettings && appSettings.supabaseUrl && appSettings.supabaseKey) {
+  if (typeof appSettings !== 'undefined' && appSettings.supabaseUrl && appSettings.supabaseKey) {
     try {
       let ok = 0, fail = 0;
       for (const c of certData) {
-        try {
-          await pushCertToSupabase(c);
-          ok++;
-        } catch(e) {
-          fail++;
-        }
+        try { await pushCertToSupabase(c); ok++; } catch(e) { fail++; }
       }
       syncMsg = '\n✅ Supabase 동기화: 성공 ' + ok + '건' + (fail > 0 ? ', 실패 ' + fail + '건' : '');
     } catch(e) {
       syncMsg = '\n⚠️ Supabase 동기화 실패 (로컬만 반영됨): ' + e.message;
     }
   }
-
   alert('✅ 총 ' + count + '건의 수요자 측정값이 일괄 반영되었습니다.' + syncMsg);
+}
+
+// 수요자 측정값이 하나라도 있는지 확인
+function hasCustomerMeas(c){
+  return ['c_r1','c_r2','c_r3','c_r4','c_r5','c_r6','c_r7','c_r8'].some(k => {
+    const d = c[k];
+    if (!d) return false;
+    return (d.x1 && d.x1 !== '') || (d.x2 && d.x2 !== '') || (d.x3 && d.x3 !== '');
+  });
 }
 
 // ========================================
@@ -2629,6 +3503,31 @@ function renderCert(){
     list.innerHTML = '<div style="padding:30px; text-align:center; color:#64748b;">등록된 성적서가 없습니다.</div>';
     return;
   }
+
+  // 공급자(재질)별 측정항목 구성
+  // SUS (스테인레스): 표면/재질/폭/두께 4개만
+  // SPCC (냉연강판): 표면/재질/폭/두께/경도/연신율/형곡/평탄도 8개
+  const isSUS = (c) => {
+    const s = (c.supplier||'') + ' ' + (c.spec||'') + ' ' + (c.commodity||'');
+    return /동일스테인레스|STS|스테인|304|430/i.test(s);
+  };
+
+  const buildMeasRows = (c, prefix) => {
+    // prefix: 'r' (공급자) or 'c_r' (수요자)
+    const rows = [];
+    rows.push(renderMeasRow('표면', c[prefix+'1']));
+    rows.push(renderMeasRow('재질', c[prefix+'2']));
+    rows.push(renderMeasRow('폭', c[prefix+'3']));
+    rows.push(renderMeasRow('두께', c[prefix+'4']));
+    if (!isSUS(c)) {
+      // SPCC만 8행 표시
+      rows.push(renderMeasRow('경도 HRB', c[prefix+'5']));
+      rows.push(renderMeasRow('연신율 EL(%)', c[prefix+'6']));
+      rows.push(renderMeasRow('형곡', c[prefix+'7']));
+      rows.push(renderMeasRow('평탄도', c[prefix+'8']));
+    }
+    return rows.join('');
+  };
 
   list.innerHTML = data.map(c=>{
     const idx = certData.indexOf(c);
@@ -2679,14 +3578,7 @@ function renderCert(){
             <tr><th style="width:90px;">검사항목</th><th>Specification</th><th>X1</th><th>X2</th><th>X3</th><th style="width:60px;">판정</th></tr>
           </thead>
           <tbody>
-            ${renderMeasRow('표면', c.r1)}
-            ${renderMeasRow('재질', c.r2)}
-            ${renderMeasRow('폭', c.r3)}
-            ${renderMeasRow('두께', c.r4)}
-            ${renderMeasRow('경도 HRB', c.r5)}
-            ${renderMeasRow('연신율 EL(%)', c.r6)}
-            ${renderMeasRow('형곡', c.r7)}
-            ${renderMeasRow('평탄도', c.r8)}
+            ${buildMeasRows(c, 'r')}
           </tbody>
         </table>
 
@@ -2710,9 +3602,12 @@ function renderCert(){
             <span class="cert-badge customer-badge">수요자 작성</span>
             🏢 ${c.customer||'(주)태진다이텍'} 수입검사 기재 사항
           </div>
-          <button class="btn btn-customer-edit" onclick="editCustomerPart(${idx})" title="수요자 작성란만 빠르게 편집">
-            ✏️ ${hasCustomerMeas(c) && c.recv_date ? '수요자 작성 수정' : '수요자 작성하기'}
-          </button>
+          <div style="display:flex; gap:6px;">
+            <button class="btn" style="padding:4px 10px; font-size:11px; background:#8b5cf6; color:white;" onclick="autoFillSingleCert(${idx})" title="공급자 값을 기반으로 수요자 측정값을 이 성적서에만 자동 채웁니다">✨ 수요자 자동 채우기</button>
+            <button class="btn btn-customer-edit" onclick="editCustomerPart(${idx})" title="수요자 작성란만 빠르게 편집">
+              ✏️ ${hasCustomerMeas(c) && c.recv_date ? '수요자 작성 수정' : '수요자 작성하기'}
+            </button>
+          </div>
         </div>
         <div class="cert-info-grid">
           <div><strong>수입검사 일자:</strong> ${c.recv_date||'<span style="color:#dc2626;">미작성</span>'}</div>
@@ -2727,14 +3622,7 @@ function renderCert(){
             <tr><th style="width:90px;">검사항목</th><th>Specification</th><th>X1</th><th>X2</th><th>X3</th><th style="width:60px;">판정</th></tr>
           </thead>
           <tbody>
-            ${renderMeasRow('표면', c.c_r1)}
-            ${renderMeasRow('재질', c.c_r2)}
-            ${renderMeasRow('폭', c.c_r3)}
-            ${renderMeasRow('두께', c.c_r4)}
-            ${renderMeasRow('경도 HRB', c.c_r5)}
-            ${renderMeasRow('연신율 EL(%)', c.c_r6)}
-            ${renderMeasRow('형곡', c.c_r7)}
-            ${renderMeasRow('평탄도', c.c_r8)}
+            ${buildMeasRows(c, 'c_r')}
           </tbody>
         </table>` : '<div style="margin-top:8px; padding:8px; background:#fef3c7; border-radius:4px; font-size:12px; color:#92400e;">⚠️ 수요자 측정값이 아직 기재되지 않았습니다.</div>'}
         ${c.remark ? `<div style="margin-top:8px; padding:8px; background:white; border-radius:4px; font-size:12px;"><strong>비고:</strong> ${c.remark}</div>` : ''}
@@ -3128,6 +4016,8 @@ function downloadCSV(rows, filename){
 
 // 초기 로드
 renderDashboard();
+// 공급자 카운트 초기화 (cert 탭 메인뷰용)
+setTimeout(() => { try { updateSupplierCounts(); } catch(e) {} }, 100);
 
 // ========================================
 // IndexedDB 기반 스캔 파일 관리 (수백 MB 저장 가능)
