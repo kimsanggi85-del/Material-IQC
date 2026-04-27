@@ -1273,7 +1273,7 @@
 
           <div style="text-align:center; margin-top:25px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
             <button class="btn btn-secondary" onclick="openSupplierView('')" style="padding:8px 20px; font-size:13px;">📋 전체 보기</button>
-            <button class="btn" onclick="forceResetCertData()" style="padding:8px 20px; font-size:13px; background:#dc2626; color:white;" title="localStorage와 Supabase의 기존 성적서 데이터를 삭제하고 HTML에 내장된 45건 데이터(태경 18건 + 동일 27건)로 재설정합니다.">🔄 검사증명서 데이터 재설정 (45건 복원)</button>
+            <button class="btn" onclick="forceResetCertData()" style="padding:8px 20px; font-size:13px; background:#dc2626; color:white;" title="localStorage와 Supabase의 기존 성적서/일보 데이터를 삭제하고 HTML에 내장된 데이터로 재설정합니다.">🔄 데이터 재설정 (성적서 45건 + 일보 54건 복원)</button>
           </div>
         </div>
 
@@ -1753,39 +1753,75 @@ let certData = JSON.parse(localStorage.getItem(LS_CERT) || 'null');
 // ========================================
 // 초기 데이터 (PDF에서 추출한 실제 데이터)
 // ========================================
-if (!logData) {
+// 기본 수입검사일보 데이터 초기화 (재설정 시 재호출 가능)
+function initLogDefaults() {
   logData = [
+
     // PDF 1페이지 데이터
-    {date:'2026-03-10', material:'SPCC', appear:'OK', thick_spec:0.6, width_spec:102, thick:0.6, width:102.00, in_kg:3065, count:3, bad_kg:0, heat:'SP24225', nc:'', label:'부착', judge:'OK', charge:'홍길동', boss:'차장'},
-    {date:'2026-03-11', material:'SPCC', appear:'OK', thick_spec:0.6, width_spec:84, thick:0.6, width:84.00, in_kg:519, count:2, bad_kg:0, heat:'SB34P84', nc:'', label:'부착', judge:'OK', charge:'홍길동', boss:'차장'},
-    {date:'2026-03-13', material:'SPCC', appear:'OK', thick_spec:0.6, width_spec:112, thick:0.6, width:112.00, in_kg:1456, count:3, bad_kg:0, heat:'SQ06431', nc:'', label:'부착', judge:'OK', charge:'운전', boss:'대리'},
-    {date:'2026-03-13', material:'SPCC', appear:'OK', thick_spec:0.6, width_spec:84, thick:0.6, width:84.00, in_kg:1432, count:3, bad_kg:0, heat:'SQ06431', nc:'', label:'부착', judge:'OK', charge:'운전', boss:'차장'},
-    {date:'2026-03-17', material:'SPCC', appear:'OK', thick_spec:0.6, width_spec:84, thick:0.6, width:84.00, in_kg:1382, count:3, bad_kg:0, heat:'SB34P84', nc:'', label:'부착', judge:'OK', charge:'운전', boss:'차장'},
-    {date:'2026-03-17', material:'SPCC', appear:'OK', thick_spec:0.6, width_spec:80, thick:0.6, width:80.00, in_kg:1822, count:4, bad_kg:0, heat:'SQ06431', nc:'', label:'부착', judge:'OK', charge:'운전', boss:'차장'},
-    {date:'2026-03-17', material:'SPCC', appear:'OK', thick_spec:0.6, width_spec:112, thick:0.6, width:112.00, in_kg:3450, count:6, bad_kg:0, heat:'SQ06431', nc:'', label:'부착', judge:'OK', charge:'운전', boss:'차장'},
-    {date:'2026-04-02', material:'SPCC', appear:'OK', thick_spec:0.6, width_spec:84, thick:0.6, width:84.00, in_kg:884, count:2, bad_kg:0, heat:'SB34P84', nc:'', label:'부착', judge:'OK', charge:'운전', boss:'차장'},
-    {date:'2026-04-02', material:'SPCC', appear:'OK', thick_spec:0.6, width_spec:110, thick:0.6, width:110.00, in_kg:3156, count:6, bad_kg:0, heat:'SB34P84', nc:'', label:'부착', judge:'OK', charge:'운전', boss:'차장'},
-    {date:'2026-04-02', material:'SPCC', appear:'OK', thick_spec:0.6, width_spec:116, thick:0.6, width:116.00, in_kg:1960, count:5, bad_kg:0, heat:'SQ06431', nc:'', label:'부착', judge:'OK', charge:'운전', boss:'차장'},
-    {date:'2026-04-03', material:'SPCC', appear:'OK', thick_spec:0.6, width_spec:112, thick:0.6, width:112.00, in_kg:3426, count:6, bad_kg:0, heat:'SQ06431', nc:'', label:'부착', judge:'OK', charge:'운전', boss:'차장'},
-    {date:'2026-04-07', material:'SPCC', appear:'OK', thick_spec:0.6, width_spec:102, thick:0.6, width:102.00, in_kg:3188, count:6, bad_kg:0, heat:'SP36079', nc:'', label:'부착', judge:'OK', charge:'운전', boss:'차장'},
-    {date:'2026-04-08', material:'SPCC', appear:'OK', thick_spec:0.6, width_spec:114, thick:0.6, width:114.00, in_kg:1136, count:2, bad_kg:0, heat:'SQ06431', nc:'', label:'부착', judge:'OK', charge:'운전', boss:'차장'},
-    {date:'2026-04-08', material:'SPCC', appear:'OK', thick_spec:0.6, width_spec:112, thick:0.6, width:112.00, in_kg:3426, count:6, bad_kg:0, heat:'SQ06431', nc:'', label:'부착', judge:'OK', charge:'운전', boss:'차장'},
-    {date:'2026-04-09', material:'SPCC', appear:'OK', thick_spec:0.6, width_spec:64, thick:0.9, width:64.00, in_kg:990, count:6, bad_kg:0, heat:'SP08209', nc:'', label:'부착', judge:'OK', charge:'운전', boss:'차장'},
-    {date:'2026-04-09', material:'SPCC', appear:'OK', thick_spec:0.6, width_spec:114, thick:0.6, width:114.00, in_kg:3240, count:6, bad_kg:0, heat:'SP36079', nc:'', label:'부착', judge:'OK', charge:'운전', boss:'차장'},
-    {date:'2026-04-13', material:'SPCC', appear:'OK', thick_spec:0.6, width_spec:102, thick:0.6, width:102.00, in_kg:3382, count:7, bad_kg:0, heat:'SP36079', nc:'', label:'부착', judge:'OK', charge:'운전', boss:'차장'},
-    {date:'2026-04-13', material:'SPCC', appear:'OK', thick_spec:0.6, width_spec:112, thick:0.6, width:112.00, in_kg:3178, count:6, bad_kg:0, heat:'SP36079', nc:'', label:'부착', judge:'OK', charge:'운전', boss:'차장'},
+    {date:'2026-03-10', material:'SPCC', appear:'OK', thick_spec:0.6, width_spec:102, thick:0.6, width:102.00, in_kg:3065, count:3, bad_kg:0, heat:'SP24225', nc:'', label:'부착', judge:'OK', charge:'문수진', boss:'강병주'},
+    {date:'2026-03-11', material:'SPCC', appear:'OK', thick_spec:0.6, width_spec:84, thick:0.6, width:84.00, in_kg:519, count:2, bad_kg:0, heat:'SB34P84', nc:'', label:'부착', judge:'OK', charge:'문수진', boss:'강병주'},
+    {date:'2026-03-13', material:'SPCC', appear:'OK', thick_spec:0.6, width_spec:112, thick:0.6, width:112.00, in_kg:1456, count:3, bad_kg:0, heat:'SQ06431', nc:'', label:'부착', judge:'OK', charge:'문수진', boss:'강병주'},
+    {date:'2026-03-13', material:'SPCC', appear:'OK', thick_spec:0.6, width_spec:84, thick:0.6, width:84.00, in_kg:1432, count:3, bad_kg:0, heat:'SQ06431', nc:'', label:'부착', judge:'OK', charge:'문수진', boss:'강병주'},
+    {date:'2026-03-17', material:'SPCC', appear:'OK', thick_spec:0.6, width_spec:84, thick:0.6, width:84.00, in_kg:1382, count:3, bad_kg:0, heat:'SB34P84', nc:'', label:'부착', judge:'OK', charge:'문수진', boss:'강병주'},
+    {date:'2026-03-17', material:'SPCC', appear:'OK', thick_spec:0.6, width_spec:80, thick:0.6, width:80.00, in_kg:1822, count:4, bad_kg:0, heat:'SQ06431', nc:'', label:'부착', judge:'OK', charge:'문수진', boss:'강병주'},
+    {date:'2026-03-17', material:'SPCC', appear:'OK', thick_spec:0.6, width_spec:112, thick:0.6, width:112.00, in_kg:3450, count:6, bad_kg:0, heat:'SQ06431', nc:'', label:'부착', judge:'OK', charge:'문수진', boss:'강병주'},
+    {date:'2026-04-02', material:'SPCC', appear:'OK', thick_spec:0.6, width_spec:84, thick:0.6, width:84.00, in_kg:884, count:2, bad_kg:0, heat:'SB34P84', nc:'', label:'부착', judge:'OK', charge:'문수진', boss:'강병주'},
+    {date:'2026-04-02', material:'SPCC', appear:'OK', thick_spec:0.6, width_spec:110, thick:0.6, width:110.00, in_kg:3156, count:6, bad_kg:0, heat:'SB34P84', nc:'', label:'부착', judge:'OK', charge:'문수진', boss:'강병주'},
+    {date:'2026-04-02', material:'SPCC', appear:'OK', thick_spec:0.6, width_spec:116, thick:0.6, width:116.00, in_kg:1960, count:5, bad_kg:0, heat:'SQ06431', nc:'', label:'부착', judge:'OK', charge:'문수진', boss:'강병주'},
+    {date:'2026-04-03', material:'SPCC', appear:'OK', thick_spec:0.6, width_spec:112, thick:0.6, width:112.00, in_kg:3426, count:6, bad_kg:0, heat:'SQ06431', nc:'', label:'부착', judge:'OK', charge:'문수진', boss:'강병주'},
+    {date:'2026-04-07', material:'SPCC', appear:'OK', thick_spec:0.6, width_spec:102, thick:0.6, width:102.00, in_kg:3188, count:6, bad_kg:0, heat:'SP36079', nc:'', label:'부착', judge:'OK', charge:'문수진', boss:'강병주'},
+    {date:'2026-04-08', material:'SPCC', appear:'OK', thick_spec:0.6, width_spec:114, thick:0.6, width:114.00, in_kg:1136, count:2, bad_kg:0, heat:'SQ06431', nc:'', label:'부착', judge:'OK', charge:'문수진', boss:'강병주'},
+    {date:'2026-04-08', material:'SPCC', appear:'OK', thick_spec:0.6, width_spec:112, thick:0.6, width:112.00, in_kg:3426, count:6, bad_kg:0, heat:'SQ06431', nc:'', label:'부착', judge:'OK', charge:'문수진', boss:'강병주'},
+    {date:'2026-04-09', material:'SPCC', appear:'OK', thick_spec:0.6, width_spec:64, thick:0.9, width:64.00, in_kg:990, count:6, bad_kg:0, heat:'SP08209', nc:'', label:'부착', judge:'OK', charge:'문수진', boss:'강병주'},
+    {date:'2026-04-09', material:'SPCC', appear:'OK', thick_spec:0.6, width_spec:114, thick:0.6, width:114.00, in_kg:3240, count:6, bad_kg:0, heat:'SP36079', nc:'', label:'부착', judge:'OK', charge:'문수진', boss:'강병주'},
+    {date:'2026-04-13', material:'SPCC', appear:'OK', thick_spec:0.6, width_spec:102, thick:0.6, width:102.00, in_kg:3382, count:7, bad_kg:0, heat:'SP36079', nc:'', label:'부착', judge:'OK', charge:'문수진', boss:'강병주'},
+    {date:'2026-04-13', material:'SPCC', appear:'OK', thick_spec:0.6, width_spec:112, thick:0.6, width:112.00, in_kg:3178, count:6, bad_kg:0, heat:'SP36079', nc:'', label:'부착', judge:'OK', charge:'문수진', boss:'강병주'},
     // PDF 2페이지 데이터
-    {date:'2026-04-14', material:'SPCC', appear:'OK', thick_spec:0.6, width_spec:90, thick:0.6, width:90.00, in_kg:3012, count:7, bad_kg:0, heat:'SP36079', nc:'', label:'부착', judge:'OK', charge:'운전', boss:'차장'},
-    {date:'2026-04-15', material:'SPCC', appear:'OK', thick_spec:0.8, width_spec:120, thick:0.8, width:120.00, in_kg:3320, count:7, bad_kg:0, heat:'SQ12634', nc:'', label:'부착', judge:'OK', charge:'운전', boss:'차장'},
-    {date:'2026-04-16', material:'SPCC', appear:'OK', thick_spec:0.6, width_spec:76, thick:0.6, width:76.00, in_kg:2706, count:7, bad_kg:0, heat:'SQ06431', nc:'', label:'부착', judge:'OK', charge:'운전', boss:'차장'},
-    {date:'2026-04-16', material:'SPCC', appear:'OK', thick_spec:0.6, width_spec:94, thick:0.6, width:94.00, in_kg:420, count:1, bad_kg:0, heat:'SQ06431', nc:'', label:'부착', judge:'OK', charge:'운전', boss:'차장'},
-    {date:'2026-04-20', material:'SPCC', appear:'OK', thick_spec:0.6, width_spec:94, thick:0.6, width:94.00, in_kg:1338, count:3, bad_kg:0, heat:'SP36079', nc:'', label:'부착', judge:'OK', charge:'운전', boss:'차장'},
-    {date:'2026-04-20', material:'SPCC', appear:'OK', thick_spec:0.6, width_spec:102, thick:0.6, width:102.00, in_kg:1924, count:4, bad_kg:0, heat:'SP36079', nc:'', label:'부착', judge:'OK', charge:'운전', boss:'차장'},
-    {date:'2026-04-20', material:'SPCC', appear:'OK', thick_spec:0.6, width_spec:90, thick:0.6, width:90.00, in_kg:3020, count:7, bad_kg:0, heat:'SP36079', nc:'', label:'부착', judge:'OK', charge:'운전', boss:'차장'},
-    {date:'2026-04-21', material:'SPCC', appear:'OK', thick_spec:0.6, width_spec:90, thick:0.6, width:90.00, in_kg:3154, count:7, bad_kg:0, heat:'SP36079', nc:'', label:'부착', judge:'OK', charge:'운전', boss:'차장'},
-    {date:'2026-04-21', material:'SPCC', appear:'OK', thick_spec:0.6, width_spec:94, thick:0.6, width:94.00, in_kg:1350, count:3, bad_kg:0, heat:'SP36079', nc:'', label:'부착', judge:'OK', charge:'운전', boss:'차장'},
+    {date:'2026-04-14', material:'SPCC', appear:'OK', thick_spec:0.6, width_spec:90, thick:0.6, width:90.00, in_kg:3012, count:7, bad_kg:0, heat:'SP36079', nc:'', label:'부착', judge:'OK', charge:'문수진', boss:'강병주'},
+    {date:'2026-04-15', material:'SPCC', appear:'OK', thick_spec:0.8, width_spec:120, thick:0.8, width:120.00, in_kg:3320, count:7, bad_kg:0, heat:'SQ12634', nc:'', label:'부착', judge:'OK', charge:'문수진', boss:'강병주'},
+    {date:'2026-04-16', material:'SPCC', appear:'OK', thick_spec:0.6, width_spec:76, thick:0.6, width:76.00, in_kg:2706, count:7, bad_kg:0, heat:'SQ06431', nc:'', label:'부착', judge:'OK', charge:'문수진', boss:'강병주'},
+    {date:'2026-04-16', material:'SPCC', appear:'OK', thick_spec:0.6, width_spec:94, thick:0.6, width:94.00, in_kg:420, count:1, bad_kg:0, heat:'SQ06431', nc:'', label:'부착', judge:'OK', charge:'문수진', boss:'강병주'},
+    {date:'2026-04-20', material:'SPCC', appear:'OK', thick_spec:0.6, width_spec:94, thick:0.6, width:94.00, in_kg:1338, count:3, bad_kg:0, heat:'SP36079', nc:'', label:'부착', judge:'OK', charge:'문수진', boss:'강병주'},
+    {date:'2026-04-20', material:'SPCC', appear:'OK', thick_spec:0.6, width_spec:102, thick:0.6, width:102.00, in_kg:1924, count:4, bad_kg:0, heat:'SP36079', nc:'', label:'부착', judge:'OK', charge:'문수진', boss:'강병주'},
+    {date:'2026-04-20', material:'SPCC', appear:'OK', thick_spec:0.6, width_spec:90, thick:0.6, width:90.00, in_kg:3020, count:7, bad_kg:0, heat:'SP36079', nc:'', label:'부착', judge:'OK', charge:'문수진', boss:'강병주'},
+    {date:'2026-04-21', material:'SPCC', appear:'OK', thick_spec:0.6, width_spec:90, thick:0.6, width:90.00, in_kg:3154, count:7, bad_kg:0, heat:'SP36079', nc:'', label:'부착', judge:'OK', charge:'문수진', boss:'강병주'},
+    {date:'2026-04-21', material:'SPCC', appear:'OK', thick_spec:0.6, width_spec:94, thick:0.6, width:94.00, in_kg:1350, count:3, bad_kg:0, heat:'SP36079', nc:'', label:'부착', judge:'OK', charge:'문수진', boss:'강병주'},
+
+    // SUS 검사성적서 데이터 (동일스테인레스)
+    {date:'2026-04-23', material:'SUS304', appear:'OK', thick_spec:0.5, width_spec:118, thick:0.49, width:117.97, in_kg:5130, count:9, bad_kg:0, heat:'5E56766', nc:'', label:'부착', judge:'OK', charge:'허미정', boss:'강병주'},
+    {date:'2026-04-08', material:'SUS304', appear:'OK', thick_spec:0.5, width_spec:126, thick:0.48, width:125.96, in_kg:3020, count:5, bad_kg:0, heat:'SE55024', nc:'', label:'부착', judge:'OK', charge:'허미정', boss:'강병주'},
+    {date:'2026-04-01', material:'SUS430', appear:'OK', thick_spec:0.6, width_spec:70, thick:0.58, width:69.97, in_kg:1206, count:4, bad_kg:0, heat:'SG92534', nc:'', label:'부착', judge:'OK', charge:'허미정', boss:'강병주'},
+    {date:'2026-04-01', material:'SUS430', appear:'OK', thick_spec:0.6, width_spec:70, thick:0.59, width:69.97, in_kg:617, count:2, bad_kg:0, heat:'SG94296', nc:'', label:'부착', judge:'OK', charge:'허미정', boss:'강병주'},
+    {date:'2026-04-01', material:'SUS430', appear:'OK', thick_spec:0.6, width_spec:80, thick:0.58, width:79.96, in_kg:2226, count:6, bad_kg:0, heat:'SD77587', nc:'', label:'부착', judge:'OK', charge:'허미정', boss:'강병주'},
+    {date:'2026-04-01', material:'SUS430', appear:'OK', thick_spec:0.6, width_spec:80, thick:0.58, width:79.97, in_kg:635, count:2, bad_kg:0, heat:'SG94296', nc:'', label:'부착', judge:'OK', charge:'허미정', boss:'강병주'},
+    {date:'2026-04-01', material:'SUS304', appear:'OK', thick_spec:0.6, width_spec:74, thick:0.58, width:73.95, in_kg:804, count:2, bad_kg:0, heat:'SE54468', nc:'', label:'부착', judge:'OK', charge:'허미정', boss:'강병주'},
+    {date:'2026-04-01', material:'SUS304', appear:'OK', thick_spec:0.6, width_spec:74, thick:0.58, width:73.96, in_kg:756, count:2, bad_kg:0, heat:'SE53333', nc:'', label:'부착', judge:'OK', charge:'허미정', boss:'강병주'},
+    {date:'2026-03-19', material:'SUS304', appear:'OK', thick_spec:0.5, width_spec:130, thick:0.49, width:129.97, in_kg:628, count:1, bad_kg:0, heat:'SE55024', nc:'', label:'부착', judge:'OK', charge:'허미정', boss:'강병주'},
+    {date:'2026-03-19', material:'SUS304', appear:'OK', thick_spec:0.5, width_spec:130, thick:0.49, width:129.96, in_kg:1878, count:3, bad_kg:0, heat:'SE53911', nc:'', label:'부착', judge:'OK', charge:'허미정', boss:'강병주'},
+    {date:'2026-03-06', material:'SUS430', appear:'OK', thick_spec:0.6, width_spec:70, thick:0.59, width:69.97, in_kg:1380, count:4, bad_kg:0, heat:'SG90619', nc:'', label:'부착', judge:'OK', charge:'허미정', boss:'강병주'},
+    {date:'2026-03-06', material:'SUS430', appear:'OK', thick_spec:0.6, width_spec:80, thick:0.58, width:79.96, in_kg:2278, count:4, bad_kg:0, heat:'SG94718', nc:'', label:'부착', judge:'OK', charge:'허미정', boss:'강병주'},
+    {date:'2026-03-05', material:'SUS304', appear:'OK', thick_spec:0.6, width_spec:74, thick:0.58, width:73.95, in_kg:2270, count:6, bad_kg:0, heat:'SE53333 외', nc:'', label:'부착', judge:'OK', charge:'허미정', boss:'강병주'},
+    {date:'2026-02-19', material:'SUS430', appear:'OK', thick_spec:0.6, width_spec:70, thick:0.58, width:69.97, in_kg:2760, count:8, bad_kg:0, heat:'SG90627', nc:'', label:'부착', judge:'OK', charge:'허미정', boss:'강병주'},
+    {date:'2026-02-10', material:'SUS430', appear:'OK', thick_spec:0.6, width_spec:84, thick:0.58, width:83.96, in_kg:394, count:1, bad_kg:0, heat:'SG90619', nc:'', label:'부착', judge:'OK', charge:'허미정', boss:'강병주'},
+    {date:'2026-02-04', material:'SUS430', appear:'OK', thick_spec:0.6, width_spec:70, thick:0.59, width:69.97, in_kg:3120, count:9, bad_kg:0, heat:'SG92009', nc:'', label:'부착', judge:'OK', charge:'허미정', boss:'강병주'},
+    {date:'2026-02-04', material:'SUS430', appear:'OK', thick_spec:0.6, width_spec:80, thick:0.58, width:79.96, in_kg:2346, count:6, bad_kg:0, heat:'SG90945', nc:'', label:'부착', judge:'OK', charge:'허미정', boss:'강병주'},
+    {date:'2026-02-04', material:'SUS304', appear:'OK', thick_spec:0.5, width_spec:130, thick:0.49, width:129.97, in_kg:1854, count:3, bad_kg:0, heat:'SE53911', nc:'', label:'부착', judge:'OK', charge:'허미정', boss:'강병주'},
+    {date:'2026-02-04', material:'SUS304', appear:'OK', thick_spec:0.6, width_spec:74, thick:0.58, width:73.95, in_kg:1987, count:5, bad_kg:0, heat:'SE53333 외', nc:'', label:'부착', judge:'OK', charge:'허미정', boss:'강병주'},
+    {date:'2026-01-20', material:'SUS430', appear:'OK', thick_spec:0.6, width_spec:80, thick:0.58, width:79.97, in_kg:2052, count:6, bad_kg:0, heat:'SG92534', nc:'', label:'부착', judge:'OK', charge:'허미정', boss:'강병주'},
+    {date:'2026-01-20', material:'SUS430', appear:'OK', thick_spec:0.6, width_spec:70, thick:0.58, width:69.95, in_kg:900, count:3, bad_kg:0, heat:'SG92534', nc:'', label:'부착', judge:'OK', charge:'허미정', boss:'강병주'},
+    {date:'2026-01-20', material:'SUS304', appear:'OK', thick_spec:0.5, width_spec:126, thick:0.48, width:125.96, in_kg:3024, count:5, bad_kg:0, heat:'SE55024', nc:'', label:'부착', judge:'OK', charge:'허미정', boss:'강병주'},
+    {date:'2026-01-15', material:'SUS304', appear:'OK', thick_spec:0.5, width_spec:118, thick:0.49, width:117.95, in_kg:2902, count:5, bad_kg:0, heat:'SE54468 외', nc:'', label:'부착', judge:'OK', charge:'허미정', boss:'강병주'},
+    {date:'2026-01-12', material:'SUS304', appear:'OK', thick_spec:0.6, width_spec:80, thick:0.58, width:79.97, in_kg:1116, count:3, bad_kg:0, heat:'SE51203 외', nc:'', label:'부착', judge:'OK', charge:'허미정', boss:'강병주'},
+    {date:'2026-01-12', material:'SUS430', appear:'OK', thick_spec:0.6, width_spec:70, thick:0.58, width:69.95, in_kg:2007, count:6, bad_kg:0, heat:'SG90620', nc:'', label:'부착', judge:'OK', charge:'허미정', boss:'강병주'},
+    {date:'2026-01-06', material:'SUS430', appear:'OK', thick_spec:0.6, width_spec:80, thick:0.58, width:79.96, in_kg:1364, count:3, bad_kg:0, heat:'SG88660', nc:'', label:'부착', judge:'OK', charge:'허미정', boss:'강병주'},
+    {date:'2026-01-06', material:'SUS304', appear:'OK', thick_spec:0.5, width_spec:118, thick:0.48, width:117.97, in_kg:3192, count:6, bad_kg:0, heat:'SE54468', nc:'', label:'부착', judge:'OK', charge:'허미정', boss:'강병주'}
   ];
   saveLogToLS();
+}
+
+// 초기 로드 시 localStorage에 데이터가 없으면 내장 데이터 자동 세팅
+if (!logData) {
+  initLogDefaults();
 }
 
 // 기본 검사증명서 데이터 초기화 (재설정 시 재호출 가능)
@@ -2799,49 +2835,68 @@ function saveCertToLS(){ localStorage.setItem(LS_CERT, JSON.stringify(certData))
 async function forceResetCertData(){
   const hasSupa = (typeof appSettings !== 'undefined' && appSettings.supabaseUrl && appSettings.supabaseKey);
   const msg =
-    '⚠️ 검사증명서 데이터 재설정\n\n' +
+    '⚠️ 검사증명서 + 수입검사일보 데이터 재설정\n\n' +
     '이 작업은 다음을 수행합니다:\n' +
-    '① localStorage의 기존 검사증명서 데이터 삭제\n' +
-    (hasSupa ? '② Supabase material_cert 테이블의 모든 레코드 삭제\n' : '') +
-    '③ HTML 내장 45건 (태경스틸 SPCC 18건 + ㈜동일스테인레스 SUS 27건) 복원\n' +
-    (hasSupa ? '④ 복원된 45건을 Supabase에 재업로드\n' : '') +
+    '① localStorage의 기존 검사증명서/일보 데이터 삭제\n' +
+    (hasSupa ? '② Supabase material_cert / material_log 테이블의 모든 레코드 삭제\n' : '') +
+    '③ HTML 내장 데이터 복원\n' +
+    '   • 검사증명서 45건 (태경스틸 SPCC 18건 + ㈜동일스테인레스 SUS 27건)\n' +
+    '   • 수입검사일보 54건 (SPCC 27건 / SUS304 13건 / SUS430 14건)\n' +
+    '   • 담당자: SPCC → 문수진, SUS → 허미정 / 부서장: 강병주\n' +
+    (hasSupa ? '④ 복원된 데이터를 Supabase에 재업로드\n' : '') +
     '\n수요자 작성 내용도 초기값으로 복원됩니다.\n진행하시겠습니까?';
   if (!confirm(msg)) return;
 
   try {
-    // 1) localStorage 비우기
+    // 1) localStorage 비우기 (cert + log 모두)
     localStorage.removeItem(LS_CERT);
+    localStorage.removeItem(LS_LOG);
     localStorage.removeItem('tj_material_cert_v1');
     localStorage.removeItem('tj_material_cert_v2');
 
-    // 2) Supabase 기존 데이터 삭제 (material_cert 테이블 전체 레코드)
+    // 2) Supabase 기존 데이터 삭제 (material_cert + material_log 전체)
     if (hasSupa) {
       try {
-        // id 는 text 타입이므로 모든 레코드 삭제하려면 PostgREST 필터 필요
         await supabaseRequest('DELETE', 'material_cert?id=neq.__impossible_id__');
         console.log('[Reset] Supabase material_cert 전체 삭제 완료');
       } catch(e) {
-        console.warn('[Reset] Supabase 삭제 실패 (계속 진행):', e.message);
+        console.warn('[Reset] Supabase cert 삭제 실패 (계속 진행):', e.message);
+      }
+      try {
+        await supabaseRequest('DELETE', 'material_log?id=neq.__impossible_id__');
+        console.log('[Reset] Supabase material_log 전체 삭제 완료');
+      } catch(e) {
+        console.warn('[Reset] Supabase log 삭제 실패 (계속 진행):', e.message);
       }
     }
 
-    // 3) certData 재초기화 - 내장 45건 복원
+    // 3) certData + logData 재초기화 - 내장 데이터 복원
     certData = null;
-    initCertDefaults(); // ↓에 정의된 함수로 내장 데이터 로드
+    logData = null;
+    initCertDefaults();
+    initLogDefaults();
 
-    // 4) Supabase에 45건 재업로드
+    // 4) Supabase에 재업로드 (cert + log)
     if (hasSupa) {
-      let ok = 0, fail = 0;
+      let certOk = 0, certFail = 0, logOk = 0, logFail = 0;
       for (const c of certData) {
-        try { await pushCertToSupabase(c); ok++; } catch(e) { fail++; }
+        try { await pushCertToSupabase(c); certOk++; } catch(e) { certFail++; }
       }
-      console.log('[Reset] Supabase 업로드: 성공 ' + ok + ', 실패 ' + fail);
+      for (const l of logData) {
+        try { await pushLogToSupabase(l); logOk++; } catch(e) { logFail++; }
+      }
+      console.log('[Reset] Supabase 업로드 - 성적서:', certOk + '/' + (certOk+certFail), '/ 일보:', logOk + '/' + (logOk+logFail));
     }
 
     renderCert();
+    renderLog();
+    renderDashboard();
     updateSupplierCounts();
-    alert('✅ 재설정 완료!\n\n태경스틸 18건 + ㈜동일스테인레스 27건 = 총 45건이 복원되었습니다.' +
-          (hasSupa ? '\nSupabase에도 동기화되었습니다.' : ''));
+    alert('✅ 재설정 완료!\n\n' +
+          '검사증명서: 태경 18건 + 동일 27건 = 총 45건\n' +
+          '수입검사일보: SPCC 27건 + SUS304 13건 + SUS430 14건 = 총 54건\n' +
+          '담당자 일괄 변경 완료 (SPCC: 문수진, SUS: 허미정)' +
+          (hasSupa ? '\n\nSupabase에도 동기화되었습니다.' : ''));
   } catch(e) {
     alert('❌ 재설정 중 오류: ' + e.message + '\n\n브라우저 콘솔(F12)을 확인하세요.');
     console.error(e);
@@ -2865,6 +2920,35 @@ if (certData && Array.isArray(certData)) {
     if (c.scan_id === undefined) c.scan_id = null;
   });
   if (migrated) saveCertToLS();
+}
+
+// ========================================
+// 수입검사일보 자동 마이그레이션
+// 1) 기존 logData에 SUS304/SUS430 데이터가 없으면 → 내장 데이터로 자동 업그레이드
+// 2) 담당자 "운전" / "홍길동" → 재질별 담당자(SPCC: 문수진, SUS: 허미정)로 일괄 변경
+// ========================================
+if (logData && Array.isArray(logData)) {
+  const hasSUS = logData.some(d => d.material === 'SUS304' || d.material === 'SUS430');
+  const hasInvalidCharge = logData.some(d => d.charge === '운전' || d.charge === '홍길동');
+
+  // SUS 데이터가 없으면 logData를 통째로 재설정 (내장 54건으로)
+  if (!hasSUS) {
+    console.log('[Migration] logData에 SUS 데이터가 없어 내장 54건으로 자동 보강합니다.');
+    logData = null;
+    initLogDefaults();
+  } else if (hasInvalidCharge) {
+    // SUS는 있는데 담당자만 "운전/홍길동"이 잔존하는 경우
+    console.log('[Migration] 담당자 "운전/홍길동"을 재질별 담당자로 일괄 변경합니다.');
+    logData.forEach(d => {
+      if (d.charge === '운전' || d.charge === '홍길동') {
+        if (d.material === 'SUS304' || d.material === 'SUS430') d.charge = '허미정';
+        else d.charge = '문수진';
+      }
+      // 부서장도 통일
+      if (d.boss === '차장' || d.boss === '대리') d.boss = '강병주';
+    });
+    saveLogToLS();
+  }
 }
 
 
