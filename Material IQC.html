@@ -1486,6 +1486,68 @@ CREATE TRIGGER trg_cert_updated BEFORE UPDATE ON material_cert FOR EACH ROW EXEC
       </div>
     </div>
 
+    <!-- 담당자 관리 -->
+    <div class="card">
+      <div class="card-header">👤 수입검사 담당자 관리</div>
+      <div class="card-body">
+        <div style="background:#dbeafe; padding:10px 14px; border-radius:5px; font-size:12px; color:#1e40af; margin-bottom:15px; border-left:3px solid #3b82f6;">
+          재질별 기본 담당자를 지정하면 "수요자 자동 채우기" 시 자동 적용됩니다.<br>
+          담당자 목록에 새 담당자를 추가/삭제할 수 있습니다.
+        </div>
+
+        <!-- 재질별 기본 담당자 -->
+        <div style="margin-bottom:20px;">
+          <label style="font-weight:700; font-size:13px; color:#1e3a5f; margin-bottom:10px; display:block;">📌 재질별 기본 담당자</label>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px;">
+            <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:6px; padding:12px;">
+              <div style="font-size:12px; color:#1e40af; font-weight:600; margin-bottom:6px;">SPCC (냉연강판)</div>
+              <select id="defaultChargeSPCC" onchange="saveDefaultCharges()" style="width:100%; padding:8px; font-size:13px; border:1px solid #cbd5e0; border-radius:4px; background:white;"></select>
+            </div>
+            <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:6px; padding:12px;">
+              <div style="font-size:12px; color:#15803d; font-weight:600; margin-bottom:6px;">SUS304 (스테인리스)</div>
+              <select id="defaultChargeSUS304" onchange="saveDefaultCharges()" style="width:100%; padding:8px; font-size:13px; border:1px solid #cbd5e0; border-radius:4px; background:white;"></select>
+            </div>
+            <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:6px; padding:12px;">
+              <div style="font-size:12px; color:#15803d; font-weight:600; margin-bottom:6px;">SUS430 (스테인리스)</div>
+              <select id="defaultChargeSUS430" onchange="saveDefaultCharges()" style="width:100%; padding:8px; font-size:13px; border:1px solid #cbd5e0; border-radius:4px; background:white;"></select>
+            </div>
+          </div>
+        </div>
+
+        <!-- 담당자 목록 추가/삭제 -->
+        <div>
+          <label style="font-weight:700; font-size:13px; color:#1e3a5f; margin-bottom:10px; display:block;">📋 담당자 목록 (수입검사 담당자)</label>
+          <div id="chargeList" style="margin-bottom:10px;"></div>
+          <div style="display:flex; gap:8px;">
+            <input type="text" id="newChargeInput" placeholder="새 담당자 이름" style="flex:1; padding:8px 12px; border:1px solid #cbd5e0; border-radius:5px; font-size:13px;" onkeypress="if(event.key==='Enter') addCharge()">
+            <button class="btn btn-primary" style="padding:8px 16px; min-width:44px;" onclick="addCharge()">＋ 추가</button>
+          </div>
+        </div>
+
+        <!-- 수요자 승인자 (공통) -->
+        <div style="margin-top:20px; padding-top:18px; border-top:1px dashed #cbd5e0;">
+          <label style="font-weight:700; font-size:13px; color:#1e3a5f; margin-bottom:10px; display:block;">✅ 수요자 승인자 (공통)</label>
+          <input type="text" id="defaultCustomerSign" placeholder="강병주" onchange="saveDefaultCharges()" style="width:100%; max-width:300px; padding:8px 12px; border:1px solid #cbd5e0; border-radius:5px; font-size:13px;">
+        </div>
+      </div>
+    </div>
+
+    <!-- 수요자 측정값 일괄 자동 채우기 -->
+    <div class="card">
+      <div class="card-header">✨ 수요자 측정값 일괄 자동 채우기</div>
+      <div class="card-body">
+        <div style="background:#fef3c7; padding:10px 14px; border-radius:5px; font-size:12px; color:#92400e; margin-bottom:15px; border-left:3px solid #f59e0b;">
+          <strong>⚠️ 주의:</strong> 이 기능은 <b>모든 검사성적서</b>의 수요자 측정값을 일괄로 자동 생성합니다.<br>
+          각 성적서별 개별 자동 채우기는 검사성적서 탭에서 가능합니다.<br>
+          담당자는 위에서 지정한 <b>재질별 기본 담당자</b>가 자동 적용됩니다 (SPCC: 문수진 / SUS: 허미정 등).
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+          <button class="btn" style="padding:10px 22px; font-size:14px; background:#8b5cf6; color:white; font-weight:700;" onclick="bulkFillCustomerMeas()">✨ 전체 검사성적서 수요자 자동 채우기</button>
+          <span id="bulkFillStatus" style="font-size:12px; color:#64748b;"></span>
+        </div>
+      </div>
+    </div>
+
   </div>
 
 </div>
@@ -3219,24 +3281,22 @@ async function autoFillSingleCert(idx){
   const itemCount = isSUS ? 4 : 8;
   const itemLabel = isSUS ? '표면/재질/폭/두께' : '표면/재질/폭/두께/경도/연신율/형곡/평탄도';
 
-  let defaultCharge = c.recv_charge || '문수진';
-  let defaultSign = c.customer_sign || '강병주';
+  // 재질별 기본 담당자 자동 적용
+  const charge = c.recv_charge || getDefaultChargeForCert(c);
+  const sign = c.customer_sign || (chargeSettings && chargeSettings.customerSign) || '강병주';
 
   const msg =
     '✨ 수요자 측정값 자동 채우기\n\n' +
     '[' + (c.size||'') + ' / ' + (c.date||'') + ' / ' + (c.lot||'') + ']\n' +
     '공급자: ' + (c.supplier||'') + '\n' +
     '재질 유형: ' + (isSUS ? 'SUS (스테인레스)' : 'SPCC (냉연강판)') + '\n' +
-    '측정항목: ' + itemCount + '개 (' + itemLabel + ')\n\n' +
+    '측정항목: ' + itemCount + '개 (' + itemLabel + ')\n' +
+    '담당자: ' + charge + '\n' +
+    '승인자: ' + sign + '\n\n' +
+    '※ 담당자는 [설정] 탭에서 변경할 수 있습니다.\n' +
     '공급자 측정값을 기준으로 수요자 실측값을 자동 생성합니다.\n' +
     '기존 수요자 측정값이 있으면 덮어쓰기됩니다. 계속하시겠습니까?';
   if (!confirm(msg)) return;
-
-  // 담당자/승인자 확인
-  const charge = prompt('수입검사 담당자:', defaultCharge);
-  if (!charge) return;
-  const sign = prompt('수요자 승인자:', defaultSign);
-  if (!sign) return;
 
   // 공급자 값 기준 수요자 실측값 생성 로직 (idx 기반 결정적 선택)
   const seedBase = idx * 17 + (c.date||'').length * 7;
@@ -3354,17 +3414,23 @@ async function bulkFillCustomerMeas(){
     return;
   }
 
-  const defaultCharge = prompt('수입검사 담당자를 입력하세요:', '문수진');
-  if (!defaultCharge) return;
-
-  const defaultSign = prompt('수요자 승인자를 입력하세요:', '강병주');
-  if (!defaultSign) return;
+  // 재질별 기본 담당자 정보 표시
+  const cs = chargeSettings || loadChargeSettings();
+  const defaultSign = cs.customerSign || '강병주';
+  const spccCharge = cs.defaultByMaterial.SPCC || '문수진';
+  const sus304Charge = cs.defaultByMaterial.SUS304 || '허미정';
+  const sus430Charge = cs.defaultByMaterial.SUS430 || '허미정';
 
   const overwrite = confirm(
     '⚠️ 수요자 실측값 일괄 반영\n\n' +
     '수요자(태진다이텍) 자체 재측정 실측값으로 모든 검사증명서를 채웁니다.\n' +
     '공급자 값과 다른 수요자 고유 측정치가 기재됩니다.\n\n' +
-    '- 담당자: ' + defaultCharge + ', 승인자: ' + defaultSign + '\n\n' +
+    '담당자 (재질별 기본 담당자 자동 적용):\n' +
+    '  • SPCC → ' + spccCharge + '\n' +
+    '  • SUS304 → ' + sus304Charge + '\n' +
+    '  • SUS430 → ' + sus430Charge + '\n' +
+    '  • 수요자 승인자 → ' + defaultSign + '\n\n' +
+    '※ 담당자 변경은 [설정] 탭 → [수입검사 담당자 관리] 에서 가능합니다.\n\n' +
     '기존 수요자 측정값도 모두 덮어쓰기됩니다. 진행하시겠습니까?'
   );
   if (!overwrite) return;
@@ -3426,27 +3492,53 @@ async function bulkFillCustomerMeas(){
 
   const fillGood = (r) => r ? {spec: r.spec||'', x1: '양호', x2: '양호', x3: '양호', j: 'OK'} : null;
   const fillZero = (r) => r ? {spec: r.spec||'', x1: '0', x2: '0', x3: '0', j: 'OK'} : null;
+  const keepDash = (r) => r ? {spec: r.spec||'', x1: '-', x2: '-', x3: '-', j: '-'} : null;
 
   let count = 0;
+  let sumByCharge = {};
   certData.forEach(c => {
     if (!c.recv_date) c.recv_date = c.date || new Date().toISOString().split('T')[0];
-    c.recv_charge = defaultCharge;
+    // 재질별 기본 담당자 자동 적용
+    const charge = getDefaultChargeForCert(c);
+    c.recv_charge = charge;
+    sumByCharge[charge] = (sumByCharge[charge] || 0) + 1;
     c.customer_sign = defaultSign;
     c.judge = c.judge || 'OK';
     c.label = c.label || '부착';
     if (!c.supplier_judge) c.supplier_judge = 'OK';
     if (!c.supplier_sign) c.supplier_sign = c.supplier || '';
 
+    // SUS인지 판별
+    const isSUS = /동일스테인레스|STS|스테인|304|430/i.test((c.supplier||'')+' '+(c.spec||'')+' '+(c.commodity||''));
+
+    // 공통 4행 (표면/재질/폭/두께)
     c.c_r1 = fillGood(c.r1);
     c.c_r2 = fillGood(c.r2);
     c.c_r3 = fillWidth(c.r3);
     c.c_r4 = fillThickness(c.r4);
-    c.c_r5 = fillHardness(c.r5);
-    c.c_r6 = fillElong(c.r6);
-    c.c_r7 = fillZero(c.r7);
-    c.c_r8 = fillGood(c.r8);
+
+    if (isSUS) {
+      // SUS는 r5~r8이 '-' 이므로 수요자도 '-'로 유지
+      c.c_r5 = keepDash(c.r5);
+      c.c_r6 = keepDash(c.r6);
+      c.c_r7 = keepDash(c.r7);
+      c.c_r8 = keepDash(c.r8);
+    } else {
+      // SPCC는 8행 전체
+      c.c_r5 = fillHardness(c.r5);
+      c.c_r6 = fillElong(c.r6);
+      c.c_r7 = fillZero(c.r7);
+      c.c_r8 = fillGood(c.r8);
+    }
     count++;
   });
+
+  // 자동채우기 통계 표시
+  const statusEl = document.getElementById('bulkFillStatus');
+  if (statusEl) {
+    const summary = Object.entries(sumByCharge).map(([n, c]) => n + ' ' + c + '건').join(' / ');
+    statusEl.textContent = '✅ ' + count + '건 반영 완료 — ' + summary;
+  }
 
   saveCertToLS();
   renderCert();
@@ -3464,7 +3556,8 @@ async function bulkFillCustomerMeas(){
       syncMsg = '\n⚠️ Supabase 동기화 실패 (로컬만 반영됨): ' + e.message;
     }
   }
-  alert('✅ 총 ' + count + '건의 수요자 측정값이 일괄 반영되었습니다.' + syncMsg);
+  const summaryText = Object.entries(sumByCharge).map(([n, c]) => '  • ' + n + ': ' + c + '건').join('\n');
+  alert('✅ 총 ' + count + '건의 수요자 측정값이 일괄 반영되었습니다.\n\n담당자별 처리 내역:\n' + summaryText + syncMsg);
 }
 
 // 수요자 측정값이 하나라도 있는지 확인
@@ -3603,7 +3696,6 @@ function renderCert(){
             🏢 ${c.customer||'(주)태진다이텍'} 수입검사 기재 사항
           </div>
           <div style="display:flex; gap:6px;">
-            <button class="btn" style="padding:4px 10px; font-size:11px; background:#8b5cf6; color:white;" onclick="autoFillSingleCert(${idx})" title="공급자 값을 기반으로 수요자 측정값을 이 성적서에만 자동 채웁니다">✨ 수요자 자동 채우기</button>
             <button class="btn btn-customer-edit" onclick="editCustomerPart(${idx})" title="수요자 작성란만 빠르게 편집">
               ✏️ ${hasCustomerMeas(c) && c.recv_date ? '수요자 작성 수정' : '수요자 작성하기'}
             </button>
@@ -4471,7 +4563,140 @@ function renderSettingsTab(){
   document.getElementById('supabaseKey').value = appSettings.supabaseKey || '';
   renderMailRecipients();
   renderNtfyTopics();
+  renderChargeSettings();
   updateConnectionStatus();
+}
+
+// ========================================
+// 담당자 관리 (localStorage 기반)
+// ========================================
+const LS_CHARGE_SETTINGS = 'tj_material_charge_settings_v1';
+
+function loadChargeSettings(){
+  const def = {
+    chargeList: ['문수진', '허미정', '김상기'],
+    defaultByMaterial: {
+      'SPCC': '문수진',
+      'SUS304': '허미정',
+      'SUS430': '허미정'
+    },
+    customerSign: '강병주'
+  };
+  try {
+    const raw = localStorage.getItem(LS_CHARGE_SETTINGS);
+    if (!raw) {
+      localStorage.setItem(LS_CHARGE_SETTINGS, JSON.stringify(def));
+      return def;
+    }
+    const saved = JSON.parse(raw);
+    // 기본값 병합 (누락된 키 보강)
+    return {
+      chargeList: Array.isArray(saved.chargeList) && saved.chargeList.length > 0 ? saved.chargeList : def.chargeList,
+      defaultByMaterial: Object.assign({}, def.defaultByMaterial, saved.defaultByMaterial || {}),
+      customerSign: saved.customerSign || def.customerSign
+    };
+  } catch(e) {
+    return def;
+  }
+}
+
+let chargeSettings = loadChargeSettings();
+
+function saveChargeSettingsToLS(){
+  localStorage.setItem(LS_CHARGE_SETTINGS, JSON.stringify(chargeSettings));
+}
+
+function renderChargeSettings(){
+  // 재질별 기본 담당자 select 채우기
+  ['SPCC', 'SUS304', 'SUS430'].forEach(mat => {
+    const sel = document.getElementById('defaultCharge' + mat);
+    if (!sel) return;
+    const cur = chargeSettings.defaultByMaterial[mat] || '';
+    sel.innerHTML = chargeSettings.chargeList.map(name =>
+      '<option value="' + name + '"' + (name === cur ? ' selected' : '') + '>' + name + '</option>'
+    ).join('');
+    // 만약 현재 지정된 담당자가 목록에 없으면 추가하여 유지
+    if (cur && !chargeSettings.chargeList.includes(cur)) {
+      sel.innerHTML = '<option value="' + cur + '" selected>' + cur + '</option>' + sel.innerHTML;
+    }
+  });
+
+  // 수요자 승인자
+  const csi = document.getElementById('defaultCustomerSign');
+  if (csi) csi.value = chargeSettings.customerSign || '';
+
+  // 담당자 목록
+  const list = document.getElementById('chargeList');
+  if (!list) return;
+  if (chargeSettings.chargeList.length === 0) {
+    list.innerHTML = '<div style="padding:12px; text-align:center; color:#94a3b8; background:#f8fafc; border-radius:4px; font-size:12px;">담당자가 없습니다</div>';
+    return;
+  }
+  list.innerHTML = chargeSettings.chargeList.map((name, idx) => {
+    // 어떤 재질의 기본 담당자인지 표시
+    const usedFor = [];
+    if (chargeSettings.defaultByMaterial.SPCC === name) usedFor.push('SPCC');
+    if (chargeSettings.defaultByMaterial.SUS304 === name) usedFor.push('SUS304');
+    if (chargeSettings.defaultByMaterial.SUS430 === name) usedFor.push('SUS430');
+    const usedBadge = usedFor.length > 0
+      ? '<span style="font-size:10px; padding:2px 6px; background:#dbeafe; color:#1e40af; border-radius:3px; margin-left:6px;">기본: ' + usedFor.join(', ') + '</span>'
+      : '';
+    const canDelete = usedFor.length === 0;
+    return '<div style="display:flex; align-items:center; gap:8px; padding:8px 12px; background:#f8fafc; border-radius:4px; margin-bottom:4px;">' +
+      '<span style="font-weight:600; color:#64748b; font-size:12px; min-width:20px;">' + (idx+1) + '</span>' +
+      '<span style="flex:1; font-size:13px; color:#1e3a5f;">' + name + usedBadge + '</span>' +
+      (canDelete
+        ? '<button class="btn btn-danger" style="padding:4px 10px; font-size:11px;" onclick="removeCharge(' + idx + ')">✕</button>'
+        : '<button class="btn" style="padding:4px 10px; font-size:11px; background:#e2e8f0; color:#94a3b8; cursor:not-allowed;" disabled title="이 담당자는 기본 담당자로 사용중이라 삭제할 수 없습니다. 먼저 위에서 다른 담당자로 변경하세요.">✕</button>') +
+    '</div>';
+  }).join('');
+}
+
+function addCharge(){
+  const input = document.getElementById('newChargeInput');
+  const name = (input.value || '').trim();
+  if (!name) { alert('담당자 이름을 입력하세요.'); return; }
+  if (chargeSettings.chargeList.includes(name)) { alert('이미 등록된 담당자입니다.'); return; }
+  chargeSettings.chargeList.push(name);
+  saveChargeSettingsToLS();
+  input.value = '';
+  renderChargeSettings();
+}
+
+function removeCharge(idx){
+  const name = chargeSettings.chargeList[idx];
+  if (!name) return;
+  // 기본 담당자로 사용중이면 삭제 차단 (이미 UI에서도 막혀있지만 이중 안전장치)
+  if (Object.values(chargeSettings.defaultByMaterial).includes(name)) {
+    alert('"' + name + '"님은 재질별 기본 담당자로 지정되어 있어 삭제할 수 없습니다.\n먼저 다른 담당자로 변경한 후 삭제하세요.');
+    return;
+  }
+  if (!confirm('"' + name + '"님을 담당자 목록에서 삭제하시겠습니까?')) return;
+  chargeSettings.chargeList.splice(idx, 1);
+  saveChargeSettingsToLS();
+  renderChargeSettings();
+}
+
+function saveDefaultCharges(){
+  ['SPCC', 'SUS304', 'SUS430'].forEach(mat => {
+    const sel = document.getElementById('defaultCharge' + mat);
+    if (sel) chargeSettings.defaultByMaterial[mat] = sel.value;
+  });
+  const csi = document.getElementById('defaultCustomerSign');
+  if (csi) chargeSettings.customerSign = (csi.value || '').trim() || '강병주';
+  saveChargeSettingsToLS();
+  renderChargeSettings();
+}
+
+// 검사증명서의 재질을 판별해서 담당자 반환
+function getDefaultChargeForCert(c){
+  const s = (c.supplier||'') + ' ' + (c.spec||'') + ' ' + (c.commodity||'') + ' ' + (c.r2 ? (c.r2.spec||'') : '');
+  if (/SUS304|STS304|KS D3698-STS304/i.test(s)) return chargeSettings.defaultByMaterial.SUS304 || '허미정';
+  if (/SUS430|430|ASTM-A240M-430/i.test(s)) return chargeSettings.defaultByMaterial.SUS430 || '허미정';
+  // SUS인데 304/430 둘 다 매칭 안되는 경우 (ex. spec='304')는 SUS304로
+  if (/동일스테인레스|STS|스테인|304/i.test(s)) return chargeSettings.defaultByMaterial.SUS304 || '허미정';
+  // 그 외(SPCC 포함)
+  return chargeSettings.defaultByMaterial.SPCC || '문수진';
 }
 
 function renderMailRecipients(){
