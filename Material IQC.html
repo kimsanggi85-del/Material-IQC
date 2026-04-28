@@ -1636,8 +1636,6 @@
 
           <div style="text-align:center; margin-top:25px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
             <button class="btn btn-secondary" onclick="openSupplierView('')" style="padding:8px 20px; font-size:13px;">📋 전체 보기</button>
-            <button class="btn" style="padding:8px 20px; font-size:13px; background:#f59e0b; color:white;" onclick="manualMigrateCertData()" title="동일스테인레스(SUS) 담당자가 '문수진'으로 잘못 들어가 있으면 '허미정'으로 자동 정정합니다.">🔧 담당자 정리 (SUS → 허미정)</button>
-            <button class="btn" onclick="forceResetCertData()" style="padding:8px 20px; font-size:13px; background:#dc2626; color:white;" title="localStorage와 Supabase의 기존 성적서/일보 데이터를 삭제하고 HTML에 내장된 데이터로 재설정합니다.">🔄 데이터 재설정 (성적서 45건 + 일보 54건 복원)</button>
           </div>
         </div>
 
@@ -1969,6 +1967,45 @@ CREATE TRIGGER trg_cert_updated BEFORE UPDATE ON material_cert FOR EACH ROW EXEC
         <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
           <button class="btn" style="padding:10px 22px; font-size:14px; background:#8b5cf6; color:white; font-weight:700;" onclick="bulkFillCustomerMeas()">✨ 전체 검사성적서 수요자 자동 채우기</button>
           <span id="bulkFillStatus" style="font-size:12px; color:#64748b;"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====================== 데이터 관리 ====================== -->
+    <div class="card">
+      <div class="card-header">🛠️ 데이터 관리 (관리자용)</div>
+      <div class="card-body">
+        <div style="background:#fef3c7; padding:10px 14px; border-radius:5px; font-size:12px; color:#92400e; margin-bottom:15px; border-left:3px solid #f59e0b;">
+          ⚠️ <strong>주의:</strong> 아래 기능은 데이터를 일괄 변경/초기화합니다. 신중하게 사용하세요.
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:14px;">
+          <!-- 담당자 정리 -->
+          <div style="display:flex; gap:12px; align-items:center; padding:12px; background:#fffbeb; border-radius:6px; border:1px solid #fde68a; flex-wrap:wrap;">
+            <div style="flex:1; min-width:200px;">
+              <div style="font-weight:700; color:#92400e; font-size:13px;">🔧 검사성적서 담당자 정리</div>
+              <div style="font-size:11px; color:#78350f; margin-top:3px;">동일스테인레스(SUS) → 허미정 / 태경스틸(SPCC) → 문수진으로 일괄 정정</div>
+            </div>
+            <button class="btn" style="padding:8px 18px; font-size:13px; background:#f59e0b; color:white;" onclick="manualMigrateCertData()">담당자 정리 실행</button>
+          </div>
+
+          <!-- 관리대장 데이터 정리 -->
+          <div style="display:flex; gap:12px; align-items:center; padding:12px; background:#fffbeb; border-radius:6px; border:1px solid #fde68a; flex-wrap:wrap;">
+            <div style="flex:1; min-width:200px;">
+              <div style="font-weight:700; color:#92400e; font-size:13px;">🔧 관리대장 데이터 정리</div>
+              <div style="font-size:11px; color:#78350f; margin-top:3px;">담당자 "운전" → 재질별 담당자 / 부서장 "차장" → 강병주 / 중복 제거</div>
+            </div>
+            <button class="btn" style="padding:8px 18px; font-size:13px; background:#f59e0b; color:white;" onclick="manualMigrateLogData()">관리대장 정리 실행</button>
+          </div>
+
+          <!-- 데이터 재설정 -->
+          <div style="display:flex; gap:12px; align-items:center; padding:12px; background:#fef2f2; border-radius:6px; border:1px solid #fecaca; flex-wrap:wrap;">
+            <div style="flex:1; min-width:200px;">
+              <div style="font-weight:700; color:#991b1b; font-size:13px;">🔄 전체 데이터 재설정</div>
+              <div style="font-size:11px; color:#7f1d1d; margin-top:3px;">모든 데이터 삭제 후 HTML 내장 기본값으로 복원 (검사성적서 45건 + 관리대장 54건)</div>
+            </div>
+            <button class="btn" style="padding:8px 18px; font-size:13px; background:#dc2626; color:white;" onclick="forceResetCertData()">데이터 재설정</button>
+          </div>
         </div>
       </div>
     </div>
@@ -4548,6 +4585,7 @@ function renderCert(){
         <span>검 사 성 적 서 — ${c.commodity||''} / ${c.size||''}</span>
         <span>
           <span class="badge badge-${badgeClass}" style="margin-right:10px;">수요자판정: ${finalJudge}</span>
+          <button class="btn" style="padding:3px 10px; font-size:11px; background:#8b5cf6; color:white;" onclick="autoFillSingleCert(${idx})" title="이 성적서의 수요자 측정값을 SPEC 중심값으로 자동 채우고 OK 판정을 적용합니다.">✨ 자동채우기</button>
           <button class="btn btn-primary" style="padding:3px 10px; font-size:11px;" onclick="editCert(${idx})">수정</button>
           <button class="btn btn-danger" style="padding:3px 10px; font-size:11px;" onclick="delCert(${idx})">삭제</button>
         </span>
@@ -4658,11 +4696,12 @@ function openCertModal(){
   document.getElementById('cert_scan_id').value = '';
   document.getElementById('certScanPreview').innerHTML = '';
 
-  document.getElementById('c_commodity').value = 'CR COIL (SPCC)';
-  document.getElementById('c_spec').value = 'KS D3512 SPC1 / JIS G3141 SPCC / ASTM A1008 CSA';
-  document.getElementById('c_surface').value = 'DULL(S)';
+  // ⭐ 공급자/품명/규격/표면을 빈 양식으로 (사용자가 소재업체에서 직접 선택/입력)
+  document.getElementById('c_commodity').value = '';
+  document.getElementById('c_spec').value = '';
+  document.getElementById('c_surface').value = '';
   document.getElementById('c_size').value = '';
-  document.getElementById('c_supplier').value = '태경스틸';
+  document.getElementById('c_supplier').value = '';
   document.getElementById('c_customer').value = '(주)태진다이텍';
   document.getElementById('c_date').value = new Date().toISOString().split('T')[0];
   document.getElementById('c_weight').value = '';
@@ -4683,29 +4722,19 @@ function openCertModal(){
   document.getElementById('supplierMeasBody').innerHTML = buildMeasTable('sup');
   document.getElementById('customerMeasBody').innerHTML = buildMeasTable('cus');
 
-  // 초기값 세팅
+  // ⭐ 측정값 SPEC도 모두 비움 (공급자가 작성하도록)
   MEAS_ITEMS.forEach(item => {
-    // 공급자 Spec: defaultSpec 세팅 (편집 가능)
     const supSpecEl = document.getElementById('sup_' + item.key + '_spec');
-    if (supSpecEl) supSpecEl.value = item.defaultSpec || '';
-
-    // 수요자 Spec: 공급자 값과 동일 (읽기전용)
+    if (supSpecEl) supSpecEl.value = '';
     const cusSpecEl = document.getElementById('cus_' + item.key + '_spec');
-    if (cusSpecEl) cusSpecEl.value = item.defaultSpec || '';
+    if (cusSpecEl) cusSpecEl.value = '';
 
-    // 측정값(X1/X2/X3) 및 판정 초기화
+    // 측정값(X1/X2/X3) 및 판정 초기화 (모두 빈 값)
     ['sup','cus'].forEach(prefix => {
-      if (item.type === 'text') {
-        ['x1','x2','x3'].forEach(x => {
-          const el = document.getElementById(prefix + '_' + item.key + '_' + x);
-          if (el) el.value = '양호';
-        });
-      } else {
-        ['x1','x2','x3'].forEach(x => {
-          const el = document.getElementById(prefix + '_' + item.key + '_' + x);
-          if (el) el.value = (item.key === 'r7') ? '0' : '';
-        });
-      }
+      ['x1','x2','x3'].forEach(x => {
+        const el = document.getElementById(prefix + '_' + item.key + '_' + x);
+        if (el) el.value = '';
+      });
       setRadioValue(prefix + '_' + item.key + '_j', 'OK');
     });
   });
@@ -5892,27 +5921,90 @@ function refreshCertModalDatalists(){
 // 공급자 변경 시 → 해당 업체의 기본 품명/규격/표면 자동 채우기
 function onSupplierChange(){
   const supName = (document.getElementById('c_supplier').value || '').trim();
-  const found = supplierMaster.find(s => s.name === supName);
-  if (!found) return;
-  // 빈 필드는 자동으로 채우기, 채워진 필드는 사용자에게 확인
-  const fields = [
-    {id:'c_commodity', label:'품명', val: found.commodity},
-    {id:'c_spec',      label:'규격', val: found.spec},
-    {id:'c_surface',   label:'표면', val: found.surface}
-  ];
-  fields.forEach(({id, label, val}) => {
-    const el = document.getElementById(id);
-    if (!el || !val) return;
-    if (!el.value) {
-      el.value = val;  // 빈 칸은 자동 채움
-    } else if (el.value !== val) {
-      // 다른 값이 있으면 확인 후 변경
-      if (confirm(label + '을(를) "' + val + '"(으)로 변경할까요?\n(현재값: ' + el.value + ')')) {
-        el.value = val;
-      }
+  if (!supName) return;
+
+  // 1) supplierMaster에서 기본 정보 (품명/규격/표면)
+  const found = (typeof supplierMaster !== 'undefined') ? supplierMaster.find(s => s.name === supName) : null;
+  if (found) {
+    const fields = [
+      {id:'c_commodity', val: found.commodity},
+      {id:'c_spec',      val: found.spec},
+      {id:'c_surface',   val: found.surface}
+    ];
+    fields.forEach(({id, val}) => {
+      const el = document.getElementById(id);
+      if (el && !el.value && val) el.value = val;  // 빈 필드만 자동 채움 (확인창 없음)
+    });
+  }
+
+  // 2) materialMaster에서 동일 공급자 항목 찾아 측정 SPEC 자동 채움
+  if (typeof materialMaster !== 'undefined' && Array.isArray(materialMaster) && typeof MATERIAL_SPEC_TEMPLATES === 'object') {
+    const matchedMat = materialMaster.find(m => m.supplier === supName);
+    if (matchedMat && matchedMat.material) {
+      autoFillMeasSpecsByMaterial(matchedMat.material, matchedMat.thick, matchedMat.width);
     }
-  });
+  }
 }
+
+// 재질에 따라 측정값 SPEC 자동 채움 (sup_xxx_spec, cus_xxx_spec 둘 다)
+function autoFillMeasSpecsByMaterial(material, thick, width){
+  if (!material || typeof MATERIAL_SPEC_TEMPLATES === 'undefined') return;
+  const template = MATERIAL_SPEC_TEMPLATES[material];
+  if (!template) return;
+
+  // 재질에 따라 두께/폭/경도/연신율/형곡/평탄도 SPEC 채움 (빈 필드만)
+  Object.keys(template).forEach(key => {
+    const supSpec = document.getElementById('sup_' + key + '_spec');
+    const cusSpec = document.getElementById('cus_' + key + '_spec');
+    let val = template[key];
+    // {thick}, {width} 치환
+    if (typeof val === 'string') {
+      val = val.replace('{thick}', thick || '').replace('{width}', width || '');
+    }
+    if (supSpec && !supSpec.value && val) supSpec.value = val;
+    if (cusSpec && !cusSpec.value && val) cusSpec.value = val;
+  });
+
+  // 재질명도 자동 채움 (r2 = 재질 항목)
+  const supR2X1 = document.getElementById('sup_r2_x1');
+  const cusR2X1 = document.getElementById('cus_r2_x1');
+  if (supR2X1 && !supR2X1.value) supR2X1.value = material;
+  if (cusR2X1 && !cusR2X1.value) cusR2X1.value = material;
+}
+
+// 재질별 SPEC 템플릿 (검사 기준서 기반)
+const MATERIAL_SPEC_TEMPLATES = {
+  'SPCC': {
+    r1: '과도한 스크래치 및 오염 없을 것',
+    r2: 'SPCC',
+    r3: '{width} ±0.1',
+    r4: '{thick} ±0.05',
+    r5: '65 이하',
+    r6: '24 이상',
+    r7: '0 / +2',
+    r8: '0/+12, 0/+8, 0/+6'
+  },
+  'SUS304': {
+    r1: '과도한 스크래치 및 오염 없을 것',
+    r2: 'SUS304',
+    r3: '{width} ±0.1',
+    r4: '{thick} ±0.02',
+    r5: '90 이하',
+    r6: '40 이상',
+    r7: '0 / +2',
+    r8: '0/+12, 0/+8, 0/+6'
+  },
+  'SUS430': {
+    r1: '과도한 스크래치 및 오염 없을 것',
+    r2: 'SUS430',
+    r3: '{width} ±0.1',
+    r4: '{thick} ±0.02',
+    r5: '88 이하',
+    r6: '22 이상',
+    r7: '0 / +2',
+    r8: '0/+12, 0/+8, 0/+6'
+  }
+};
 
 function onCommodityChange(){
   // 품명 변경 시 추가 동작 (현재는 자동 동작 없음, 향후 확장 가능)
