@@ -3369,8 +3369,26 @@ function migrateCertData(){
   return modified;
 }
 
-// 초기 로드 시 1회 실행
-migrateCertData();
+// 초기 로드 시 1회 실행 (정정 시 Supabase에도 자동 반영)
+(function autoMigrateOnLoad(){
+  const fixed = migrateCertData();
+  if (fixed) {
+    console.log('[Migration] 검사성적서 자동 정정 완료. Supabase 동기화 대기 중...');
+    // 페이지 로드 후 Supabase 연결되면 자동 push (3초 후)
+    setTimeout(async () => {
+      if (typeof appSettings !== 'undefined' && appSettings.supabaseUrl && appSettings.supabaseKey
+          && typeof pushCertToSupabase === 'function') {
+        let ok = 0, fail = 0;
+        for (const cert of certData) {
+          if (cert.id) {
+            try { await pushCertToSupabase(cert); ok++; } catch(e) { fail++; }
+          }
+        }
+        console.log('[Migration] 정정 데이터 Supabase 동기화: ' + ok + '/' + (ok+fail));
+      }
+    }, 3000);
+  }
+})();
 
 // 사용자가 직접 트리거하는 검사성적서 담당자 정리 (Supabase에도 반영)
 async function manualMigrateCertData(){
@@ -4355,6 +4373,9 @@ function hasCustomerMeas(c){
 // 검사성적서 (공급자/수요자 구분)
 // ========================================
 function renderCert(){
+  // ⭐ 렌더링 직전 자동 정정: SUS는 허미정, SPCC는 문수진 (사용자가 잘못된 데이터를 보지 않도록)
+  if (typeof migrateCertData === 'function') migrateCertData();
+
   const suppliers = [...new Set(certData.map(c=>c.supplier).filter(Boolean))];
   const selSupp = document.getElementById('certFilterSupplier');
   const curSupp = selSupp.value;
