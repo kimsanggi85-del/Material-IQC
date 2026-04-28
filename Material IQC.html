@@ -1632,6 +1632,57 @@
               </div>
             </div>
 
+            <!-- 동국산업 -->
+            <div onclick="openSupplierView('동국산업')"
+                 style="cursor:pointer; background:linear-gradient(135deg, #f59e0b 0%, #b45309 100%); color:white; border-radius:12px; padding:30px 25px; box-shadow:0 4px 15px rgba(245,158,11,0.3); transition:all 0.2s; position:relative; overflow:hidden;"
+                 onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 25px rgba(245,158,11,0.45)';"
+                 onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(245,158,11,0.3)';">
+              <div style="font-size:14px; opacity:0.9; margin-bottom:8px; font-weight:500;">③ 공급자</div>
+              <div style="font-size:24px; font-weight:800; margin-bottom:6px; letter-spacing:-0.5px;">동국산업</div>
+              <div style="font-size:15px; opacity:0.95; margin-bottom:18px; font-weight:600;">소재 공급사</div>
+              <div style="display:flex; justify-content:space-between; align-items:center; padding-top:15px; border-top:1px solid rgba(255,255,255,0.25);">
+                <div>
+                  <div style="font-size:11px; opacity:0.85;">등록 건수</div>
+                  <div style="font-size:22px; font-weight:700;" id="count_dongguk">-</div>
+                </div>
+                <div style="font-size:28px; opacity:0.8;">→</div>
+              </div>
+            </div>
+
+            <!-- 나스테크 -->
+            <div onclick="openSupplierView('나스테크')"
+                 style="cursor:pointer; background:linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%); color:white; border-radius:12px; padding:30px 25px; box-shadow:0 4px 15px rgba(139,92,246,0.3); transition:all 0.2s; position:relative; overflow:hidden;"
+                 onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 25px rgba(139,92,246,0.45)';"
+                 onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(139,92,246,0.3)';">
+              <div style="font-size:14px; opacity:0.9; margin-bottom:8px; font-weight:500;">④ 공급자</div>
+              <div style="font-size:24px; font-weight:800; margin-bottom:6px; letter-spacing:-0.5px;">나스테크</div>
+              <div style="font-size:15px; opacity:0.95; margin-bottom:18px; font-weight:600;">소재 공급사</div>
+              <div style="display:flex; justify-content:space-between; align-items:center; padding-top:15px; border-top:1px solid rgba(255,255,255,0.25);">
+                <div>
+                  <div style="font-size:11px; opacity:0.85;">등록 건수</div>
+                  <div style="font-size:22px; font-weight:700;" id="count_naseutech">-</div>
+                </div>
+                <div style="font-size:28px; opacity:0.8;">→</div>
+              </div>
+            </div>
+
+            <!-- 한국금속 -->
+            <div onclick="openSupplierView('한국금속')"
+                 style="cursor:pointer; background:linear-gradient(135deg, #ec4899 0%, #be185d 100%); color:white; border-radius:12px; padding:30px 25px; box-shadow:0 4px 15px rgba(236,72,153,0.3); transition:all 0.2s; position:relative; overflow:hidden;"
+                 onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 25px rgba(236,72,153,0.45)';"
+                 onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(236,72,153,0.3)';">
+              <div style="font-size:14px; opacity:0.9; margin-bottom:8px; font-weight:500;">⑤ 공급자</div>
+              <div style="font-size:24px; font-weight:800; margin-bottom:6px; letter-spacing:-0.5px;">한국금속</div>
+              <div style="font-size:15px; opacity:0.95; margin-bottom:18px; font-weight:600;">소재 공급사</div>
+              <div style="display:flex; justify-content:space-between; align-items:center; padding-top:15px; border-top:1px solid rgba(255,255,255,0.25);">
+                <div>
+                  <div style="font-size:11px; opacity:0.85;">등록 건수</div>
+                  <div style="font-size:22px; font-weight:700;" id="count_hangukmetal">-</div>
+                </div>
+                <div style="font-size:28px; opacity:0.8;">→</div>
+              </div>
+            </div>
+
           </div>
 
           <div style="text-align:center; margin-top:25px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
@@ -4171,10 +4222,16 @@ function renderMeasRow(label, data){
 function updateSupplierCounts(){
   const taegyeong = certData.filter(c => c.supplier === '태경스틸').length;
   const dongil = certData.filter(c => c.supplier === '㈜동일스테인레스' || c.supplier === '(주)동일스테인레스').length;
-  const el1 = document.getElementById('count_taegyeong');
-  const el2 = document.getElementById('count_dongil');
-  if (el1) el1.textContent = taegyeong + '건';
-  if (el2) el2.textContent = dongil + '건';
+  const dongguk = certData.filter(c => c.supplier === '동국산업').length;
+  const naseutech = certData.filter(c => c.supplier === '나스테크').length;
+  const hangukmetal = certData.filter(c => c.supplier === '한국금속').length;
+
+  const setEl = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val + '건'; };
+  setEl('count_taegyeong', taegyeong);
+  setEl('count_dongil', dongil);
+  setEl('count_dongguk', dongguk);
+  setEl('count_naseutech', naseutech);
+  setEl('count_hangukmetal', hangukmetal);
 }
 
 function openSupplierView(supplier){
@@ -4189,6 +4246,9 @@ function openSupplierView(supplier){
   if (label) {
     if (supplier === '태경스틸') label.textContent = '태경스틸 (SPCC)';
     else if (supplier === '㈜동일스테인레스' || supplier === '(주)동일스테인레스') label.textContent = '㈜동일스테인레스 (SUS)';
+    else if (supplier === '동국산업') label.textContent = '동국산업';
+    else if (supplier === '나스테크') label.textContent = '나스테크';
+    else if (supplier === '한국금속') label.textContent = '한국금속';
     else label.textContent = '전체 공급자';
   }
 
@@ -5558,7 +5618,10 @@ const LS_SUPPLIER_MASTER = 'tj_material_supplier_master_v1';
 function loadSupplierMaster(){
   const def = [
     {name:'태경스틸',         commodity:'CR COIL (SPCC)',  spec:'KS D3512 SPC1 / JIS G3141 SPCC / ASTM A1008 CSA', surface:'DULL(S)'},
-    {name:'㈜동일스테인레스', commodity:'STS CR COIL',     spec:'KS D3698-STS304',                                  surface:'NO. 2B'}
+    {name:'㈜동일스테인레스', commodity:'STS CR COIL',     spec:'KS D3698-STS304',                                  surface:'NO. 2B'},
+    {name:'동국산업',         commodity:'',                spec:'',                                                  surface:''},
+    {name:'나스테크',         commodity:'',                spec:'',                                                  surface:''},
+    {name:'한국금속',         commodity:'',                spec:'',                                                  surface:''}
   ];
   try {
     const raw = localStorage.getItem(LS_SUPPLIER_MASTER);
@@ -5567,7 +5630,21 @@ function loadSupplierMaster(){
       return def;
     }
     const saved = JSON.parse(raw);
-    return Array.isArray(saved) && saved.length > 0 ? saved : def;
+    if (!Array.isArray(saved) || saved.length === 0) return def;
+
+    // ⭐ 자동 보강: 기존 저장 데이터에 새 공급자(동국산업/나스테크/한국금속)가 없으면 추가
+    const savedNames = new Set(saved.map(s => s.name));
+    let added = false;
+    ['동국산업', '나스테크', '한국금속'].forEach(name => {
+      if (!savedNames.has(name)) {
+        saved.push({name, commodity:'', spec:'', surface:''});
+        added = true;
+      }
+    });
+    if (added) {
+      localStorage.setItem(LS_SUPPLIER_MASTER, JSON.stringify(saved));
+    }
+    return saved;
   } catch(e) {
     return def;
   }
