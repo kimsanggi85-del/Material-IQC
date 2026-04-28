@@ -1922,6 +1922,41 @@ CREATE TRIGGER trg_cert_updated BEFORE UPDATE ON material_cert FOR EACH ROW EXEC
       </div>
     </div>
 
+    <!-- ====================== 소재 마스터 ====================== -->
+    <div class="card">
+      <div class="card-header">
+        <span>📦 소재 마스터 (검사성적서용)</span>
+        <div>
+          <button class="btn btn-success" style="padding:6px 14px; font-size:12px;" onclick="autoExtractMaterialMaster()" title="기존 검사성적서에서 (공급자+품명+규격+표면) 조합을 자동으로 추출해 마스터에 추가합니다.">🔄 기존 데이터에서 자동 추출</button>
+          <button class="btn btn-primary" style="padding:6px 14px; font-size:12px;" onclick="openMaterialMasterModal()">＋ 소재 추가</button>
+        </div>
+      </div>
+      <div class="card-body">
+        <div style="background:#dbeafe; padding:10px 14px; border-radius:5px; font-size:12px; color:#1e40af; margin-bottom:15px; border-left:3px solid #3b82f6;">
+          검사성적서 신규 등록 시 <b>품명/규격/표면 드롭다운</b>에 표시됩니다. 공급자 선택 후 동일 공급자의 소재 옵션이 자동으로 표시됩니다.<br>
+          <b>두께/폭 SPEC</b>도 등록해두면 검사성적서 SIZE 자동 채움에 활용됩니다.
+        </div>
+
+        <div style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
+          <table class="data-table" id="materialMasterTable" style="font-size:13px;">
+            <thead>
+              <tr>
+                <th>공급자</th>
+                <th>품명</th>
+                <th>규격</th>
+                <th>표면</th>
+                <th>재질</th>
+                <th>두께(mm)</th>
+                <th>폭(mm)</th>
+                <th style="width:90px;">관리</th>
+              </tr>
+            </thead>
+            <tbody id="materialMasterBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
     <!-- 수요자 측정값 일괄 자동 채우기 -->
     <div class="card">
       <div class="card-header">✨ 수요자 측정값 일괄 자동 채우기</div>
@@ -1940,6 +1975,77 @@ CREATE TRIGGER trg_cert_updated BEFORE UPDATE ON material_cert FOR EACH ROW EXEC
 
   </div>
 
+</div>
+
+<!-- ===================== 소재 마스터 모달 ===================== -->
+<div class="modal-overlay" id="materialMasterModal">
+  <div class="modal" style="max-width:600px;">
+    <div class="modal-header">
+      <span id="mmModalTitle">소재 추가</span>
+      <button class="close-btn" onclick="closeMaterialMasterModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="mm_idx" value="-1">
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+        <div>
+          <label style="font-size:12px; color:#475569; font-weight:700;">공급자 *</label>
+          <input type="text" id="mm_supplier" list="dl_mm_supplier" placeholder="태경스틸 / ㈜동일스테인레스" style="width:100%; padding:8px 10px; border:1px solid #cbd5e0; border-radius:4px; font-size:13px; margin-top:4px;">
+          <datalist id="dl_mm_supplier"></datalist>
+        </div>
+        <div>
+          <label style="font-size:12px; color:#475569; font-weight:700;">재질 *</label>
+          <select id="mm_material" style="width:100%; padding:8px 10px; border:1px solid #cbd5e0; border-radius:4px; font-size:13px; margin-top:4px;">
+            <option value="SPCC">SPCC</option>
+            <option value="SUS304">SUS304</option>
+            <option value="SUS430">SUS430</option>
+            <option value="SUS301">SUS301</option>
+            <option value="SUS316">SUS316</option>
+            <option value="SUS420">SUS420</option>
+            <option value="기타">기타</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="margin-top:12px;">
+        <label style="font-size:12px; color:#475569; font-weight:700;">품명 *</label>
+        <input type="text" id="mm_commodity" placeholder="예) CR COIL (SPCC), STS CR COIL" style="width:100%; padding:8px 10px; border:1px solid #cbd5e0; border-radius:4px; font-size:13px; margin-top:4px;">
+      </div>
+
+      <div style="margin-top:12px;">
+        <label style="font-size:12px; color:#475569; font-weight:700;">규격</label>
+        <input type="text" id="mm_spec" placeholder="예) KS D3512 SPC1 / JIS G3141 SPCC" style="width:100%; padding:8px 10px; border:1px solid #cbd5e0; border-radius:4px; font-size:13px; margin-top:4px;">
+      </div>
+
+      <div style="margin-top:12px;">
+        <label style="font-size:12px; color:#475569; font-weight:700;">표면</label>
+        <input type="text" id="mm_surface" placeholder="예) DULL(S), NO. 2B" style="width:100%; padding:8px 10px; border:1px solid #cbd5e0; border-radius:4px; font-size:13px; margin-top:4px;">
+      </div>
+
+      <div style="margin-top:14px; padding-top:14px; border-top:1px dashed #cbd5e0;">
+        <label style="font-size:12px; color:#475569; font-weight:700; display:block; margin-bottom:6px;">SIZE SPEC (선택)</label>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+          <div>
+            <label style="font-size:11px; color:#64748b;">두께(mm)</label>
+            <input type="number" id="mm_thick" step="0.01" placeholder="0.5" style="width:100%; padding:8px 10px; border:1px solid #cbd5e0; border-radius:4px; font-size:13px; margin-top:4px;">
+          </div>
+          <div>
+            <label style="font-size:11px; color:#64748b;">폭(mm)</label>
+            <input type="number" id="mm_width" step="0.1" placeholder="118" style="width:100%; padding:8px 10px; border:1px solid #cbd5e0; border-radius:4px; font-size:13px; margin-top:4px;">
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:12px;">
+        <label style="font-size:12px; color:#475569; font-weight:700;">비고</label>
+        <input type="text" id="mm_remark" placeholder="" style="width:100%; padding:8px 10px; border:1px solid #cbd5e0; border-radius:4px; font-size:13px; margin-top:4px;">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeMaterialMasterModal()">취소</button>
+      <button class="btn btn-primary" onclick="saveMaterialMaster()">💾 저장</button>
+    </div>
+  </div>
 </div>
 
 <!-- ===================== 수입검사일보 모달 ===================== -->
@@ -5411,6 +5517,7 @@ function renderSettingsTab(){
   renderNtfyTopics();
   renderChargeSettings();
   renderSupplierMaster();
+  renderMaterialMaster();
   updateConnectionStatus();
 }
 
@@ -5525,6 +5632,224 @@ function removeSupplier(idx){
   renderSupplierMaster();
 }
 
+// ============================================================
+// 📦 소재 마스터 (Material Master) - 검사성적서용
+// ============================================================
+const LS_MATERIAL_MASTER = 'tj_material_master_v1';
+let materialMaster = [];
+
+function loadMaterialMaster(){
+  const def = [
+    { supplier:'태경스틸', material:'SPCC', commodity:'CR COIL (SPCC)', spec:'KS D3512 SPC1 / JIS G3141 SPCC / ASTM A1008 CSA', surface:'DULL(S)', thick:0.5, width:0, remark:'' },
+    { supplier:'태경스틸', material:'SPCC', commodity:'CR COIL (SPCC)', spec:'KS D3512 SPC1 / JIS G3141 SPCC / ASTM A1008 CSA', surface:'DULL(S)', thick:0.6, width:0, remark:'' },
+    { supplier:'㈜동일스테인레스', material:'SUS304', commodity:'STS CR COIL', spec:'KS D3698-STS304 / ASTM A240M-304', surface:'NO. 2B', thick:0.5, width:0, remark:'' },
+    { supplier:'㈜동일스테인레스', material:'SUS430', commodity:'STS CR COIL', spec:'ASTM A240M-430 / KS D3698-STS430', surface:'NO. 2B', thick:0.6, width:0, remark:'' }
+  ];
+  try {
+    const raw = localStorage.getItem(LS_MATERIAL_MASTER);
+    if (!raw) {
+      materialMaster = def;
+      localStorage.setItem(LS_MATERIAL_MASTER, JSON.stringify(def));
+    } else {
+      materialMaster = JSON.parse(raw);
+    }
+  } catch(e) {
+    materialMaster = def;
+  }
+}
+
+function saveMaterialMasterToLS(){
+  localStorage.setItem(LS_MATERIAL_MASTER, JSON.stringify(materialMaster));
+}
+
+function renderMaterialMaster(){
+  const tbody = document.getElementById('materialMasterBody');
+  if (!tbody) return;
+
+  if (!materialMaster || materialMaster.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:30px; color:#94a3b8;">등록된 소재가 없습니다. <b>＋ 소재 추가</b> 또는 <b>🔄 자동 추출</b> 버튼을 사용하세요.</td></tr>';
+    return;
+  }
+
+  // 공급자 → 재질 → 두께 순 정렬
+  const sorted = [...materialMaster].sort((a, b) => {
+    if ((a.supplier||'') !== (b.supplier||'')) return (a.supplier||'').localeCompare(b.supplier||'');
+    if ((a.material||'') !== (b.material||'')) return (a.material||'').localeCompare(b.material||'');
+    return (parseFloat(a.thick)||0) - (parseFloat(b.thick)||0);
+  });
+
+  tbody.innerHTML = sorted.map(m => {
+    const idx = materialMaster.indexOf(m);
+    const matColor = m.material === 'SPCC' ? '#3b82f6' : (m.material && m.material.startsWith('SUS')) ? '#10b981' : '#64748b';
+    return `<tr>
+      <td>${m.supplier||''}</td>
+      <td style="font-weight:600;">${m.commodity||''}</td>
+      <td style="font-size:11px; color:#475569;">${m.spec||''}</td>
+      <td>${m.surface||''}</td>
+      <td><span style="background:${matColor}; color:white; padding:2px 8px; border-radius:10px; font-size:11px; font-weight:600;">${m.material||''}</span></td>
+      <td style="text-align:right;">${m.thick ? Number(m.thick).toFixed(2) : '-'}</td>
+      <td style="text-align:right;">${m.width ? Number(m.width).toFixed(1) : '-'}</td>
+      <td>
+        <button class="btn btn-primary" style="padding:4px 10px; font-size:11px;" onclick="editMaterialMaster(${idx})">수정</button>
+        <button class="btn btn-danger" style="padding:4px 10px; font-size:11px;" onclick="removeMaterialMaster(${idx})">삭제</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function openMaterialMasterModal(){
+  document.getElementById('mmModalTitle').textContent = '소재 추가';
+  document.getElementById('mm_idx').value = '-1';
+  document.getElementById('mm_supplier').value = '';
+  document.getElementById('mm_material').value = 'SPCC';
+  document.getElementById('mm_commodity').value = '';
+  document.getElementById('mm_spec').value = '';
+  document.getElementById('mm_surface').value = '';
+  document.getElementById('mm_thick').value = '';
+  document.getElementById('mm_width').value = '';
+  document.getElementById('mm_remark').value = '';
+
+  // 공급자 드롭다운 옵션 채우기
+  const dlSup = document.getElementById('dl_mm_supplier');
+  if (dlSup && Array.isArray(supplierMaster)) {
+    dlSup.innerHTML = supplierMaster.map(s => '<option value="' + s.name + '">').join('');
+  }
+
+  document.getElementById('materialMasterModal').classList.add('show');
+}
+
+function editMaterialMaster(idx){
+  const m = materialMaster[idx];
+  if (!m) return;
+  document.getElementById('mmModalTitle').textContent = '소재 수정';
+  document.getElementById('mm_idx').value = String(idx);
+  document.getElementById('mm_supplier').value = m.supplier || '';
+  document.getElementById('mm_material').value = m.material || 'SPCC';
+  document.getElementById('mm_commodity').value = m.commodity || '';
+  document.getElementById('mm_spec').value = m.spec || '';
+  document.getElementById('mm_surface').value = m.surface || '';
+  document.getElementById('mm_thick').value = m.thick || '';
+  document.getElementById('mm_width').value = m.width || '';
+  document.getElementById('mm_remark').value = m.remark || '';
+
+  const dlSup = document.getElementById('dl_mm_supplier');
+  if (dlSup && Array.isArray(supplierMaster)) {
+    dlSup.innerHTML = supplierMaster.map(s => '<option value="' + s.name + '">').join('');
+  }
+
+  document.getElementById('materialMasterModal').classList.add('show');
+}
+
+function closeMaterialMasterModal(){
+  document.getElementById('materialMasterModal').classList.remove('show');
+}
+
+function saveMaterialMaster(){
+  const idx = parseInt(document.getElementById('mm_idx').value);
+  const supplier = document.getElementById('mm_supplier').value.trim();
+  const material = document.getElementById('mm_material').value;
+  const commodity = document.getElementById('mm_commodity').value.trim();
+  const spec = document.getElementById('mm_spec').value.trim();
+  const surface = document.getElementById('mm_surface').value.trim();
+  const thick = parseFloat(document.getElementById('mm_thick').value) || 0;
+  const width = parseFloat(document.getElementById('mm_width').value) || 0;
+  const remark = document.getElementById('mm_remark').value.trim();
+
+  if (!supplier) { alert('공급자를 입력하세요.'); return; }
+  if (!commodity) { alert('품명을 입력하세요.'); return; }
+
+  const data = { supplier, material, commodity, spec, surface, thick, width, remark };
+
+  if (idx >= 0) {
+    materialMaster[idx] = data;
+  } else {
+    // 중복 체크 (공급자+품명+규격+표면+두께)
+    const dup = materialMaster.find(m =>
+      m.supplier === supplier && m.commodity === commodity &&
+      m.spec === spec && m.surface === surface &&
+      (parseFloat(m.thick)||0) === thick
+    );
+    if (dup) {
+      if (!confirm('동일한 소재가 이미 등록되어 있습니다. 그래도 추가하시겠습니까?')) return;
+    }
+    materialMaster.push(data);
+  }
+
+  saveMaterialMasterToLS();
+  renderMaterialMaster();
+  closeMaterialMasterModal();
+  // 검사성적서 모달 datalist도 갱신
+  if (typeof refreshCertModalDatalists === 'function') refreshCertModalDatalists();
+  showToast(idx >= 0 ? '✅ 소재 정보가 수정되었습니다' : '✅ 소재가 추가되었습니다');
+}
+
+function removeMaterialMaster(idx){
+  const m = materialMaster[idx];
+  if (!m) return;
+  if (!confirm('"' + (m.commodity||'') + ' / ' + (m.spec||'') + '" 소재를 삭제하시겠습니까?')) return;
+  materialMaster.splice(idx, 1);
+  saveMaterialMasterToLS();
+  renderMaterialMaster();
+  if (typeof refreshCertModalDatalists === 'function') refreshCertModalDatalists();
+}
+
+// 기존 검사성적서 데이터에서 (공급자+품명+규격+표면+두께+폭) 조합 자동 추출
+function autoExtractMaterialMaster(){
+  if (!Array.isArray(certData) || certData.length === 0) {
+    alert('등록된 검사성적서가 없어 추출할 데이터가 없습니다.');
+    return;
+  }
+
+  // 기존 마스터 키 (중복 방지)
+  const existingKeys = new Set(materialMaster.map(m =>
+    [m.supplier, m.commodity, m.spec, m.surface, parseFloat(m.thick)||0].join('|')
+  ));
+
+  let added = 0;
+  certData.forEach(c => {
+    // 재질 추정
+    const s = (c.supplier||'') + ' ' + (c.spec||'') + ' ' + (c.commodity||'');
+    let mat = 'SPCC';
+    if (/304/.test(s)) mat = 'SUS304';
+    else if (/430/.test(s)) mat = 'SUS430';
+    else if (/STS|스테인/.test(s)) mat = 'SUS304';
+
+    // SIZE에서 두께/폭 추출 (예: "0.5(T) X 118(mm)")
+    let thick = 0, width = 0;
+    const sm = (c.size||'').match(/([\d.]+)\s*\(?T\)?\s*[Xx×]\s*([\d.]+)/);
+    if (sm) { thick = parseFloat(sm[1]); width = parseFloat(sm[2]); }
+
+    const key = [c.supplier||'', c.commodity||'', c.spec||'', c.surface||'', thick].join('|');
+    if (!existingKeys.has(key)) {
+      materialMaster.push({
+        supplier: c.supplier||'',
+        material: mat,
+        commodity: c.commodity||'',
+        spec: c.spec||'',
+        surface: c.surface||'',
+        thick: thick,
+        width: width,
+        remark: '자동 추출'
+      });
+      existingKeys.add(key);
+      added++;
+    }
+  });
+
+  if (added === 0) {
+    alert('새로 추출된 소재가 없습니다. (모든 조합이 이미 등록되어 있음)');
+    return;
+  }
+
+  saveMaterialMasterToLS();
+  renderMaterialMaster();
+  if (typeof refreshCertModalDatalists === 'function') refreshCertModalDatalists();
+  alert('✅ ' + added + '건의 소재가 자동 추출되어 마스터에 추가되었습니다.');
+}
+
+// 초기 로드
+loadMaterialMaster();
+
 // 신규 등록 모달의 datalist 채우기
 function refreshCertModalDatalists(){
   const dlSup = document.getElementById('dl_supplier');
@@ -5539,6 +5864,14 @@ function refreshCertModalDatalists(){
     if (s.spec) specs.add(s.spec);
     if (s.surface) surfaces.add(s.surface);
   });
+  // ⭐ 소재 마스터의 옵션도 추가
+  if (Array.isArray(materialMaster)) {
+    materialMaster.forEach(m => {
+      if (m.commodity) commodities.add(m.commodity);
+      if (m.spec) specs.add(m.spec);
+      if (m.surface) surfaces.add(m.surface);
+    });
+  }
   // 기존 데이터에서 사용된 값도 추가
   if (Array.isArray(certData)) {
     certData.forEach(c => {
