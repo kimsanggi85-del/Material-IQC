@@ -818,6 +818,362 @@
     background: white;
   }
 
+  /* ============================================================
+     📱 모바일 반응형 (768px 이하)
+     ============================================================ */
+  @media (max-width: 768px) {
+    body {
+      font-size: 13px;
+      padding: 0;
+    }
+
+    /* 헤더 - 한 줄로 컴팩트 */
+    .header {
+      padding: 14px 14px 50px;
+    }
+    .header h1 {
+      font-size: 17px;
+      line-height: 1.3;
+      margin-bottom: 3px;
+    }
+    .header .sub {
+      font-size: 11px;
+      line-height: 1.4;
+    }
+    .header .doc-info {
+      bottom: 8px;
+      right: 14px;
+      font-size: 10px;
+    }
+    /* Sync 뱃지 헤더 우상단 */
+    #syncStatusBadge {
+      top: 14px !important;
+      right: 14px !important;
+      padding: 4px 10px !important;
+      font-size: 10px !important;
+    }
+
+    /* 탭 - 가로 스크롤 + 작은 사이즈 */
+    .tabs {
+      padding: 0 8px;
+      gap: 0;
+    }
+    .tab-btn {
+      padding: 12px 12px;
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+
+    /* 컨테이너 패딩 축소 */
+    .container {
+      padding: 12px 10px;
+    }
+
+    /* 카드 마진/패딩 축소 */
+    .card {
+      margin-bottom: 12px;
+      border-radius: 6px;
+    }
+    .card-header {
+      padding: 10px 12px;
+      font-size: 13px;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .card-header > span:first-child {
+      width: 100%;
+    }
+    .card-header > div, .card-header > span:nth-child(2) {
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .card-body {
+      padding: 12px;
+    }
+
+    /* 버튼 - 터치 친화적 */
+    .btn {
+      padding: 8px 12px;
+      font-size: 12px;
+      min-height: 36px;
+    }
+
+    /* 테이블 - 가로 스크롤 + 작은 글씨 */
+    table {
+      font-size: 11px;
+    }
+    table.data-table {
+      min-width: 700px;
+    }
+    table.data-table th, table.data-table td {
+      padding: 6px 4px;
+      white-space: nowrap;
+    }
+    .card-body > table {
+      display: block;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    table.std-table th, table.std-table td {
+      padding: 6px 8px;
+      font-size: 11px;
+    }
+
+    /* 통계 카드 - 2열 → 1열 */
+    .stats-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+    .stat-card {
+      padding: 12px;
+    }
+    .stat-card .label {
+      font-size: 11px;
+    }
+    .stat-card .value {
+      font-size: 18px;
+    }
+
+    /* 폼 그리드 - 1열 */
+    .form-grid {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    /* 입력 필드 - 큰 크기로 (터치 편의) */
+    input[type="text"], input[type="number"], input[type="date"], input[type="email"], input[type="password"], select, textarea {
+      padding: 10px 10px;
+      font-size: 14px;
+      width: 100%;
+    }
+    input[type="radio"] {
+      transform: scale(1.2);
+    }
+
+    /* 모달 - 풀스크린 */
+    .modal-overlay {
+      padding: 0;
+    }
+    .modal {
+      max-width: 100% !important;
+      max-height: 100vh !important;
+      border-radius: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .modal-header {
+      padding: 12px 14px;
+      font-size: 14px;
+      border-radius: 0;
+      flex-shrink: 0;
+    }
+    .modal-body {
+      padding: 14px;
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .modal-footer {
+      padding: 12px 14px;
+      flex-shrink: 0;
+      gap: 8px;
+    }
+    .modal-footer .btn {
+      flex: 1;
+      min-height: 44px;
+      font-size: 14px;
+    }
+
+    /* 필터바 - 1열 세로 정렬 */
+    .filter-bar {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 8px;
+      padding: 10px;
+    }
+    .filter-bar label {
+      font-size: 11px;
+      margin-bottom: -4px;
+    }
+    .filter-bar input[type="text"], .filter-bar select {
+      width: 100%;
+      min-width: 0 !important;
+    }
+
+    /* 공급자 선택 메인 카드 - 세로 배치 */
+    #supplierMainView > div[style*="grid-template-columns"] {
+      grid-template-columns: 1fr !important;
+    }
+    #supplierMainView > div > div[onclick] {
+      padding: 18px !important;
+    }
+    #supplierMainView > div > div[onclick] > div[style*="font-size:24px"] {
+      font-size: 18px !important;
+    }
+
+    /* 검사성적서 카드 컴팩트 */
+    .inspection-cert {
+      padding: 12px;
+    }
+    .cert-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 10px 12px;
+      margin: -12px -12px 12px;
+      font-size: 12px;
+    }
+    .cert-header > span:nth-child(2) {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      width: 100%;
+    }
+    .cert-info-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      font-size: 11px;
+    }
+    .cert-info-grid div {
+      padding: 4px 6px;
+    }
+    .cert-part-supplier, .cert-part-customer {
+      padding: 8px;
+    }
+    .cert-part-title {
+      font-size: 11px !important;
+      flex-direction: column !important;
+      align-items: flex-start !important;
+      gap: 6px;
+    }
+
+    /* 측정 테이블 (모달) - 가로 스크롤 */
+    .meas-table {
+      font-size: 11px;
+    }
+    .meas-table th, .meas-table td {
+      padding: 4px 3px !important;
+    }
+    .meas-table input[type="text"], .meas-table input[type="number"] {
+      padding: 6px 4px !important;
+      font-size: 11px !important;
+    }
+    .judge-radio {
+      flex-direction: column;
+      gap: 2px;
+    }
+    .judge-radio label {
+      padding: 2px 6px;
+      font-size: 10px;
+    }
+
+    /* 외관 불량 갤러리 - 1열 */
+    .defect-gallery {
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    .defect-photos-2x2 {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    /* 수입검사 기준서 재질 탭 */
+    .std-mat-btn {
+      font-size: 12px !important;
+      padding: 10px 8px !important;
+    }
+
+    /* 토스트 알림 위치 조정 */
+    #_tjToast {
+      top: 70px !important;
+      left: 10px !important;
+      right: 10px !important;
+      transform: none !important;
+      width: auto !important;
+      max-width: none !important;
+      padding: 10px 14px !important;
+      font-size: 13px !important;
+    }
+
+    /* 푸터 */
+    .footer {
+      padding: 14px;
+      font-size: 11px;
+    }
+
+    /* 스캔 갤러리 */
+    .scan-gallery {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+    .scan-thumb {
+      height: 100px;
+    }
+
+    /* 측정테이블 컨테이너 가로스크롤 */
+    .cert-section-box .std-table,
+    .cert-section-box .meas-table {
+      display: block;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      max-width: 100%;
+    }
+    .cert-section-box .std-table tbody,
+    .cert-section-box .std-table thead,
+    .cert-section-box .meas-table tbody,
+    .cert-section-box .meas-table thead {
+      display: table;
+      width: 100%;
+      min-width: 520px;
+      table-layout: fixed;
+    }
+
+    /* 이미지 뷰어 닫기 버튼 - 보이도록 위치 조정 */
+    .viewer-close {
+      top: -36px !important;
+      right: -4px !important;
+    }
+  }
+
+  /* ============================================================
+     📱 작은 모바일 (480px 이하) - 추가 컴팩트
+     ============================================================ */
+  @media (max-width: 480px) {
+    .header h1 { font-size: 15px; }
+    .header .sub { font-size: 10px; }
+    .stats-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .stat-card .value {
+      font-size: 16px;
+    }
+    .tab-btn {
+      padding: 10px 10px;
+      font-size: 11px;
+    }
+    .card-body {
+      padding: 10px;
+    }
+    /* 모달 측정 테이블 더 컴팩트 */
+    .meas-table input {
+      min-width: 0 !important;
+    }
+    /* 공급자 카드 텍스트 줄임 */
+    #supplierMainView > div > div[onclick] > div[style*="font-size:24px"] {
+      font-size: 16px !important;
+    }
+    #supplierMainView > div > div[onclick] > div[style*="font-size:15px"] {
+      font-size: 12px !important;
+    }
+    /* 정보 그리드 1열 */
+    .cert-info-grid {
+      grid-template-columns: 1fr !important;
+    }
+  }
+
   @media print {
     .tabs, .toolbar, .btn, .header .doc-info { display: none !important; }
     .tab-content { display: block !important; }
@@ -844,7 +1200,7 @@
   <button class="tab-btn active" onclick="showTab('dashboard')">📊 대시보드</button>
   <button class="tab-btn" onclick="showTab('standard')">📖 수입검사 기준서</button>
   <button class="tab-btn" onclick="showTab('material-std')">🔬 소재 화학/기계 기준</button>
-  <button class="tab-btn" onclick="showTab('log')">📝 수입검사일보 (소재)</button>
+  <button class="tab-btn" onclick="showTab('log')">📝 관리대장 (소재)</button>
   <button class="tab-btn" onclick="showTab('cert')">📄 검사 성적서</button>
   <button class="tab-btn" onclick="showTab('settings')">⚙️ 설정</button>
 </div>
@@ -883,28 +1239,32 @@
     <div class="card">
       <div class="card-header">📌 최근 입고 내역 (최근 10건)</div>
       <div class="card-body">
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>입고일</th><th>재질</th><th>두께(mm)</th><th>폭(mm)</th>
-              <th>입고량(KG)</th><th>HEAT-NO</th><th>판정</th><th>담당</th>
-            </tr>
-          </thead>
-          <tbody id="recentLogBody"></tbody>
-        </table>
+        <div style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>입고일</th><th>재질</th><th>두께(mm)</th><th>폭(mm)</th>
+                <th>입고량(KG)</th><th>HEAT-NO</th><th>판정</th><th>담당</th>
+              </tr>
+            </thead>
+            <tbody id="recentLogBody"></tbody>
+          </table>
+        </div>
       </div>
     </div>
 
     <div class="card">
       <div class="card-header">ℹ️ 검사 기준 요약 (SPCC)</div>
       <div class="card-body">
-        <table class="std-table">
-          <tr><th>검사항목</th><th>기준</th><th>검사방식</th><th>판정</th><th>주기</th><th>계측기</th></tr>
-          <tr><td>외관</td><td>유해 결점·변형·녹 없을 것</td><td>외관</td><td>N=전수, C=0</td><td>입고시</td><td>육안</td></tr>
-          <tr><td>재질/성분</td><td>성분표준과 일치, 밀시트 확인</td><td>밀시트</td><td>N=전수, C=0</td><td>입고시</td><td>육안</td></tr>
-          <tr><td>두께</td><td>지정두께 +0.05 / -0</td><td>측정</td><td>N=1, C=0</td><td>입고시</td><td>M/M</td></tr>
-          <tr><td>폭</td><td>지정폭 +0.1 / -0</td><td>측정</td><td>N=1, C=0</td><td>입고시</td><td>V/C</td></tr>
-        </table>
+        <div style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
+          <table class="std-table">
+            <tr><th>검사항목</th><th>기준</th><th>검사방식</th><th>판정</th><th>주기</th><th>계측기</th></tr>
+            <tr><td>외관</td><td>유해 결점·변형·녹 없을 것</td><td>외관</td><td>N=전수, C=0</td><td>입고시</td><td>육안</td></tr>
+            <tr><td>재질/성분</td><td>성분표준과 일치, 밀시트 확인</td><td>밀시트</td><td>N=전수, C=0</td><td>입고시</td><td>육안</td></tr>
+            <tr><td>두께</td><td>지정두께 +0.05 / -0</td><td>측정</td><td>N=1, C=0</td><td>입고시</td><td>M/M</td></tr>
+            <tr><td>폭</td><td>지정폭 +0.1 / -0</td><td>측정</td><td>N=1, C=0</td><td>입고시</td><td>V/C</td></tr>
+          </table>
+        </div>
       </div>
     </div>
   </div>
@@ -1168,11 +1528,12 @@
   <div id="log" class="tab-content">
     <div class="card">
       <div class="card-header">
-        <span>📝 수입검사일보 (소재) - TJP-M0711-12</span>
+        <span>📝 관리대장 (소재) - TJP-M0711-12</span>
         <div>
           <button class="btn btn-primary" onclick="openLogModal()">＋ 신규 등록</button>
           <button class="btn btn-success" onclick="exportLog()">📥 CSV 다운로드</button>
           <button class="btn btn-secondary" onclick="window.print()">🖨️ 인쇄</button>
+          <button class="btn" style="background:#f59e0b; color:white;" onclick="manualMigrateLogData()" title="담당자 '운전' → 재질별 담당자, 부서장 '차장' → '강병주', 중복 데이터 제거">🔧 데이터 정리</button>
         </div>
       </div>
       <div class="card-body">
@@ -1194,21 +1555,23 @@
           <input type="text" id="filterText" placeholder="HEAT-NO, 담당자 등" oninput="renderLog()" style="flex:1; min-width:200px;">
         </div>
 
-        <table class="data-table" id="logTable">
-          <thead>
-            <tr>
-              <th>입고일</th><th>재질</th><th>외관</th>
-              <th>두께 SPEC</th><th>폭 SPEC</th>
-              <th>실측 두께</th><th>실측 폭</th>
-              <th>입고(KG)</th><th>검사수</th><th>불량(KG)</th>
-              <th>HEAT-NO</th><th>부적합/처리</th>
-              <th>입고라벨</th><th>판정</th>
-              <th>담당</th><th>부서장</th>
-              <th>관리</th>
-            </tr>
-          </thead>
-          <tbody id="logBody"></tbody>
-        </table>
+        <div style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
+          <table class="data-table" id="logTable">
+            <thead>
+              <tr>
+                <th>입고일</th><th>재질</th><th>외관</th>
+                <th>두께 SPEC</th><th>폭 SPEC</th>
+                <th>실측 두께</th><th>실측 폭</th>
+                <th>입고(KG)</th><th>검사수</th><th>불량(KG)</th>
+                <th>HEAT-NO</th><th>부적합/처리</th>
+                <th>입고라벨</th><th>판정</th>
+                <th>담당</th><th>부서장</th>
+                <th>관리</th>
+              </tr>
+            </thead>
+            <tbody id="logBody"></tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
@@ -1273,6 +1636,7 @@
 
           <div style="text-align:center; margin-top:25px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
             <button class="btn btn-secondary" onclick="openSupplierView('')" style="padding:8px 20px; font-size:13px;">📋 전체 보기</button>
+            <button class="btn" style="padding:8px 20px; font-size:13px; background:#f59e0b; color:white;" onclick="manualMigrateCertData()" title="동일스테인레스(SUS) 담당자가 '문수진'으로 잘못 들어가 있으면 '허미정'으로 자동 정정합니다.">🔧 담당자 정리 (SUS → 허미정)</button>
             <button class="btn" onclick="forceResetCertData()" style="padding:8px 20px; font-size:13px; background:#dc2626; color:white;" title="localStorage와 Supabase의 기존 성적서/일보 데이터를 삭제하고 HTML에 내장된 데이터로 재설정합니다.">🔄 데이터 재설정 (성적서 45건 + 일보 54건 복원)</button>
           </div>
         </div>
@@ -1486,6 +1850,32 @@ CREATE TRIGGER trg_cert_updated BEFORE UPDATE ON material_cert FOR EACH ROW EXEC
       </div>
     </div>
 
+    <!-- 소재업체 (공급자) 관리 -->
+    <div class="card">
+      <div class="card-header">🏭 소재업체 (공급자) 관리</div>
+      <div class="card-body">
+        <div style="background:#dbeafe; padding:10px 14px; border-radius:5px; font-size:12px; color:#1e40af; margin-bottom:15px; border-left:3px solid #3b82f6;">
+          검사성적서 신규 등록 시 공급자/품명/규격/표면을 드롭다운에서 선택할 수 있도록 업체 정보를 등록합니다.<br>
+          여기에 등록된 업체는 검사성적서 신규 등록 모달의 드롭다운에 자동으로 나타납니다.
+        </div>
+
+        <!-- 등록된 업체 목록 -->
+        <div id="supplierMasterList" style="margin-bottom:15px;"></div>
+
+        <!-- 신규 업체 추가 -->
+        <div style="padding:14px; background:#f8fafc; border:1px solid #cbd5e0; border-radius:6px;">
+          <div style="font-weight:700; font-size:13px; color:#1e3a5f; margin-bottom:10px;">＋ 신규 업체 추가</div>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:8px; margin-bottom:8px;">
+            <input type="text" id="supName" placeholder="업체명 (예: 태경스틸)" style="padding:8px 10px; border:1px solid #cbd5e0; border-radius:4px; font-size:13px;">
+            <input type="text" id="supCommodity" placeholder="품명 (예: CR COIL (SPCC))" style="padding:8px 10px; border:1px solid #cbd5e0; border-radius:4px; font-size:13px;">
+            <input type="text" id="supSpec" placeholder="규격 (예: KS D3512 SPC1)" style="padding:8px 10px; border:1px solid #cbd5e0; border-radius:4px; font-size:13px;">
+            <input type="text" id="supSurface" placeholder="표면 (예: DULL(S))" style="padding:8px 10px; border:1px solid #cbd5e0; border-radius:4px; font-size:13px;">
+          </div>
+          <button class="btn btn-primary" style="padding:8px 18px; font-size:13px;" onclick="addSupplierMaster()">＋ 업체 추가</button>
+        </div>
+      </div>
+    </div>
+
     <!-- 담당자 관리 -->
     <div class="card">
       <div class="card-header">👤 수입검사 담당자 관리</div>
@@ -1556,7 +1946,7 @@ CREATE TRIGGER trg_cert_updated BEFORE UPDATE ON material_cert FOR EACH ROW EXEC
 <div class="modal-overlay" id="logModal">
   <div class="modal">
     <div class="modal-header">
-      <span id="logModalTitle">수입검사일보 신규 등록</span>
+      <span id="logModalTitle">관리대장 신규 등록</span>
       <button class="close-btn" onclick="closeLogModal()">✕</button>
     </div>
     <div class="modal-body">
@@ -1616,9 +2006,21 @@ CREATE TRIGGER trg_cert_updated BEFORE UPDATE ON material_cert FOR EACH ROW EXEC
       <!-- 기본정보 (공통) -->
       <div class="section-title" style="margin-top:15px;">📋 기본 정보</div>
       <div class="form-grid">
-        <div class="form-item"><label>품명 (Commodity)</label><input type="text" id="c_commodity" value="CR COIL (SPCC)"></div>
-        <div class="form-item"><label>규격 (Spec & Type)</label><input type="text" id="c_spec" value="KS D3512 SPC1 / JIS G3141 SPCC / ASTM A1008 CSA"></div>
-        <div class="form-item"><label>표면 (Surface Finish)</label><input type="text" id="c_surface" value="DULL(S)"></div>
+        <div class="form-item">
+          <label>품명 (Commodity) <span style="font-size:10px; color:#64748b;">▼ 선택 또는 직접 입력</span></label>
+          <input type="text" id="c_commodity" list="dl_commodity" value="CR COIL (SPCC)" onchange="onCommodityChange()">
+          <datalist id="dl_commodity"></datalist>
+        </div>
+        <div class="form-item">
+          <label>규격 (Spec & Type) <span style="font-size:10px; color:#64748b;">▼ 선택 또는 직접 입력</span></label>
+          <input type="text" id="c_spec" list="dl_spec" value="KS D3512 SPC1 / JIS G3141 SPCC / ASTM A1008 CSA">
+          <datalist id="dl_spec"></datalist>
+        </div>
+        <div class="form-item">
+          <label>표면 (Surface Finish) <span style="font-size:10px; color:#64748b;">▼ 선택 또는 직접 입력</span></label>
+          <input type="text" id="c_surface" list="dl_surface" value="DULL(S)">
+          <datalist id="dl_surface"></datalist>
+        </div>
         <div class="form-item"><label>치수 SIZE (TxW mm)</label><input type="text" id="c_size" placeholder="예: 0.6(T) X 90(W)mm"></div>
       </div>
 
@@ -1629,7 +2031,11 @@ CREATE TRIGGER trg_cert_updated BEFORE UPDATE ON material_cert FOR EACH ROW EXEC
           🏭 공급자 기재 사항 (업체 제공)
         </div>
         <div class="form-grid" style="margin-top:10px;">
-          <div class="form-item"><label>공급자 (Supplier)</label><input type="text" id="c_supplier" value="태경스틸"></div>
+          <div class="form-item">
+            <label>공급자 (Supplier) <span style="font-size:10px; color:#64748b;">▼ 선택 또는 직접 입력</span></label>
+            <input type="text" id="c_supplier" list="dl_supplier" value="태경스틸" onchange="onSupplierChange()">
+            <datalist id="dl_supplier"></datalist>
+          </div>
           <div class="form-item"><label>정기검사일자</label><input type="date" id="c_date"></div>
           <div class="form-item"><label>Weight (KG)</label><input type="number" id="c_weight"></div>
           <div class="form-item"><label>Cut</label><input type="text" id="c_cut" placeholder="예: 7CUT"></div>
@@ -1831,7 +2237,7 @@ function initCertDefaults() {
      size:'0.5(T) X 118(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
      date:'2026-04-23', weight:5130, cut:'9조', lot:'QFD0287', heat:'5E56766',
      supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
-     recv_date:'2026-04-23', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     recv_date:'2026-04-23', recv_charge:'허미정', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
      r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
      r2:{spec:'304', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
      r3:{spec:'118mm +0.1, -0.1mm', x1:'117.995', x2:'117.997', x3:'117.997', j:'OK'},
@@ -1853,7 +2259,7 @@ function initCertDefaults() {
      size:'0.5(T) X 126(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
      date:'2026-04-08', weight:3020, cut:'5조', lot:'QGZ0812', heat:'SE55024',
      supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
-     recv_date:'2026-04-08', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     recv_date:'2026-04-08', recv_charge:'허미정', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
      r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
      r2:{spec:'304', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
      r3:{spec:'126mm +0.1, -0.1mm', x1:'125.995', x2:'125.998', x3:'125.998', j:'OK'},
@@ -1875,7 +2281,7 @@ function initCertDefaults() {
      size:'0.6(T) X 70(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
      date:'2026-04-01', weight:1206, cut:'4조', lot:'C259102473', heat:'SG92534',
      supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
-     recv_date:'2026-04-01', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     recv_date:'2026-04-01', recv_charge:'허미정', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
      r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
      r2:{spec:'430', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
      r3:{spec:'70mm +0.1, -0.1mm', x1:'69.996', x2:'69.997', x3:'69.997', j:'OK'},
@@ -1897,7 +2303,7 @@ function initCertDefaults() {
      size:'0.6(T) X 70(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
      date:'2026-04-01', weight:617, cut:'2조', lot:'C25440B140', heat:'SG94296',
      supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
-     recv_date:'2026-04-01', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     recv_date:'2026-04-01', recv_charge:'허미정', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
      r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
      r2:{spec:'430', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
      r3:{spec:'70mm +0.1, -0.1mm', x1:'69.995', x2:'69.997', x3:'69.998', j:'OK'},
@@ -1919,7 +2325,7 @@ function initCertDefaults() {
      size:'0.6(T) X 80(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
      date:'2026-04-01', weight:2226, cut:'6조', lot:'C262100869', heat:'SD77587',
      supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
-     recv_date:'2026-04-01', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     recv_date:'2026-04-01', recv_charge:'허미정', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
      r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
      r2:{spec:'430', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
      r3:{spec:'80mm +0.1, -0.1mm', x1:'79.997', x2:'79.998', x3:'79.998', j:'OK'},
@@ -1941,7 +2347,7 @@ function initCertDefaults() {
      size:'0.6(T) X 80(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
      date:'2026-04-01', weight:635, cut:'2조', lot:'C25440B140', heat:'SG94296',
      supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
-     recv_date:'2026-04-01', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     recv_date:'2026-04-01', recv_charge:'허미정', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
      r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
      r2:{spec:'430', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
      r3:{spec:'80mm +0.1, -0.1mm', x1:'79.995', x2:'79.995', x3:'79.996', j:'OK'},
@@ -1963,7 +2369,7 @@ function initCertDefaults() {
      size:'0.6(T) X 74(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
      date:'2026-04-01', weight:804, cut:'2조', lot:'QGZ0217', heat:'SE54468',
      supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
-     recv_date:'2026-04-01', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     recv_date:'2026-04-01', recv_charge:'허미정', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
      r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
      r2:{spec:'304', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
      r3:{spec:'74mm +0.1, -0.1mm', x1:'73.997', x2:'73.997', x3:'73.999', j:'OK'},
@@ -1985,7 +2391,7 @@ function initCertDefaults() {
      size:'0.6(T) X 74(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
      date:'2026-04-01', weight:756, cut:'2조', lot:'QGW0615', heat:'SE53333',
      supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
-     recv_date:'2026-04-01', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     recv_date:'2026-04-01', recv_charge:'허미정', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
      r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
      r2:{spec:'304', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
      r3:{spec:'74mm +0.1, -0.1mm', x1:'73.999', x2:'73.998', x3:'73.999', j:'OK'},
@@ -2007,7 +2413,7 @@ function initCertDefaults() {
      size:'0.5(T) X 130(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
      date:'2026-03-19', weight:628, cut:'1조', lot:'QGZ0812', heat:'SE55024',
      supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
-     recv_date:'2026-03-19', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     recv_date:'2026-03-19', recv_charge:'허미정', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
      r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
      r2:{spec:'304', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
      r3:{spec:'130mm +0.1, -0.1mm', x1:'129.997', x2:'129.995', x3:'129.996', j:'OK'},
@@ -2029,7 +2435,7 @@ function initCertDefaults() {
      size:'0.5(T) X 130(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
      date:'2026-03-19', weight:1878, cut:'3조', lot:'QGX0678', heat:'SE53911',
      supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
-     recv_date:'2026-03-19', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     recv_date:'2026-03-19', recv_charge:'허미정', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
      r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
      r2:{spec:'304', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
      r3:{spec:'130mm +0.1, -0.1mm', x1:'129.997', x2:'129.996', x3:'129.996', j:'OK'},
@@ -2051,7 +2457,7 @@ function initCertDefaults() {
      size:'0.6(T) X 70(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
      date:'2026-03-06', weight:1380, cut:'4조', lot:'C258500385', heat:'SG90619',
      supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
-     recv_date:'2026-03-06', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     recv_date:'2026-03-06', recv_charge:'허미정', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
      r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
      r2:{spec:'430', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
      r3:{spec:'70mm +0.1, -0.1mm', x1:'69.998', x2:'69.999', x3:'69.997', j:'OK'},
@@ -2073,7 +2479,7 @@ function initCertDefaults() {
      size:'0.6(T) X 80(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
      date:'2026-03-06', weight:2278, cut:'4조', lot:'C261500857', heat:'SG94718',
      supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
-     recv_date:'2026-03-06', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     recv_date:'2026-03-06', recv_charge:'허미정', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
      r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
      r2:{spec:'430', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
      r3:{spec:'80mm +0.1, -0.1mm', x1:'79.996', x2:'79.996', x3:'79.997', j:'OK'},
@@ -2095,7 +2501,7 @@ function initCertDefaults() {
      size:'0.6(T) X 74(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
      date:'2026-03-05', weight:2270, cut:'6조', lot:'QGW0615 외', heat:'SE53333 외',
      supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
-     recv_date:'2026-03-05', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     recv_date:'2026-03-05', recv_charge:'허미정', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
      r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
      r2:{spec:'304', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
      r3:{spec:'74mm +0.1, -0.1mm', x1:'73.998', x2:'73.997', x3:'73.997', j:'OK'},
@@ -2117,7 +2523,7 @@ function initCertDefaults() {
      size:'0.6(T) X 70(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
      date:'2026-02-19', weight:2760, cut:'8조', lot:'C256501167', heat:'SG90627',
      supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
-     recv_date:'2026-02-19', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     recv_date:'2026-02-19', recv_charge:'허미정', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
      r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
      r2:{spec:'430', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
      r3:{spec:'70mm +0.1, -0.1mm', x1:'69.998', x2:'69.997', x3:'69.997', j:'OK'},
@@ -2139,7 +2545,7 @@ function initCertDefaults() {
      size:'0.6(T) X 84(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
      date:'2026-02-10', weight:394, cut:'1조', lot:'C258500385', heat:'SG90619',
      supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
-     recv_date:'2026-02-10', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     recv_date:'2026-02-10', recv_charge:'허미정', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
      r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
      r2:{spec:'430', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
      r3:{spec:'84mm +0.1, -0.1mm', x1:'83.998', x2:'83.997', x3:'83.997', j:'OK'},
@@ -2161,7 +2567,7 @@ function initCertDefaults() {
      size:'0.6(T) X 70(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
      date:'2026-02-04', weight:3120, cut:'9조', lot:'C258500764', heat:'SG92009',
      supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
-     recv_date:'2026-02-04', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     recv_date:'2026-02-04', recv_charge:'허미정', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
      r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
      r2:{spec:'430', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
      r3:{spec:'70mm +0.1, -0.1mm', x1:'69.997', x2:'69.998', x3:'69.998', j:'OK'},
@@ -2183,7 +2589,7 @@ function initCertDefaults() {
      size:'0.6(T) X 80(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
      date:'2026-02-04', weight:2346, cut:'6조', lot:'C257501435', heat:'SG90945',
      supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
-     recv_date:'2026-02-04', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     recv_date:'2026-02-04', recv_charge:'허미정', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
      r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
      r2:{spec:'430', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
      r3:{spec:'80mm +0.1, -0.1mm', x1:'79.997', x2:'79.999', x3:'79.994', j:'OK'},
@@ -2205,7 +2611,7 @@ function initCertDefaults() {
      size:'0.5(T) X 130(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
      date:'2026-02-04', weight:1854, cut:'3조', lot:'QGX0678', heat:'SE53911',
      supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
-     recv_date:'2026-02-04', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     recv_date:'2026-02-04', recv_charge:'허미정', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
      r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
      r2:{spec:'304', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
      r3:{spec:'130mm +0.1, -0.1mm', x1:'129.998', x2:'129.995', x3:'129.997', j:'OK'},
@@ -2227,7 +2633,7 @@ function initCertDefaults() {
      size:'0.6(T) X 74(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
      date:'2026-02-04', weight:1987, cut:'5조', lot:'QGW0615 외', heat:'SE53333 외',
      supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
-     recv_date:'2026-02-04', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     recv_date:'2026-02-04', recv_charge:'허미정', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
      r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
      r2:{spec:'304', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
      r3:{spec:'74mm +0.1, -0.1mm', x1:'73.997', x2:'73.999', x3:'73.995', j:'OK'},
@@ -2249,7 +2655,7 @@ function initCertDefaults() {
      size:'0.6(T) X 80(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
      date:'2026-01-20', weight:2052, cut:'6조', lot:'C259102473', heat:'SG92534',
      supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
-     recv_date:'2026-01-20', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     recv_date:'2026-01-20', recv_charge:'허미정', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
      r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
      r2:{spec:'430', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
      r3:{spec:'80mm +0.1, -0.1mm', x1:'79.995', x2:'79.997', x3:'79.997', j:'OK'},
@@ -2271,7 +2677,7 @@ function initCertDefaults() {
      size:'0.6(T) X 70(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
      date:'2026-01-20', weight:900, cut:'3조', lot:'C259102473', heat:'SG92534',
      supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
-     recv_date:'2026-01-20', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     recv_date:'2026-01-20', recv_charge:'허미정', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
      r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
      r2:{spec:'430', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
      r3:{spec:'70mm +0.1, -0.1mm', x1:'69.999', x2:'69.995', x3:'69.997', j:'OK'},
@@ -2293,7 +2699,7 @@ function initCertDefaults() {
      size:'0.5(T) X 126(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
      date:'2026-01-20', weight:3024, cut:'5조', lot:'QGZ0812', heat:'SE55024',
      supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
-     recv_date:'2026-01-20', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     recv_date:'2026-01-20', recv_charge:'허미정', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
      r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
      r2:{spec:'304', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
      r3:{spec:'126mm +0.1, -0.1mm', x1:'125.998', x2:'125.995', x3:'125.999', j:'OK'},
@@ -2315,7 +2721,7 @@ function initCertDefaults() {
      size:'0.5(T) X 118(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
      date:'2026-01-15', weight:2902, cut:'5조', lot:'QDY1252 외', heat:'SE54468 외',
      supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
-     recv_date:'2026-01-15', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     recv_date:'2026-01-15', recv_charge:'허미정', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
      r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
      r2:{spec:'304', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
      r3:{spec:'118mm +0.1, -0.1mm', x1:'117.997', x2:'117.998', x3:'117.998', j:'OK'},
@@ -2337,7 +2743,7 @@ function initCertDefaults() {
      size:'0.6(T) X 80(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
      date:'2026-01-12', weight:1116, cut:'3조', lot:'QGS0405A 외', heat:'SE51203 외',
      supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
-     recv_date:'2026-01-12', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     recv_date:'2026-01-12', recv_charge:'허미정', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
      r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
      r2:{spec:'304', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
      r3:{spec:'80mm +0.1, -0.1mm', x1:'79.995', x2:'79.997', x3:'79.996', j:'OK'},
@@ -2359,7 +2765,7 @@ function initCertDefaults() {
      size:'0.6(T) X 70(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
      date:'2026-01-12', weight:2007, cut:'6조', lot:'C258500494', heat:'SG90620',
      supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
-     recv_date:'2026-01-12', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     recv_date:'2026-01-12', recv_charge:'허미정', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
      r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
      r2:{spec:'430', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
      r3:{spec:'70mm +0.1, -0.1mm', x1:'69.997', x2:'69.999', x3:'69.997', j:'OK'},
@@ -2381,7 +2787,7 @@ function initCertDefaults() {
      size:'0.6(T) X 80(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
      date:'2026-01-06', weight:1364, cut:'3조', lot:'C258101449', heat:'SG88660',
      supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
-     recv_date:'2026-01-06', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     recv_date:'2026-01-06', recv_charge:'허미정', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
      r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
      r2:{spec:'430', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
      r3:{spec:'80mm +0.1, -0.1mm', x1:'79.996', x2:'79.999', x3:'79.995', j:'OK'},
@@ -2403,7 +2809,7 @@ function initCertDefaults() {
      size:'0.5(T) X 118(mm)', supplier:'㈜동일스테인레스', customer:'㈜태진다이텍',
      date:'2026-01-06', weight:3192, cut:'6조', lot:'QDY1252', heat:'SE54468',
      supplier_judge:'OK', supplier_sign:'㈜동일스테인레스',
-     recv_date:'2026-01-06', recv_charge:'문수진', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
+     recv_date:'2026-01-06', recv_charge:'허미정', judge:'OK', customer_sign:'강병주', label:'부착', remark:'',
      r1:{spec:'과도한 스크래치 및 오염, Burr 없을것', x1:'O', x2:'O', x3:'O', j:'OK'},
      r2:{spec:'304', x1:'밀시트참조', x2:'밀시트참조', x3:'밀시트참조', j:'OK'},
      r3:{spec:'118mm +0.1, -0.1mm', x1:'117.998', x2:'117.997', x3:'117.998', j:'OK'},
@@ -2835,13 +3241,13 @@ function saveCertToLS(){ localStorage.setItem(LS_CERT, JSON.stringify(certData))
 async function forceResetCertData(){
   const hasSupa = (typeof appSettings !== 'undefined' && appSettings.supabaseUrl && appSettings.supabaseKey);
   const msg =
-    '⚠️ 검사증명서 + 수입검사일보 데이터 재설정\n\n' +
+    '⚠️ 검사증명서 + 관리대장 데이터 재설정\n\n' +
     '이 작업은 다음을 수행합니다:\n' +
     '① localStorage의 기존 검사증명서/일보 데이터 삭제\n' +
     (hasSupa ? '② Supabase material_cert / material_log 테이블의 모든 레코드 삭제\n' : '') +
     '③ HTML 내장 데이터 복원\n' +
     '   • 검사증명서 45건 (태경스틸 SPCC 18건 + ㈜동일스테인레스 SUS 27건)\n' +
-    '   • 수입검사일보 54건 (SPCC 27건 / SUS304 13건 / SUS430 14건)\n' +
+    '   • 관리대장 54건 (SPCC 27건 / SUS304 13건 / SUS430 14건)\n' +
     '   • 담당자: SPCC → 문수진, SUS → 허미정 / 부서장: 강병주\n' +
     (hasSupa ? '④ 복원된 데이터를 Supabase에 재업로드\n' : '') +
     '\n수요자 작성 내용도 초기값으로 복원됩니다.\n진행하시겠습니까?';
@@ -2894,7 +3300,7 @@ async function forceResetCertData(){
     updateSupplierCounts();
     alert('✅ 재설정 완료!\n\n' +
           '검사증명서: 태경 18건 + 동일 27건 = 총 45건\n' +
-          '수입검사일보: SPCC 27건 + SUS304 13건 + SUS430 14건 = 총 54건\n' +
+          '관리대장: SPCC 27건 + SUS304 13건 + SUS430 14건 = 총 54건\n' +
           '담당자 일괄 변경 완료 (SPCC: 문수진, SUS: 허미정)' +
           (hasSupa ? '\n\nSupabase에도 동기화되었습니다.' : ''));
   } catch(e) {
@@ -2903,13 +3309,21 @@ async function forceResetCertData(){
   }
 }
 
-// 기존 certData 레코드에 새 필드 없으면 보강 (마이그레이션)
-if (certData && Array.isArray(certData)) {
-  let migrated = false;
+// ========================================
+// 검사성적서(certData) 자동 마이그레이션 (재사용 가능)
+// 1) 누락 필드 보강
+// 2) SUS(동일스테인레스) 담당자 "문수진" → "허미정" 자동 정정
+// 3) SUS 승인자가 비었으면 "강병주" 적용
+// ========================================
+function migrateCertData(){
+  if (!certData || !Array.isArray(certData)) return false;
+  let modified = false;
+
   certData.forEach(c => {
+    // 누락 필드 보강
     if (c.supplier_judge === undefined && c.judge !== undefined) {
-      c.supplier_judge = c.judge; // 기존 판정을 공급자 판정으로 복사
-      migrated = true;
+      c.supplier_judge = c.judge;
+      modified = true;
     }
     if (c.supplier_sign === undefined) c.supplier_sign = '';
     if (c.recv_date === undefined) c.recv_date = '';
@@ -2918,36 +3332,175 @@ if (certData && Array.isArray(certData)) {
     if (c.label === undefined) c.label = '부착';
     if (c.remark === undefined) c.remark = '';
     if (c.scan_id === undefined) c.scan_id = null;
+
+    // SUS(동일스테인레스) 판별 - supplier 또는 spec/commodity 기반
+    const supplierStr = (c.supplier||'') + ' ' + (c.spec||'') + ' ' + (c.commodity||'') + ' ' + (c.r2 ? (c.r2.spec||'') : '');
+    const isSUS = /동일스테인레스|STS|스테인|304|430/i.test(supplierStr);
+    const isSPCC = /태경스틸|SPCC|SPC1|JIS G3141|D3512/i.test(supplierStr) && !isSUS;
+
+    // SUS 담당자: 문수진/운전/홍길동/빈값 → 허미정
+    if (isSUS) {
+      if (c.recv_charge === '문수진' || c.recv_charge === '운전' || c.recv_charge === '홍길동' || !c.recv_charge) {
+        if (c.recv_charge !== '허미정') {
+          c.recv_charge = '허미정';
+          modified = true;
+        }
+      }
+      if (!c.customer_sign || c.customer_sign === '') {
+        c.customer_sign = '강병주';
+        modified = true;
+      }
+    } else if (isSPCC) {
+      // SPCC 담당자: 운전/홍길동/빈값 → 문수진
+      if (c.recv_charge === '운전' || c.recv_charge === '홍길동' || !c.recv_charge) {
+        if (c.recv_charge !== '문수진') {
+          c.recv_charge = '문수진';
+          modified = true;
+        }
+      }
+      if (!c.customer_sign || c.customer_sign === '') {
+        c.customer_sign = '강병주';
+        modified = true;
+      }
+    }
   });
-  if (migrated) saveCertToLS();
+
+  if (modified) saveCertToLS();
+  return modified;
+}
+
+// 초기 로드 시 1회 실행
+migrateCertData();
+
+// 사용자가 직접 트리거하는 검사성적서 담당자 정리 (Supabase에도 반영)
+async function manualMigrateCertData(){
+  if (!confirm('🔧 검사성적서 담당자 정리\n\n다음 작업을 수행합니다:\n' +
+               '① ㈜동일스테인레스 (SUS) → 담당자 "허미정"으로 일괄 정정\n' +
+               '② 태경스틸 (SPCC) → 담당자 "문수진"으로 일괄 정정\n' +
+               '③ 빈 승인자 → "강병주" 자동 적용\n' +
+               '④ 정정된 데이터를 Supabase에 재업로드\n\n계속하시겠습니까?')) return;
+
+  try {
+    // 변경 전 카운트
+    const beforeStats = { sus: 0, spcc: 0 };
+    certData.forEach(c => {
+      const s = (c.supplier||'') + ' ' + (c.spec||'');
+      const isSUS = /동일스테인레스|STS|스테인|304|430/i.test(s);
+      if (isSUS && c.recv_charge !== '허미정') beforeStats.sus++;
+      else if (!isSUS && c.recv_charge !== '문수진') beforeStats.spcc++;
+    });
+
+    const fixed = migrateCertData();
+
+    // Supabase에 모든 cert 재push
+    let pushOk = 0, pushFail = 0;
+    if (appSettings.supabaseUrl && appSettings.supabaseKey) {
+      for (const cert of certData) {
+        try { await pushCertToSupabase(cert); pushOk++; } catch(e) { pushFail++; }
+      }
+    }
+
+    renderCert();
+    updateSupplierCounts();
+    alert('✅ 검사성적서 담당자 정리 완료!\n\n' +
+          '정정된 SUS(동일스테인레스): ' + beforeStats.sus + '건\n' +
+          '정정된 SPCC(태경스틸): ' + beforeStats.spcc + '건\n' +
+          (appSettings.supabaseUrl ? '\nSupabase 동기화: 성공 ' + pushOk + '건' + (pushFail>0 ? ', 실패 ' + pushFail + '건' : '') : '로컬만 정리됨'));
+  } catch(e) {
+    alert('❌ 오류: ' + e.message);
+    console.error(e);
+  }
 }
 
 // ========================================
-// 수입검사일보 자동 마이그레이션
+// 수입검사일보(관리대장) 자동 마이그레이션 (재사용 가능)
 // 1) 기존 logData에 SUS304/SUS430 데이터가 없으면 → 내장 데이터로 자동 업그레이드
-// 2) 담당자 "운전" / "홍길동" → 재질별 담당자(SPCC: 문수진, SUS: 허미정)로 일괄 변경
+// 2) 담당자 "운전" / "홍길동" → 재질별 담당자(SPCC: 문수진, SUS: 허미정)
+// 3) 부서장 "차장" / "대리" → "강병주"
+// 4) 중복 레코드 (같은 날짜 + 같은 Heat + 같은 width) 제거
+// 페이지 로드 시 + Supabase pull 직후에 매번 호출
 // ========================================
-if (logData && Array.isArray(logData)) {
-  const hasSUS = logData.some(d => d.material === 'SUS304' || d.material === 'SUS430');
-  const hasInvalidCharge = logData.some(d => d.charge === '운전' || d.charge === '홍길동');
+function migrateLogData(){
+  if (!logData || !Array.isArray(logData)) return false;
+  let modified = false;
 
-  // SUS 데이터가 없으면 logData를 통째로 재설정 (내장 54건으로)
-  if (!hasSUS) {
-    console.log('[Migration] logData에 SUS 데이터가 없어 내장 54건으로 자동 보강합니다.');
+  // 1) SUS 데이터가 없고 SPCC만 있을 때 → 내장 54건으로 통째로 교체
+  const hasSUS = logData.some(d => d.material === 'SUS304' || d.material === 'SUS430');
+  const onlySPCC = logData.length > 0 && !hasSUS && logData.every(d => d.material === 'SPCC' || !d.material);
+  if (onlySPCC) {
+    console.log('[Migration] logData에 SUS가 없어 내장 54건으로 자동 보강합니다.');
     logData = null;
     initLogDefaults();
-  } else if (hasInvalidCharge) {
-    // SUS는 있는데 담당자만 "운전/홍길동"이 잔존하는 경우
-    console.log('[Migration] 담당자 "운전/홍길동"을 재질별 담당자로 일괄 변경합니다.');
-    logData.forEach(d => {
-      if (d.charge === '운전' || d.charge === '홍길동') {
-        if (d.material === 'SUS304' || d.material === 'SUS430') d.charge = '허미정';
-        else d.charge = '문수진';
+    return true;
+  }
+
+  // 2) 담당자/부서장 일괄 정정 (운전/홍길동 → 재질별, 차장/대리 → 강병주)
+  logData.forEach(d => {
+    if (d.charge === '운전' || d.charge === '홍길동' || !d.charge) {
+      const newCharge = (d.material === 'SUS304' || d.material === 'SUS430') ? '허미정' : '문수진';
+      if (d.charge !== newCharge) {
+        d.charge = newCharge;
+        modified = true;
       }
-      // 부서장도 통일
-      if (d.boss === '차장' || d.boss === '대리') d.boss = '강병주';
-    });
-    saveLogToLS();
+    }
+    if (d.boss === '차장' || d.boss === '대리' || !d.boss || d.boss === '') {
+      if (d.boss !== '강병주') {
+        d.boss = '강병주';
+        modified = true;
+      }
+    }
+  });
+
+  // 3) 중복 레코드 제거 (같은 날짜 + Heat + 폭 + 재질 → 마지막 것만 유지)
+  const seen = new Map();
+  logData.forEach((d, idx) => {
+    const key = (d.date||'') + '|' + (d.heat||'') + '|' + (d.width||'') + '|' + (d.material||'');
+    seen.set(key, idx);
+  });
+  if (seen.size < logData.length) {
+    const keepIdx = new Set(seen.values());
+    const before = logData.length;
+    logData = logData.filter((_, i) => keepIdx.has(i));
+    console.log('[Migration] 중복 레코드 제거: ' + before + ' → ' + logData.length);
+    modified = true;
+  }
+
+  if (modified) saveLogToLS();
+  return modified;
+}
+
+// 초기 로드 시 1회 실행
+migrateLogData();
+
+// 사용자가 직접 트리거하는 데이터 정리 (Supabase에도 반영)
+async function manualMigrateLogData(){
+  if (!confirm('🔧 관리대장 데이터 정리\n\n다음 작업을 수행합니다:\n' +
+               '① 담당자 "운전"/"홍길동" → 재질별 담당자(SPCC: 문수진, SUS: 허미정)\n' +
+               '② 부서장 "차장"/"대리"/빈값 → "강병주"\n' +
+               '③ 중복 레코드 제거 (같은 날짜+Heat+폭+재질)\n' +
+               '④ 정정된 데이터를 Supabase에 재업로드\n\n계속하시겠습니까?')) return;
+
+  try {
+    const before = logData.length;
+    const fixed = migrateLogData();
+    const after = logData.length;
+
+    // Supabase에 모든 logData 재push (서버에도 옛 데이터 잔존하므로 강제 덮어쓰기)
+    let pushOk = 0, pushFail = 0;
+    if (appSettings.supabaseUrl && appSettings.supabaseKey) {
+      for (const log of logData) {
+        try { await pushLogToSupabase(log); pushOk++; } catch(e) { pushFail++; }
+      }
+    }
+
+    renderLog();
+    renderDashboard();
+    alert('✅ 데이터 정리 완료!\n\n' +
+          '레코드: ' + before + ' → ' + after + '건\n' +
+          (appSettings.supabaseUrl ? 'Supabase 동기화: 성공 ' + pushOk + '건' + (pushFail>0 ? ', 실패 ' + pushFail + '건' : '') : '로컬만 정리됨'));
+  } catch(e) {
+    alert('❌ 오류: ' + e.message);
+    console.error(e);
   }
 }
 
@@ -3116,7 +3669,7 @@ function renderLog(){
 }
 
 function openLogModal(){
-  document.getElementById('logModalTitle').textContent = '수입검사일보 신규 등록';
+  document.getElementById('logModalTitle').textContent = '관리대장 신규 등록';
   document.getElementById('logIdx').value = -1;
   document.getElementById('f_date').value = new Date().toISOString().split('T')[0];
   ['f_material','f_appear','f_thick_spec','f_width_spec','f_thick','f_width','f_in_kg','f_count','f_bad_kg','f_heat','f_judge','f_label','f_charge','f_boss','f_nc'].forEach(id=>{
@@ -3134,7 +3687,7 @@ function openLogModal(){
 
 function editLog(idx){
   const d = logData[idx];
-  document.getElementById('logModalTitle').textContent = '수입검사일보 수정';
+  document.getElementById('logModalTitle').textContent = '관리대장 수정';
   document.getElementById('logIdx').value = idx;
   document.getElementById('f_date').value = d.date;
   document.getElementById('f_material').value = d.material;
@@ -3195,7 +3748,7 @@ function delLog(idx){
 function exportLog(){
   const headers = ['입고일','재질','외관','두께SPEC','폭SPEC','실측두께','실측폭','입고량(KG)','검사수','불량(KG)','HEAT-NO','부적합내용','입고라벨','판정','담당','부서장'];
   const rows = logData.map(d=>[d.date,d.material,d.appear,d.thick_spec,d.width_spec,d.thick,d.width,d.in_kg,d.count,d.bad_kg,d.heat,d.nc,d.label,d.judge,d.charge,d.boss]);
-  downloadCSV([headers,...rows], `수입검사일보_${new Date().toISOString().split('T')[0]}.csv`);
+  downloadCSV([headers,...rows], `관리대장_${new Date().toISOString().split('T')[0]}.csv`);
 }
 
 
@@ -3216,30 +3769,29 @@ function buildMeasTable(prefix){
   const isSupplier = (prefix === 'sup');
   return MEAS_ITEMS.map(item => {
     // 스펙 칸
-    //  - 공급자: 모든 항목 편집 가능 (기본값 세팅은 buildMeasTable 직후)
-    //  - 수요자: 읽기 전용 (공급자 값을 자동 반영)
     let specCell;
     const specPlaceholder = item.specPlaceholder || item.defaultSpec || '';
     if (isSupplier) {
-      specCell = '<td><input type="text" id="sup_' + item.key + '_spec" placeholder="' + specPlaceholder + '" class="meas-spec-input" oninput="syncSpecToCustomer(\'' + item.key + '\')"></td>';
+      specCell = '<td><input type="text" id="sup_' + item.key + '_spec" placeholder="' + specPlaceholder + '" class="meas-spec-input" oninput="syncSpecToCustomer(\'' + item.key + '\'); autoEvaluateAndSetRow(\'sup\', \'' + item.key + '\'); autoEvaluateAndSetRow(\'cus\', \'' + item.key + '\'); syncFinalJudgesFromRows();"></td>';
     } else {
       specCell = '<td><input type="text" id="cus_' + item.key + '_spec" class="meas-spec-input readonly-spec" readonly title="공급자 Spec 자동 반영"></td>';
     }
 
-    // 측정값 칸 (X1, X2, X3)
+    // 측정값 칸 (X1, X2, X3) — 입력 시 자동 OK/NG 판정 트리거
     let valCells = '';
     ['x1','x2','x3'].forEach(x => {
+      const oninput = ' oninput="autoEvaluateAndSetRow(\'' + prefix + '\', \'' + item.key + '\'); syncFinalJudgesFromRows();"';
       if (item.type === 'number') {
-        valCells += '<td><input type="number" step="' + (item.step||'0.01') + '" id="' + prefix + '_' + item.key + '_' + x + '" placeholder="' + (item.placeholder||'') + '"></td>';
+        valCells += '<td><input type="number" step="' + (item.step||'0.01') + '" id="' + prefix + '_' + item.key + '_' + x + '" placeholder="' + (item.placeholder||'') + '"' + oninput + '></td>';
       } else {
-        valCells += '<td><input type="text" id="' + prefix + '_' + item.key + '_' + x + '" placeholder="' + (item.placeholder||'양호') + '"></td>';
+        valCells += '<td><input type="text" id="' + prefix + '_' + item.key + '_' + x + '" placeholder="' + (item.placeholder||'양호') + '"' + oninput + '></td>';
       }
     });
 
-    // 판정 라디오 (OK/NG)
+    // 판정 라디오 (OK/NG) - 자동판정되지만 수동 변경도 허용
     const radioName = prefix + '_' + item.key + '_j';
     const judgeCell = '<td>' +
-      '<div class="judge-radio">' +
+      '<div class="judge-radio" id="' + prefix + '_' + item.key + '_j_wrap">' +
         '<label><input type="radio" name="' + radioName + '" value="OK" checked><span>OK</span></label>' +
         '<label><input type="radio" name="' + radioName + '" value="NG"><span>NG</span></label>' +
       '</div>' +
@@ -3273,7 +3825,153 @@ function setRadioValue(name, value){
   if (radio) radio.checked = true;
 }
 
+// ========================================
+// 자동 OK/NG 판정 로직
+// ========================================
+// SPEC 문자열 파싱 → {nominal, lower, upper} 반환
+// 예: "118mm +0.1, -0.1mm" → {nominal:118, lower:-0.1, upper:+0.1}
+//     "0.6T ±0.05"          → {nominal:0.6, lower:-0.05, upper:+0.05}
+//     "65이하"              → {nominal:0, lower:-Infinity, upper:65}
+//     "0/+2"                → {nominal:0, lower:0, upper:+2}
+function parseSpec(specStr){
+  if (!specStr) return null;
+  const s = String(specStr).replace(/\s+/g, ' ').trim();
 
+  // "이하" 처리: "65이하" → upper=65
+  let m = s.match(/([\d.]+)\s*이하/);
+  if (m) return { nominal: 0, lower: -Infinity, upper: parseFloat(m[1]), kind:'max' };
+
+  // "이상" 처리: "205 이상" → lower=205
+  m = s.match(/([\d.]+)\s*이상/);
+  if (m) return { nominal: parseFloat(m[1]), lower: 0, upper: Infinity, kind:'min' };
+
+  // ± 처리: "0.6T ±0.05" 또는 "118mm ±0.1"
+  m = s.match(/([\d.]+)\s*[A-Za-z]*\s*[±]\s*([\d.]+)/);
+  if (m) {
+    const nominal = parseFloat(m[1]);
+    const tol = parseFloat(m[2]);
+    return { nominal, lower: -tol, upper: +tol, kind:'pm' };
+  }
+
+  // "+a, -b" 또는 "+a/-b" 형태: "118mm +0.1, -0.1mm" / "0.5T +0.02, -0.02T"
+  m = s.match(/([\d.]+)\s*[A-Za-z]*\s*\+([\d.]+)\s*[,\/]\s*-([\d.]+)/);
+  if (m) {
+    const nominal = parseFloat(m[1]);
+    return { nominal, lower: -parseFloat(m[3]), upper: +parseFloat(m[2]), kind:'asym' };
+  }
+
+  // "0/+2" 또는 "+0/-2" 형태 (기준값 없이 상하한만): nominal=0
+  m = s.match(/^(\d+|\+0|\+?[\d.]+)\s*\/\s*\+?([\d.]+)$/);
+  if (m) {
+    return { nominal: 0, lower: parseFloat(m[1])||0, upper: parseFloat(m[2]), kind:'range' };
+  }
+
+  // "0/+12, 0/+8, 0/+6" 처리: 첫번째 범위만 사용
+  m = s.match(/^(\d+|\+0|\+?[\d.]+)\s*\/\s*\+?([\d.]+)/);
+  if (m) {
+    return { nominal: 0, lower: parseFloat(m[1])||0, upper: parseFloat(m[2]), kind:'range' };
+  }
+
+  return null;
+}
+
+// 단일 측정값을 SPEC와 비교하여 OK/NG 반환 (수치형 SPEC + 수치형 측정값에만 동작)
+function judgeOneValue(specStr, val){
+  if (val === null || val === undefined || val === '' || val === '-') return null;  // 빈 값 → 판정 보류
+  // 텍스트 측정값: 양호/OK 등
+  const sval = String(val).trim();
+  if (/양호|OK/i.test(sval)) return 'OK';
+  if (/불량|NG/i.test(sval)) return 'NG';
+
+  const num = parseFloat(sval);
+  if (isNaN(num)) return null;  // 숫자 파싱 실패
+
+  const parsed = parseSpec(specStr);
+  if (!parsed) return null;  // SPEC 파싱 실패 → 판정 보류
+
+  const { nominal, lower, upper, kind } = parsed;
+  const minVal = (kind === 'max') ? -Infinity : nominal + lower;
+  const maxVal = (kind === 'min') ? Infinity  : nominal + upper;
+
+  return (num >= minVal && num <= maxVal) ? 'OK' : 'NG';
+}
+
+// 한 행의 X1/X2/X3 모두 평가하여 통합 판정 결정
+// 하나라도 NG면 NG, 평가 가능한 값이 모두 OK면 OK, 평가 불가면 기존값 유지
+function judgeRow(prefix, itemKey){
+  const specEl = document.getElementById(prefix + '_' + itemKey + '_spec');
+  if (!specEl) return null;
+  const spec = specEl.value || '';
+
+  let hasNG = false, hasOK = false, hasAny = false;
+  ['x1','x2','x3'].forEach(x => {
+    const el = document.getElementById(prefix + '_' + itemKey + '_' + x);
+    if (!el || !el.value) return;
+    hasAny = true;
+    const j = judgeOneValue(spec, el.value);
+    if (j === 'NG') hasNG = true;
+    else if (j === 'OK') hasOK = true;
+  });
+
+  if (!hasAny) return null;  // 평가 불가
+  if (hasNG) return 'NG';
+  if (hasOK) return 'OK';
+  return null;
+}
+
+// 한 행의 자동 판정 → 라디오에 반영 + 라벨 갱신
+function autoEvaluateAndSetRow(prefix, itemKey){
+  const result = judgeRow(prefix, itemKey);
+  if (result === null) return;
+  setRadioValue(prefix + '_' + itemKey + '_j', result);
+}
+
+// 모든 행 일괄 평가 (모달 열릴 때 호출)
+function evaluateAllJudgements(){
+  ['sup','cus'].forEach(prefix => {
+    MEAS_ITEMS.forEach(item => {
+      autoEvaluateAndSetRow(prefix, item.key);
+    });
+  });
+  // 측정값/SPEC 변경 시 최종 판정도 재평가하도록 자동 판정 후 모달 상단 최종 판정도 동기화
+  syncFinalJudgesFromRows();
+}
+
+// 행별 판정 → 공급자 판정 / 수요자 최종 판정 자동 동기화
+function syncFinalJudgesFromRows(){
+  let supplierAllOK = true, customerAllOK = true;
+  MEAS_ITEMS.forEach(item => {
+    const sJ = getRadioValue('sup_' + item.key + '_j');
+    const cJ = getRadioValue('cus_' + item.key + '_j');
+    if (sJ === 'NG') supplierAllOK = false;
+    if (cJ === 'NG') customerAllOK = false;
+  });
+  setRadioValue('c_supplier_judge', supplierAllOK ? 'OK' : 'NG');
+  // 수요자 최종 판정 - 보류는 사용자가 수동으로만 선택
+  const curCustomerJudge = getRadioValue('c_judge');
+  if (curCustomerJudge !== '보류') {
+    setRadioValue('c_judge', customerAllOK ? 'OK' : 'NG');
+  }
+}
+
+// 모달의 모든 측정값/SPEC input에 onChange 이벤트 부여
+function attachAutoJudgeEvents(){
+  ['sup','cus'].forEach(prefix => {
+    MEAS_ITEMS.forEach(item => {
+      // SPEC + X1/X2/X3 4개 input에 이벤트 부여
+      ['spec','x1','x2','x3'].forEach(field => {
+        const el = document.getElementById(prefix + '_' + item.key + '_' + field);
+        if (el && !el.dataset.autoJudgeBound) {
+          el.dataset.autoJudgeBound = '1';
+          el.addEventListener('input', () => {
+            autoEvaluateAndSetRow(prefix, item.key);
+            syncFinalJudgesFromRows();
+          });
+        }
+      });
+    });
+  });
+}
 
 function collectMeasData(prefix){
   const result = {};
@@ -3825,6 +4523,9 @@ function renderCert(){
 }
 
 function openCertModal(){
+  // 드롭다운(datalist) 옵션 새로고침
+  if (typeof refreshCertModalDatalists === 'function') refreshCertModalDatalists();
+
   document.getElementById('certModalTitle').textContent = '검사 성적서 신규 등록';
   document.getElementById('certIdx').value = -1;
   document.getElementById('cert_scan_id').value = '';
@@ -3882,11 +4583,17 @@ function openCertModal(){
     });
   });
 
+  // 자동 판정 이벤트 부여
+  attachAutoJudgeEvents();
+
   document.getElementById('certModal').classList.add('show');
 }
 
 function editCert(idx){
   const c = certData[idx];
+  // 드롭다운 옵션 새로고침
+  if (typeof refreshCertModalDatalists === 'function') refreshCertModalDatalists();
+
   document.getElementById('certModalTitle').textContent = '검사 성적서 수정';
   document.getElementById('certIdx').value = idx;
   document.getElementById('cert_scan_id').value = c.scan_id||'';
@@ -3952,6 +4659,10 @@ function editCert(idx){
     setRadioValue('cus_' + item.key + '_j', cusData.j || 'OK');
   });
 
+  // 자동 판정 이벤트 부여 + 현재 값으로 즉시 판정
+  attachAutoJudgeEvents();
+  evaluateAllJudgements();
+
   document.getElementById('certModal').classList.add('show');
 }
 
@@ -3992,19 +4703,38 @@ function saveCert(){
   // 수요자 Spec은 공급자 Spec과 강제로 동일하게 저장 (자동 반영)
   const customerMeas = collectMeasData('cus');
   Object.keys(customerMeas).forEach(k => {
-    customerMeas[k].spec = supplierMeas[k].spec; // 공급자 Spec으로 덮어씀
+    customerMeas[k].spec = supplierMeas[k].spec;
     c['c_' + k] = customerMeas[k];
   });
 
+  if (idx === -1) {
+    // 신규 등록 - ID 즉시 부여 (Supabase pull로 덮어써지지 않도록)
+    c.id = 'cert_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7);
+    certData.push(c);
+  } else {
+    // 수정 - 기존 ID 유지
+    if (!c.id && certData[idx] && certData[idx].id) c.id = certData[idx].id;
+    if (!c.id) c.id = 'cert_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7);
+    certData[idx] = c;
+  }
 
-  if (idx === -1) certData.push(c);
-  else certData[idx] = c;
+  // dirty 보호: 방금 저장한 ID는 pullFromSupabase가 일정 시간 동안 덮어쓰지 못하게 마킹
+  if (typeof markCertAsDirty === 'function') markCertAsDirty(c.id);
+
   saveCertToLS();
 
   // ⭐ 수요자 작성 완료시 수입검사일보에 자동 반영
   const customerCompleted = isCustomerWorkCompleted(c);
   if (customerCompleted) {
     syncCertToLog(c);
+  }
+
+  // ⭐ Supabase에 즉시 push (debounce 없이 바로)
+  if (appSettings.supabaseUrl && appSettings.supabaseKey && typeof pushCertToSupabase === 'function') {
+    pushCertToSupabase(c).catch(e => {
+      console.warn('Supabase 즉시 push 실패 (대기큐 추가):', e.message);
+      addPendingOp({ type: 'cert', action: 'upsert', data: c });
+    });
   }
 
   closeCertModal();
@@ -4014,7 +4744,7 @@ function saveCert(){
 
   if (customerCompleted) {
     // 가볍게 상단에 알림
-    showToast('✅ 수입검사일보에도 자동 반영되었습니다');
+    showToast('✅ 관리대장에도 자동 반영되었습니다');
   }
 }
 
@@ -4089,7 +4819,18 @@ function syncCertToLog(cert){
     logData.push(logRecord);
   }
 
+  // dirty 마킹 (pull로 덮어쓰지 않도록 보호)
+  if (typeof markLogAsDirty === 'function') markLogAsDirty(logRecord.id);
+
   saveLogToLS();
+
+  // Supabase 즉시 push
+  if (typeof appSettings !== 'undefined' && appSettings.supabaseUrl && appSettings.supabaseKey && typeof pushLogToSupabase === 'function') {
+    pushLogToSupabase(logRecord).catch(e => {
+      console.warn('Log Supabase push 실패:', e.message);
+      if (typeof addPendingOp === 'function') addPendingOp({ type: 'log', action: 'upsert', data: logRecord });
+    });
+  }
 }
 
 // 상단 토스트 알림 (2초 후 자동 사라짐)
@@ -4648,7 +5389,179 @@ function renderSettingsTab(){
   renderMailRecipients();
   renderNtfyTopics();
   renderChargeSettings();
+  renderSupplierMaster();
   updateConnectionStatus();
+}
+
+// ========================================
+// 소재 업체 마스터 관리 (localStorage 기반)
+// ========================================
+const LS_SUPPLIER_MASTER = 'tj_material_supplier_master_v1';
+
+function loadSupplierMaster(){
+  const def = [
+    {name:'태경스틸',         commodity:'CR COIL (SPCC)',  spec:'KS D3512 SPC1 / JIS G3141 SPCC / ASTM A1008 CSA', surface:'DULL(S)'},
+    {name:'㈜동일스테인레스', commodity:'STS CR COIL',     spec:'KS D3698-STS304',                                  surface:'NO. 2B'}
+  ];
+  try {
+    const raw = localStorage.getItem(LS_SUPPLIER_MASTER);
+    if (!raw) {
+      localStorage.setItem(LS_SUPPLIER_MASTER, JSON.stringify(def));
+      return def;
+    }
+    const saved = JSON.parse(raw);
+    return Array.isArray(saved) && saved.length > 0 ? saved : def;
+  } catch(e) {
+    return def;
+  }
+}
+
+let supplierMaster = loadSupplierMaster();
+
+function saveSupplierMasterToLS(){
+  localStorage.setItem(LS_SUPPLIER_MASTER, JSON.stringify(supplierMaster));
+}
+
+function renderSupplierMaster(){
+  const list = document.getElementById('supplierMasterList');
+  if (!list) return;
+  if (supplierMaster.length === 0) {
+    list.innerHTML = '<div style="padding:12px; text-align:center; color:#94a3b8; background:#f8fafc; border-radius:4px; font-size:12px;">등록된 업체가 없습니다</div>';
+    return;
+  }
+  list.innerHTML = supplierMaster.map((s, idx) =>
+    '<div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:10px 12px; margin-bottom:6px;">' +
+      '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">' +
+        '<div style="font-weight:700; color:#1e3a5f; font-size:14px;">' +
+          '<span style="color:#64748b; font-size:11px; margin-right:6px;">[' + (idx+1) + ']</span>' +
+          s.name +
+        '</div>' +
+        '<div style="display:flex; gap:6px;">' +
+          '<button class="btn" style="padding:4px 10px; font-size:11px; background:#3b82f6; color:white;" onclick="editSupplier(' + idx + ')">✏️ 수정</button>' +
+          '<button class="btn btn-danger" style="padding:4px 10px; font-size:11px;" onclick="removeSupplier(' + idx + ')">✕ 삭제</button>' +
+        '</div>' +
+      '</div>' +
+      '<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:6px; font-size:11px;">' +
+        '<div><span style="color:#64748b;">품명:</span> <strong style="color:#1e3a5f;">' + (s.commodity||'-') + '</strong></div>' +
+        '<div><span style="color:#64748b;">규격:</span> <strong style="color:#1e3a5f;">' + (s.spec||'-') + '</strong></div>' +
+        '<div><span style="color:#64748b;">표면:</span> <strong style="color:#1e3a5f;">' + (s.surface||'-') + '</strong></div>' +
+      '</div>' +
+    '</div>'
+  ).join('');
+}
+
+function addSupplierMaster(){
+  const name = (document.getElementById('supName').value || '').trim();
+  if (!name) { alert('업체명은 필수입니다.'); return; }
+  if (supplierMaster.some(s => s.name === name)) { alert('이미 등록된 업체입니다.'); return; }
+  supplierMaster.push({
+    name: name,
+    commodity: (document.getElementById('supCommodity').value || '').trim(),
+    spec: (document.getElementById('supSpec').value || '').trim(),
+    surface: (document.getElementById('supSurface').value || '').trim()
+  });
+  saveSupplierMasterToLS();
+  // 입력 필드 비우기
+  ['supName','supCommodity','supSpec','supSurface'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  renderSupplierMaster();
+  alert('✅ 업체가 추가되었습니다.');
+}
+
+// 하위 호환 (기존 호출 유지)
+const addSupplier = addSupplierMaster;
+
+function editSupplier(idx){
+  const s = supplierMaster[idx];
+  if (!s) return;
+  const newName = prompt('업체명:', s.name);
+  if (newName === null) return;
+  const newCommodity = prompt('기본 품명:', s.commodity || '');
+  if (newCommodity === null) return;
+  const newSpec = prompt('기본 규격:', s.spec || '');
+  if (newSpec === null) return;
+  const newSurface = prompt('기본 표면:', s.surface || '');
+  if (newSurface === null) return;
+  supplierMaster[idx] = {
+    name: newName.trim() || s.name,
+    commodity: newCommodity.trim(),
+    spec: newSpec.trim(),
+    surface: newSurface.trim()
+  };
+  saveSupplierMasterToLS();
+  renderSupplierMaster();
+  alert('✅ 업체 정보가 수정되었습니다.');
+}
+
+function removeSupplier(idx){
+  const s = supplierMaster[idx];
+  if (!s) return;
+  if (!confirm('"' + s.name + '"을(를) 삭제하시겠습니까?\n\n※ 기존 검사성적서 데이터는 유지되지만, 신규 등록 시 드롭다운에서 사라집니다.')) return;
+  supplierMaster.splice(idx, 1);
+  saveSupplierMasterToLS();
+  renderSupplierMaster();
+}
+
+// 신규 등록 모달의 datalist 채우기
+function refreshCertModalDatalists(){
+  const dlSup = document.getElementById('dl_supplier');
+  if (dlSup) {
+    dlSup.innerHTML = supplierMaster.map(s => '<option value="' + s.name + '">').join('');
+  }
+  const commodities = new Set();
+  const specs = new Set();
+  const surfaces = new Set();
+  supplierMaster.forEach(s => {
+    if (s.commodity) commodities.add(s.commodity);
+    if (s.spec) specs.add(s.spec);
+    if (s.surface) surfaces.add(s.surface);
+  });
+  // 기존 데이터에서 사용된 값도 추가
+  if (Array.isArray(certData)) {
+    certData.forEach(c => {
+      if (c.commodity) commodities.add(c.commodity);
+      if (c.spec) specs.add(c.spec);
+      if (c.surface) surfaces.add(c.surface);
+    });
+  }
+  const setOpt = (id, items) => {
+    const dl = document.getElementById(id);
+    if (dl) dl.innerHTML = [...items].sort().map(v => '<option value="' + v + '">').join('');
+  };
+  setOpt('dl_commodity', commodities);
+  setOpt('dl_spec', specs);
+  setOpt('dl_surface', surfaces);
+}
+
+// 공급자 변경 시 → 해당 업체의 기본 품명/규격/표면 자동 채우기
+function onSupplierChange(){
+  const supName = (document.getElementById('c_supplier').value || '').trim();
+  const found = supplierMaster.find(s => s.name === supName);
+  if (!found) return;
+  // 빈 필드는 자동으로 채우기, 채워진 필드는 사용자에게 확인
+  const fields = [
+    {id:'c_commodity', label:'품명', val: found.commodity},
+    {id:'c_spec',      label:'규격', val: found.spec},
+    {id:'c_surface',   label:'표면', val: found.surface}
+  ];
+  fields.forEach(({id, label, val}) => {
+    const el = document.getElementById(id);
+    if (!el || !val) return;
+    if (!el.value) {
+      el.value = val;  // 빈 칸은 자동 채움
+    } else if (el.value !== val) {
+      // 다른 값이 있으면 확인 후 변경
+      if (confirm(label + '을(를) "' + val + '"(으)로 변경할까요?\n(현재값: ' + el.value + ')')) {
+        el.value = val;
+      }
+    }
+  });
+}
+
+function onCommodityChange(){
+  // 품명 변경 시 추가 동작 (현재는 자동 동작 없음, 향후 확장 가능)
 }
 
 // ========================================
@@ -5288,6 +6201,42 @@ async function syncPendingOps(){
   updateSyncBadge();
 }
 
+// ========================================
+// Dirty 보호 시스템 (방금 저장한 데이터를 pull로 덮어쓰지 않게 함)
+// ========================================
+const DIRTY_PROTECTION_MS = 5 * 60 * 1000;  // 5분 동안 보호 (신규 등록 시 안전 마진)
+let dirtyCertIds = new Map();  // id → 마킹 시각
+let dirtyLogIds = new Map();
+
+function markCertAsDirty(id){
+  if (!id) return;
+  dirtyCertIds.set(id, Date.now());
+  // 5분 이상된 항목은 정리
+  pruneDirtyMaps();
+}
+function markLogAsDirty(id){
+  if (!id) return;
+  dirtyLogIds.set(id, Date.now());
+  pruneDirtyMaps();
+}
+function pruneDirtyMaps(){
+  const now = Date.now();
+  for (const [k, t] of dirtyCertIds) {
+    if (now - t > DIRTY_PROTECTION_MS * 10) dirtyCertIds.delete(k);
+  }
+  for (const [k, t] of dirtyLogIds) {
+    if (now - t > DIRTY_PROTECTION_MS * 10) dirtyLogIds.delete(k);
+  }
+}
+function isCertDirty(id){
+  if (!id || !dirtyCertIds.has(id)) return false;
+  return (Date.now() - dirtyCertIds.get(id)) < DIRTY_PROTECTION_MS;
+}
+function isLogDirty(id){
+  if (!id || !dirtyLogIds.has(id)) return false;
+  return (Date.now() - dirtyLogIds.get(id)) < DIRTY_PROTECTION_MS;
+}
+
 async function pullFromSupabase(){
   if (!appSettings.supabaseUrl || !appSettings.supabaseKey) return;
   try {
@@ -5296,12 +6245,11 @@ async function pullFromSupabase(){
       fetchCertsFromSupabase().catch(()=>null)
     ]);
 
-    // 서버에 데이터가 있고 로컬보다 많으면 덮어씀 (첫 접속 케이스)
+    // ===== Logs 병합 =====
     if (serverLogs && serverLogs.length > 0) {
-      // id 없는 로컬 데이터는 보존, 서버값으로 교체
-      logData = serverLogs.map(r => {
-        // 빈 값 정리
-        return Object.assign({}, r, {
+      const serverMap = new Map();
+      serverLogs.forEach(r => {
+        if (r.id) serverMap.set(r.id, Object.assign({}, r, {
           thick_spec: r.thick_spec === null ? 0 : Number(r.thick_spec),
           width_spec: r.width_spec === null ? 0 : Number(r.width_spec),
           thick: r.thick === null ? 0 : Number(r.thick),
@@ -5309,19 +6257,77 @@ async function pullFromSupabase(){
           in_kg: r.in_kg === null ? 0 : Number(r.in_kg),
           count: r.count === null ? 0 : Number(r.count),
           bad_kg: r.bad_kg === null ? 0 : Number(r.bad_kg)
-        });
+        }));
       });
+      // 🔒 로컬 보존 정책: id없거나(신규) / dirty / 서버에 아직 없음 → 모두 보존
+      const preservedLocal = (logData || []).filter(d =>
+        !d.id || isLogDirty(d.id) || !serverMap.has(d.id)
+      );
+      const merged = [...serverMap.values()];
+      preservedLocal.forEach(local => {
+        if (local.id) {
+          const i = merged.findIndex(m => m.id === local.id);
+          if (i >= 0) merged[i] = local;  // dirty 우선
+          else merged.push(local);
+        } else {
+          merged.push(local);
+        }
+      });
+      logData = merged;
       saveLogToLS();
     }
 
+    // ===== Certs 병합 =====
     if (serverCerts && serverCerts.length > 0) {
-      certData = serverCerts;
+      const serverMap = new Map();
+      serverCerts.forEach(r => { if (r.id) serverMap.set(r.id, r); });
+      // 🔒 로컬 보존 정책: id없거나(신규) / dirty / 서버에 아직 없음 → 모두 보존
+      const preservedLocal = (certData || []).filter(c =>
+        !c.id || isCertDirty(c.id) || !serverMap.has(c.id)
+      );
+      const merged = [...serverMap.values()];
+      preservedLocal.forEach(local => {
+        if (local.id) {
+          const i = merged.findIndex(m => m.id === local.id);
+          if (i >= 0) merged[i] = local;  // dirty 우선
+          else merged.push(local);
+        } else {
+          merged.push(local);
+        }
+      });
+      certData = merged;
       saveCertToLS();
     }
 
     syncState.isOnline = true;
     syncState.lastSyncAt = new Date().toISOString();
     updateSyncBadge();
+
+    // ⭐ pull 직후 운전/차장 등 옛 데이터 자동 정정 (logData)
+    if (typeof migrateLogData === 'function') {
+      const fixed = migrateLogData();
+      if (fixed && appSettings.supabaseUrl && appSettings.supabaseKey) {
+        for (const log of logData) {
+          if (log.id) {
+            try { await pushLogToSupabase(log); } catch(e) {}
+          }
+        }
+        console.log('[Migration] 정정된 logData를 Supabase에 재업로드 완료');
+      }
+    }
+
+    // ⭐ pull 직후 SUS 담당자 등 옛 데이터 자동 정정 (certData)
+    if (typeof migrateCertData === 'function') {
+      const fixed = migrateCertData();
+      if (fixed && appSettings.supabaseUrl && appSettings.supabaseKey) {
+        for (const cert of certData) {
+          if (cert.id) {
+            try { await pushCertToSupabase(cert); } catch(e) {}
+          }
+        }
+        console.log('[Migration] 정정된 certData를 Supabase에 재업로드 완료');
+      }
+    }
 
     // 화면 새로고침
     if (document.getElementById('logBody')) renderLog();
