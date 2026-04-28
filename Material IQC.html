@@ -3646,15 +3646,28 @@ function migrateLogData(){
     return true;
   }
 
-  // 2) 담당자/부서장 일괄 정정 (운전/홍길동 → 재질별, 차장/대리 → 강병주)
+  // 2) ⭐ 재질-담당자 매칭 강제 (재질이 SPCC인데 허미정이면 → 문수진, 그 반대도 정정)
+  //    운전/홍길동/빈값/차장/대리 등 모든 잘못된 값 정정
   logData.forEach(d => {
-    if (d.charge === '운전' || d.charge === '홍길동' || !d.charge) {
-      const newCharge = (d.material === 'SUS304' || d.material === 'SUS430') ? '허미정' : '문수진';
-      if (d.charge !== newCharge) {
-        d.charge = newCharge;
+    const isSUS = (d.material === 'SUS304' || d.material === 'SUS430' || d.material === 'SUS301' || d.material === 'SUS316');
+    const isSPCC = (d.material === 'SPCC' || d.material === 'SPC1' || d.material === 'SPHC' || !d.material);
+    const correctCharge = isSUS ? '허미정' : (isSPCC ? '문수진' : null);
+
+    if (correctCharge && d.charge !== correctCharge) {
+      // 잘못된 담당자 → 재질별 정담당자로 강제 변경
+      // (단, 김상기 등 그 외 정상 담당자는 그대로 둠 → 명시적 매칭만 정정)
+      const isWrongCharge = (
+        d.charge === '운전' || d.charge === '홍길동' || !d.charge ||
+        (isSUS && d.charge === '문수진') ||  // SUS인데 SPCC 담당자
+        (isSPCC && d.charge === '허미정')    // SPCC인데 SUS 담당자
+      );
+      if (isWrongCharge) {
+        d.charge = correctCharge;
         modified = true;
       }
     }
+
+    // 부서장 정정
     if (d.boss === '차장' || d.boss === '대리' || !d.boss || d.boss === '') {
       if (d.boss !== '강병주') {
         d.boss = '강병주';
@@ -3688,12 +3701,23 @@ migrateLogData();
 async function manualMigrateLogData(){
   if (!confirm('🔧 관리대장 데이터 정리\n\n다음 작업을 수행합니다:\n' +
                '① 담당자 "운전"/"홍길동" → 재질별 담당자(SPCC: 문수진, SUS: 허미정)\n' +
-               '② 부서장 "차장"/"대리"/빈값 → "강병주"\n' +
-               '③ 중복 레코드 제거 (같은 날짜+Heat+폭+재질)\n' +
-               '④ 정정된 데이터를 Supabase에 재업로드\n\n계속하시겠습니까?')) return;
+               '② SPCC인데 "허미정" → "문수진"으로 자동 정정\n' +
+               '③ SUS인데 "문수진" → "허미정"으로 자동 정정\n' +
+               '④ 부서장 "차장"/"대리"/빈값 → "강병주"\n' +
+               '⑤ 중복 레코드 제거 (같은 날짜+Heat+폭+재질)\n' +
+               '⑥ 정정된 데이터를 Supabase에 재업로드\n\n계속하시겠습니까?')) return;
 
   try {
     const before = logData.length;
+
+    // 정정 전 미스매치 카운트
+    const beforeStats = {
+      spccWrong: logData.filter(d => (d.material === 'SPCC' || !d.material) && d.charge === '허미정').length,
+      susWrong: logData.filter(d => (d.material === 'SUS304' || d.material === 'SUS430') && d.charge === '문수진').length,
+      driver: logData.filter(d => d.charge === '운전' || d.charge === '홍길동').length,
+      bossWrong: logData.filter(d => d.boss === '차장' || d.boss === '대리' || !d.boss).length
+    };
+
     const fixed = migrateLogData();
     const after = logData.length;
 
@@ -3707,9 +3731,22 @@ async function manualMigrateLogData(){
 
     renderLog();
     renderDashboard();
-    alert('✅ 데이터 정리 완료!\n\n' +
-          '레코드: ' + before + ' → ' + after + '건\n' +
-          (appSettings.supabaseUrl ? 'Supabase 동기화: 성공 ' + pushOk + '건' + (pushFail>0 ? ', 실패 ' + pushFail + '건' : '') : '로컬만 정리됨'));
+
+    let msg = '✅ 관리대장 데이터 정리 완료!\n\n';
+    msg += '정정 내역:\n';
+    msg += '• SPCC + 허미정 → 문수진: ' + beforeStats.spccWrong + '건\n';
+    msg += '• SUS + 문수진 → 허미정: ' + beforeStats.susWrong + '건\n';
+    msg += '• 운전/홍길동 → 재질별 담당자: ' + beforeStats.driver + '건\n';
+    msg += '• 차장/대리 → 강병주: ' + beforeStats.bossWrong + '건\n';
+    if (before !== after) {
+      msg += '• 중복 제거: ' + before + ' → ' + after + '건\n';
+    }
+    if (appSettings.supabaseUrl) {
+      msg += '\nSupabase 동기화: 성공 ' + pushOk + '건';
+      if (pushFail > 0) msg += ', 실패 ' + pushFail + '건';
+    }
+
+    alert(msg);
   } catch(e) {
     alert('❌ 오류: ' + e.message);
     console.error(e);
@@ -3833,6 +3870,9 @@ function renderDashboard(){
 // 수입검사일보
 // ========================================
 function renderLog(){
+  // ⭐ 렌더링 직전 자동 정정: 재질-담당자 미스매치, 운전/차장 등 옛 데이터 정정
+  if (typeof migrateLogData === 'function') migrateLogData();
+
   const fMat = document.getElementById('filterMat').value;
   const fJudge = document.getElementById('filterJudge').value;
   const fText = document.getElementById('filterText').value.toLowerCase();
