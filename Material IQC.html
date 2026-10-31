@@ -5575,8 +5575,8 @@ const SETTINGS_LS_KEY = 'tj_material_settings_v1';
 // 이 값을 비워두면 설정 탭에서 수동 입력 모드로 동작합니다.
 // 하드코딩된 값이 있으면 앱 시작 시 자동으로 연결됩니다.
 // ======================================================================
-const DEFAULT_SUPABASE_URL = 'https://ebthltdmxpzlkfwvdloz.supabase.co';
-const DEFAULT_SUPABASE_KEY = 'sb_publishable_ZSgcZapb7cTgFezGmOV_ow_9MT15SnS';
+const DEFAULT_SUPABASE_URL = 'https://omngtyewdaqpphnzeate.supabase.co';   // SmartFactory (원본)
+const DEFAULT_SUPABASE_KEY = 'sb_publishable_9j2YkkL-7ul1TrhH-NjVdQ_vWDG2-1D';
 
 // 설정 상태
 let appSettings = {
@@ -5597,6 +5597,11 @@ function loadSettingsFromLS(){
       // 저장된 값이 비어있으면 하드코딩 기본값 복원
       if (!appSettings.supabaseUrl) appSettings.supabaseUrl = DEFAULT_SUPABASE_URL;
       if (!appSettings.supabaseKey) appSettings.supabaseKey = DEFAULT_SUPABASE_KEY;
+      // 예전 프로젝트(ebthltdmxpzlkfwvdloz, 사용 중지) 주소가 저장돼 있으면 SmartFactory 로 바꾼다
+      if (/ebthltdmxpzlkfwvdloz/.test(appSettings.supabaseUrl || '')) {
+        appSettings.supabaseUrl = DEFAULT_SUPABASE_URL; appSettings.supabaseKey = DEFAULT_SUPABASE_KEY;
+        try { localStorage.setItem(SETTINGS_LS_KEY, JSON.stringify(appSettings)); } catch (e) {}
+      }
     }
   } catch(e) { console.warn('설정 로드 실패', e); }
 }
